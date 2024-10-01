@@ -1,4 +1,6 @@
+import { Link } from "expo-router";
 import { Text, View } from "react-native";
+import { Button } from "react-native-paper";
 
 export default function Index() {
   return (
@@ -10,6 +12,9 @@ export default function Index() {
       }}
     >
       <Text>Welcome</Text>
+      <Link href={"/register"}>
+        Register
+      </Link>
     </View>
   );
 }
