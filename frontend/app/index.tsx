@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
-import { Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import { View } from "react-native";
+import { Button, Text } from "react-native-paper";
 
 export default function Index() {
   return (
@@ -11,7 +11,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Welcome</Text>
+      <Text variant="displayMedium">Brand Name</Text>
       <Link href={"/register"} asChild>
         <Button mode="contained">Register</Button>
       </Link>
