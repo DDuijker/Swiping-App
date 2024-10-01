@@ -1,9 +1,13 @@
 import { Stack } from "expo-router";
-import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
+import { useColorScheme } from "react-native";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
+  
   return (
-    <PaperProvider theme={MD3DarkTheme}>
+    <PaperProvider theme={theme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false}} />
       </Stack>
