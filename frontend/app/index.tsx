@@ -12,11 +12,11 @@ export default function Index() {
       }}
     >
       <Text>Welcome</Text>
-      <Link href={"/register"}>
-        Register
+      <Link href={"/register"} asChild>
+        <Button mode="contained">Register</Button>
       </Link>
-      <Link href={"/login"}>
-        Login
+      <Link href={"/login"} asChild>
+        <Button mode="text">Login</Button>
       </Link>
     </View>
   );
