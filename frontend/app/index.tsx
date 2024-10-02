@@ -17,7 +17,7 @@ export default function Index() {
     },
     title: {
       fontWeight: "bold",
-      paddingTop: 40,
+      paddingTop: 60,
       paddingBottom: 20,
       color: theme.colors.onSurface,
       fontSize: isSmallDevice ? 24 : 32,
@@ -28,8 +28,8 @@ export default function Index() {
       width: "100%",
       padding: 20,
       backgroundColor: theme.colors.surface,
-      borderTopRightRadius: theme.roundness,
-      borderTopLeftRadius: theme.roundness,
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
     },
     button: {
       width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
