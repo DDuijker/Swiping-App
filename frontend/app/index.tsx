@@ -32,7 +32,7 @@ export default function Index() {
       borderTopLeftRadius: theme.roundness,
     },
     button: {
-      width: Platform.OS === "web" ? "20%" : isSmallDevice ? "80%" : "50%",
+      width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
       marginBottom: 16,
     },
   });
