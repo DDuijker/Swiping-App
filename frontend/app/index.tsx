@@ -27,6 +27,7 @@ export default function Index() {
       alignItems: "center",
       width: "100%",
       padding: 20,
+      paddingTop: 40,
       backgroundColor: theme.colors.surface,
       borderTopRightRadius: 20,
       borderTopLeftRadius: 20,
