@@ -4,6 +4,7 @@ import { useColorScheme } from "react-native";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 
 export default function RootLayout() {
+  // Here we define the colorscheme of MD3. This covers the whole app
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
 
