@@ -5,7 +5,7 @@ import { Button, Text, useTheme } from "react-native-paper";
 
 export default function Index() {
   const theme = useTheme();
-  const { width, height } = Dimensions.get("window");
+  const { width } = Dimensions.get("window");
   const isSmallDevice = width < 360;
 
   const styles = StyleSheet.create({
