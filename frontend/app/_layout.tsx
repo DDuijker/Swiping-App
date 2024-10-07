@@ -18,6 +18,7 @@ export default function RootLayout() {
     <PaperProvider theme={paperTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false}} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false}}/>
       </Stack>
     </PaperProvider>
   );

@@ -1,6 +1,6 @@
-import HomePage from '../app/tabs';
-import ListPage from '../app/tabs/lists';
-import ProfilePage from '../app/tabs/profile';
+import HomePage from '../app/(tabs)';
+import ListPage from '../app/(tabs)/lists';
+import ProfilePage from '../app/(tabs)/profile';
 import * as React from 'react';
 import { BottomNavigation } from 'react-native-paper';
 
