@@ -1,7 +1,10 @@
+import { Stack } from "expo-router";
 import { Text, View } from "react-native";
+import { useTheme } from "react-native-paper";
 
 export default function GroupPage() {
-  console.log('huh');
+  const theme = useTheme();
+  
   return (
     <View
       style={{
@@ -10,7 +13,12 @@ export default function GroupPage() {
         alignItems: "center",
       }}
     >
-      <Text>Home Page</Text>
+      <Stack.Screen  options={
+        {
+          title: 'My Groups',
+        }
+      }/>
+      <Text>My Groups</Text>
     </View>
   );
 }

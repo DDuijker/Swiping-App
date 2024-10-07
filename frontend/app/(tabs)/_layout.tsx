@@ -8,6 +8,7 @@ export default function TabsLayout() {
   const { colors, roundness,  } = useTheme();
   const { height } = useWindowDimensions();
   const tabBarHeight = height > 700 ? 90 : 70;
+  
   return (
     <Tabs
       screenOptions={{
@@ -22,6 +23,8 @@ export default function TabsLayout() {
         tabBarLabelPosition: 'below-icon',
         tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
         tabBarIconStyle: { marginBottom: -3 },
+        headerShown: true,
+          headerTitleAlign: 'center',
       }}
     >
        <Tabs.Screen
