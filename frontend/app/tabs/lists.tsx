@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-export default function Profile() {
+export default function ListPage() {
   return (
     <View
       style={{
@@ -9,7 +9,7 @@ export default function Profile() {
         alignItems: "center",
       }}
     >
-      <Text>Profile Page</Text>
+      <Text>Lists Page</Text>
     </View>
   );
 }

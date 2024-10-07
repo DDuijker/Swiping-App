@@ -62,6 +62,15 @@ export default function Index() {
             Login
           </Button>
         </Link>
+        <Link href={"/tabs"} asChild>
+          <Button
+            mode="text"
+            style={styles.button}
+            labelStyle={{ color: theme.colors.primary }}
+          >
+            go to tabs
+          </Button>
+        </Link>
       </View>
     </View>
   );

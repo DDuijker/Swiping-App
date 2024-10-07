@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
-export default function Lists() {
+export default function GroupPage() {
+  console.log('huh');
   return (
     <View
       style={{
@@ -9,7 +10,7 @@ export default function Lists() {
         alignItems: "center",
       }}
     >
-      <Text>Lists Page</Text>
+      <Text>Home Page</Text>
     </View>
   );
 }
