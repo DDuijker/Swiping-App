@@ -24,7 +24,8 @@ export default function TabsLayout() {
         tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
         tabBarIconStyle: { marginBottom: -3 },
         headerShown: true,
-          headerTitleAlign: 'center',
+        headerTitleAlign: 'center',
+        headerTransparent: true,
       }}
     >
        <Tabs.Screen
