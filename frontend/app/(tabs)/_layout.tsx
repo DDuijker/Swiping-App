@@ -1,23 +1,25 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { useTheme } from 'react-native-paper';
+import { PaperProvider, useTheme } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useWindowDimensions } from 'react-native';
 
 export default function TabsLayout() {
-  const { colors, roundness,  } = useTheme();
+  const theme = useTheme();
   const { height } = useWindowDimensions();
   const tabBarHeight = height > 700 ? 90 : 70;
   
+  
   return (
+    <PaperProvider theme={theme}>
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.onSecondaryContainer,
-        tabBarInactiveTintColor: colors.secondaryContainer,
+        tabBarActiveTintColor: theme.colors.onSecondaryContainer,
+        tabBarInactiveTintColor: theme.colors.secondaryContainer,
         tabBarStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: theme.colors.background,
           height: tabBarHeight,
-          padding: roundness * 2,
+          padding: theme.roundness * 2,
           paddingBottom: 20,
         },
         tabBarLabelPosition: 'below-icon',
@@ -57,5 +59,6 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+  </PaperProvider>
   );
 }

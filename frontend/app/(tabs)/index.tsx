@@ -11,14 +11,16 @@ export default function GroupPage() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: theme.colors.background,
       }}
     >
       <Stack.Screen  options={
         {
           title: 'My Groups',
+          headerTintColor: theme.colors.onBackground,
         }
       }/>
-      <Text>My Groups</Text>
+      <Text style={{color: theme.colors.onBackground}}>My Groups</Text>
     </View>
   );
 }
