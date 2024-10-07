@@ -8,14 +8,14 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
 
-  const paperTheme = colorScheme === 'dark'
+  const globalTheme = colorScheme === 'dark'
       ? { ...MD3DarkTheme, colors: theme.dark }
       : { ...MD3LightTheme, colors: theme.light };
 
 
   
   return (
-    <PaperProvider theme={paperTheme}>
+    <PaperProvider theme={globalTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false}} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false}}/>
