@@ -2,10 +2,12 @@ import * as React from "react";
 import { Link } from "expo-router";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
-import { BRAND_NAME } from "../constants/Names"; // Adjust the path as necessary
-import { SPACING } from "../constants/DesignValues"; // Adjust the path as necessary
+import { BRAND_NAME } from "../constants/Names";
+import { SPACING } from "../constants/DesignValues";
+import { useTranslation } from "react-i18next"; 
 
 export default function Index() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { width } = Dimensions.get("window");
   const isSmallDevice = width < 360;
@@ -51,7 +53,7 @@ export default function Index() {
             style={styles.button}
             labelStyle={{ color: theme.colors.onPrimary }}
           >
-            Register
+            {t("common.register")}
           </Button>
         </Link>
         <Link href={"/login"} asChild>
@@ -60,7 +62,7 @@ export default function Index() {
             style={styles.button}
             labelStyle={{ color: theme.colors.primary }}
           >
-            Login
+            {t("common.login")}
           </Button>
         </Link>
       </View>

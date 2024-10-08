@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { useTheme } from "react-native-paper";
-import { Stack } from "expo-router";
 
 export default function ListPage() {
+  const { t } = useTranslation();
   const theme = useTheme();
   
   return (
@@ -14,13 +15,7 @@ export default function ListPage() {
         backgroundColor: theme.colors.background,
       }}
     >
-      <Stack.Screen  options={
-        {
-          title: 'Lists',
-          headerTintColor: theme.colors.onBackground,
-        }
-      }/>
-      <Text style={{color: theme.colors.onBackground}}>My Lists</Text>
+      <Text style={{color: theme.colors.onBackground}}>{t("lists.title")}</Text>
     </View>
   );
 }
