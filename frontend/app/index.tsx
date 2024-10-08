@@ -62,6 +62,15 @@ export default function Index() {
             Login
           </Button>
         </Link>
+        <Link href={"/groups"} asChild>
+          <Button
+            mode="text"
+            style={styles.button}
+            labelStyle={{ color: theme.colors.primary }}
+          >
+            Go to groups
+          </Button>
+        </Link>
       </View>
     </View>
   );

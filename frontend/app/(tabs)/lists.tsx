@@ -16,7 +16,7 @@ export default function ListPage() {
     >
       <Stack.Screen  options={
         {
-          title: 'My Lists',
+          title: 'Lists',
           headerTintColor: theme.colors.onBackground,
         }
       }/>

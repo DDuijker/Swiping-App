@@ -16,7 +16,7 @@ export default function GroupPage() {
     >
       <Stack.Screen  options={
         {
-          title: 'My Groups',
+          title: 'Groups',
           headerTintColor: theme.colors.onBackground,
         }
       }/>

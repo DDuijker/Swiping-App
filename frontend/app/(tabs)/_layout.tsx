@@ -14,10 +14,10 @@ export default function TabsLayout() {
     <PaperProvider theme={theme}>
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.onSecondaryContainer,
-        tabBarInactiveTintColor: theme.colors.secondaryContainer,
+        tabBarActiveTintColor: theme.colors.onSurface,
+        tabBarInactiveTintColor: theme.colors.surface,
         tabBarStyle: {
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.colors.secondaryContainer,
           height: tabBarHeight,
           padding: theme.roundness * 2,
           paddingBottom: 20,
@@ -40,7 +40,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="groups"
         options={{
           title: 'Groups',
           tabBarIcon: ({ color, focused }) => (
