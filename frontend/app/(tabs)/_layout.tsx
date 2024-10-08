@@ -1,64 +1,53 @@
-import React from 'react';
-import { Tabs } from 'expo-router';
-import { PaperProvider, useTheme } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { PaperProvider, BottomNavigation, useTheme, Appbar } from 'react-native-paper';
 import { useWindowDimensions } from 'react-native';
+import ListPage from './lists';
+import GroupPage from './groups';
+import ProfilePage from './profile';
 
-export default function TabsLayout() {
+export default function BottomTabsLayout() {
   const theme = useTheme();
   const { height } = useWindowDimensions();
-  const tabBarHeight = height > 700 ? 90 : 70;
-  
-  
+  const tabBarHeight = height > 700 ? 80 : 60;
+
+  // State to manage the active route
+  const [index, setIndex] = useState(0);
+
+  // Define routes for BottomNavigation
+  const [routes] = useState([
+    { key: 'lists', title: 'Lists', focusedIcon: 'bookmark', unfocusedIcon: 'bookmark-outline' },
+    { key: 'groups', title: 'Groups', focusedIcon: 'account-group', unfocusedIcon: 'account-group-outline'},
+    { key: 'profile', title: 'Profile', focusedIcon: 'account-circle', unfocusedIcon: 'account-circle-outline' },
+  ]);
+
+  // Get the current tab title for the AppBar
+  const getCurrentTitle = () => {
+    return routes[index].title;
+  };
+
+  // Map each route key to its component
+  const renderScene = BottomNavigation.SceneMap({
+    lists: ListPage,
+    groups: GroupPage,
+    profile: ProfilePage,
+  });
+
   return (
     <PaperProvider theme={theme}>
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.onSurface,
-        tabBarInactiveTintColor: theme.colors.surface,
-        tabBarStyle: {
-          backgroundColor: theme.colors.secondaryContainer,
+      <Appbar.Header mode='center-aligned'>
+          <Appbar.Content title={getCurrentTitle()} />
+        </Appbar.Header>
+      <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        barStyle={{
           height: tabBarHeight,
-          padding: theme.roundness * 2,
           paddingBottom: 20,
-        },
-        tabBarLabelPosition: 'below-icon',
-        tabBarLabelStyle: { fontSize: 14, fontWeight: 'bold' },
-        tabBarIconStyle: { marginBottom: -3 },
-        headerShown: true,
-        headerTitleAlign: 'center',
-        headerTransparent: true,
-      }}
-    >
-       <Tabs.Screen
-        name="lists"
-        options={{
-          title: 'Lists',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'bookmark' : 'bookmark-outline'} size={28} color={color} />
-          ),
         }}
+        sceneAnimationType='shifting'
+        labeled={true} 
       />
-      <Tabs.Screen
-        name="groups"
-        options={{
-          title: 'Groups',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'account-group' : 'account-group-outline'} size={28} color={color} />
-          ),
-        }}
-      />
-     
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ?  'account-circle' : 'account-circle-outline'} size={28} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  </PaperProvider>
+    </PaperProvider>
   );
 }

@@ -2,6 +2,8 @@ import * as React from "react";
 import { Link } from "expo-router";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
+import { BRAND_NAME } from "../constants/Names"; // Adjust the path as necessary
+import { SPACING } from "../constants/DesignValues"; // Adjust the path as necessary
 
 export default function Index() {
   const theme = useTheme();
@@ -13,35 +15,34 @@ export default function Index() {
       flex: 1,
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: theme.colors.surfaceVariant,
+      backgroundColor: theme.colors.surfaceVariant, // Use theme color
     },
     title: {
       fontWeight: "bold",
-      paddingTop: 60,
-      paddingBottom: 20,
+      paddingTop: SPACING.xLarge, 
+      paddingBottom: SPACING.large, 
       color: theme.colors.onSurface,
-      fontSize: isSmallDevice ? 24 : 32,
+      fontSize: isSmallDevice ? theme.fonts.displayMedium.fontSize : theme.fonts.displayMedium.fontSize,
       textAlign: "center",
     },
     buttonContainer: {
       alignItems: "center",
       width: "100%",
-      padding: 20,
-      paddingTop: 40,
+      paddingTop: SPACING.xLarge,
       backgroundColor: theme.colors.surface,
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20,
+      borderTopRightRadius: theme.roundness, 
+      borderTopLeftRadius: theme.roundness, 
     },
     button: {
       width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
-      marginBottom: 16,
+      marginBottom: SPACING.medium,
     },
   });
 
   return (
     <View style={styles.container}>
-      <Text variant="displayMedium" style={styles.title}>
-        CineSwipe
+      <Text style={styles.title}>
+        {BRAND_NAME}
       </Text>
       <View style={styles.buttonContainer}>
         <Link href={"/register"} asChild>
@@ -60,15 +61,6 @@ export default function Index() {
             labelStyle={{ color: theme.colors.primary }}
           >
             Login
-          </Button>
-        </Link>
-        <Link href={"/groups"} asChild>
-          <Button
-            mode="text"
-            style={styles.button}
-            labelStyle={{ color: theme.colors.primary }}
-          >
-            Go to groups
           </Button>
         </Link>
       </View>
