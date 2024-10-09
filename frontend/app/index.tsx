@@ -4,6 +4,8 @@ import { SafeAreaView, View, Dimensions, Platform } from "react-native";
 import { Appbar, Button, Text, Menu, MD3Theme, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from '../context/ThemeContext';
+import Tutorial from "../components/Tutorial";
+import { BRAND_NAME } from "@/constants/Names";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
@@ -42,9 +44,10 @@ export default function Index() {
             </Menu>
           </Appbar.Header>
           <Text style={styles.title}>
-            {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
+            {BRAND_NAME}
           </Text>
         </View>
+        <Tutorial />
         {/* Buttons on the bottom area */}
         <View style={styles.buttonContainer}>
           <Link href="/register" asChild>

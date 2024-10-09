@@ -1,1 +1,1 @@
-export const BRAND_NAME = "Binge";
+export const BRAND_NAME = "Binge.";

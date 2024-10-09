@@ -83,5 +83,27 @@
     "accountDeleted": "Account successfully deleted",
     "editSuccess": "Profile successfully updated",
     "passwordChangeSuccess": "Password successfully changed"
+  },
+  "tutorial": {
+    "welcome": {
+      "title": "Welcome to Binge! 🎬",
+      "description": "Ever found yourself stuck in an endless cycle of 'What do you want to watch?' and 'I don’t know, what do you want to watch?'"
+    },
+    "createGroup": {
+      "title": "Create a Group",
+      "description": "Make a group with your friends and share your preferences."
+    },
+    "givePreferences": {
+      "title": "Give Your Preferences",
+      "description": "Let everyone share their movie or series preferences."
+    },
+    "swipeToFindMatch": {
+      "title": "Swipe to Find a Match",
+      "description": "Swipe to discover movies that everyone will love!"
+    },
+    "groupAndPersonalLists": {
+      "title": "Group & Personal Lists",
+      "description": "Keep track of your group matches and your personal favorites."
+    }
   }
 }
