@@ -23,7 +23,9 @@
     "success": "Success",
     "next": "Next",
     "previous": "Previous",
-    "continue": "Continue"
+    "continue": "Continue",
+    "welcome-to-brandname": "Welcome to BrandName!",
+    "language": "Language"
   },
   "groups": {
     "title": "Groups",
