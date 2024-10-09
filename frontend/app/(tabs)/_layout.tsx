@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { PaperProvider, BottomNavigation, useTheme, Appbar } from 'react-native-paper';
+import { PaperProvider, BottomNavigation, Appbar } from 'react-native-paper';
 import { useWindowDimensions } from 'react-native';
 import ListPage from './lists';
 import GroupPage from './groups';
 import ProfilePage from './profile';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function BottomTabsLayout() {
   const { t } = useTranslation();
-  const theme = useTheme();
+  const { theme} = useTheme();
   const { height } = useWindowDimensions();
   const tabBarHeight = height > 700 ? 80 : 60;
 
@@ -37,8 +38,8 @@ export default function BottomTabsLayout() {
   return (
     <PaperProvider theme={theme}>
       <Appbar.Header mode='center-aligned'>
-          <Appbar.Content title={getCurrentTitle()} />
-        </Appbar.Header>
+          <Appbar.Content color={theme.colors.onBackground} title={getCurrentTitle()} />
+      </Appbar.Header>
       <BottomNavigation
         navigationState={{ index, routes }}
         onIndexChange={setIndex}

@@ -1,18 +1,13 @@
 import * as React from "react";
 import { Link } from "expo-router";
 import { SafeAreaView, View, Dimensions, Platform } from "react-native";
-import { Appbar, Button, Text, Menu, MD3Theme, Provider, MD3DarkTheme, MD3LightTheme } from "react-native-paper";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Appbar, Button, Text, Menu, MD3Theme, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useColorScheme } from "react-native";
+import { useTheme } from '../context/ThemeContext';
 
 export default function Index() {
   const { t, i18n } = useTranslation();
-  const scheme = useColorScheme(); // Get the user's preferred color scheme (light or dark)
-  
-  // Set initial theme state based on the color scheme or saved preference
-  const [isDarkTheme, setIsDarkTheme] = React.useState(scheme === 'dark');
-  const theme = isDarkTheme ? MD3DarkTheme : MD3LightTheme;
+  const { isDarkTheme, theme, toggleTheme } = useTheme(); // Get the user's preferred color scheme (light or dark)
 
   const { width } = Dimensions.get("window");
   const isSmallDevice = width < 360;
@@ -26,44 +21,6 @@ export default function Index() {
 
   const styles = createStyles(theme, isSmallDevice);
 
-  // Function to load the theme preference
-  const loadThemePreference = async () => {
-    try {
-      const savedTheme = await AsyncStorage.getItem('isDarkTheme');
-      if (savedTheme !== null) {
-        setIsDarkTheme(JSON.parse(savedTheme)); // Set the theme state
-      }
-    } catch (error) {
-      console.error("Failed to load theme preference:", error);
-    }
-  };
-
-  // Function to save the theme preference
-  const saveThemePreference = async (isDark: boolean) => {
-    try {
-      await AsyncStorage.setItem('isDarkTheme', JSON.stringify(isDark));
-    } catch (error) {
-      console.error("Failed to save theme preference:", error);
-    }
-  };
-
-  // Load theme preference when the component mounts
-  React.useEffect(() => {
-    loadThemePreference();
-  }, []);
-
-  // Save theme preference whenever it changes
-  React.useEffect(() => {
-    saveThemePreference(isDarkTheme);
-  }, [isDarkTheme]);
-
-  // Update the theme based on system color scheme changes
-  React.useEffect(() => {
-    if (scheme) {
-      setIsDarkTheme(scheme === 'dark');
-    }
-  }, [scheme]);
-
   return (
     <Provider theme={theme}>
       <SafeAreaView style={styles.container}>
@@ -73,7 +30,7 @@ export default function Index() {
             {/* Theme Toggle Button */}
             <Appbar.Action 
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"} 
-              onPress={() => setIsDarkTheme(!isDarkTheme)} 
+              onPress={toggleTheme} // Use toggleTheme from context
             />
             <Menu
               visible={visible}
@@ -131,7 +88,7 @@ function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
       textAlign: "center",
       fontSize: theme.fonts.headlineLarge.fontSize,
       fontWeight: "bold",
-      color: theme.colors.onSurfaceVariant,
+      color: theme.colors.onSurface,
     },
     buttonContainer: {
       alignItems: "center",
