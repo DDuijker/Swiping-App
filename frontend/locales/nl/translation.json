@@ -23,7 +23,9 @@
     "success": "Succesvol",
     "next": "Volgende",
     "previous": "Vorige",
-    "continue": "Doorgaan"
+    "continue": "Doorgaan",
+    "welcome-to-brandname": "Welkom bij BrandName!",
+    "language": "Taal"
   },
   "groups": {
     "title": "Groepen",

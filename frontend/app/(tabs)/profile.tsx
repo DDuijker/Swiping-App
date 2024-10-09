@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function ProfilePage() {
   const {t} = useTranslation();
-  const theme = useTheme();
+  const {theme} = useTheme();
   
   return (
     <View
