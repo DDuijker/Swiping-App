@@ -130,7 +130,8 @@ function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
       padding: 20,
       textAlign: "center",
       fontSize: theme.fonts.headlineLarge.fontSize,
-      color: theme.colors.onSurface,
+      fontWeight: "bold",
+      color: theme.colors.onSurfaceVariant,
     },
     buttonContainer: {
       alignItems: "center",
