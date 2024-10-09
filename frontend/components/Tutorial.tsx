@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
+const svgSize = width * 0.5;
 
 const tutorialPages = [
     {
@@ -86,8 +87,8 @@ const Tutorial = () => {
         };
     });
 
-    // Animated style for the dots
-    const dotAnimatedStyle = (index: number) => {
+    // Custom hook for dot animation
+    const useDotAnimatedStyle = (index: number) => {
         const isActive = currentIndex === index;
         const scale = useSharedValue(isActive ? 1.2 : 1); // Default scale for active dot
 
@@ -117,7 +118,7 @@ const Tutorial = () => {
                 {tutorialPages.map((_, index) => (
                     <Animated.View
                         key={index}
-                        style={[styles.dot, dotAnimatedStyle(index)]} // Apply animated style
+                        style={[styles.dot, useDotAnimatedStyle(index)]} // Apply animated style
                     />
                 ))}
             </View>
