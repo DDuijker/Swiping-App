@@ -9,7 +9,6 @@ const ThemeContext = createContext({
   toggleTheme: () => {},
 });
 
-
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const scheme = useColorScheme();
   const [isDarkTheme, setIsDarkTheme] = useState(scheme === 'dark');
