@@ -104,6 +104,10 @@
     "groupAndPersonalLists": {
       "title": "Groep & Persoonlijke Lijsten",
       "description": "Houd je groepsmatches en persoonlijke favorieten bij."
+    },
+    "endCard": {
+      "title": "🎉 Klaar om te Bingen?",
+      "description": "Laten we beginnen!"
     }
   }
 }

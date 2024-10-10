@@ -104,6 +104,10 @@
     "groupAndPersonalLists": {
       "title": "Group & Personal Lists",
       "description": "Keep track of your group matches and your personal favorites."
+    },
+    "endCard": {
+      "title": "🎉 Ready to Binge?",
+      "description": "Let's get started!"
     }
   }
 }

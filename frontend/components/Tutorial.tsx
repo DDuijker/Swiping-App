@@ -9,6 +9,7 @@ import GroupSvg from '../assets/svg/group.svg';
 import HorrorMovieSvg from '../assets/svg/horror-movie.svg';
 import HighFiveSvg from '../assets/svg/high-five.svg';
 import ListSvg from '../assets/svg/list.svg';
+import WelcomeSvg from '../assets/svg/welcome.svg'
 
 // Get the width of the device screen to dynamically size elements
 const { width } = Dimensions.get('window');
@@ -55,6 +56,11 @@ const Tutorial = () => {
             descriptionKey: "tutorial.groupAndPersonalLists.description",
             illustration: <ListSvg width={svgSize} height={svgSize} fill={theme.colors.primary} />,
         },
+        {
+            titleKey: "tutorial.endCard.title",
+            descriptionKey: "tutorial.endCard.description",
+            illustration: <WelcomeSvg width={svgSize} height={svgSize} fill={theme.colors.primary} />,
+        }
     ];
 
     // Function to go to the next tutorial page, loops back to the first page if at the end
