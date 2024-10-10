@@ -82,12 +82,12 @@ const Tutorial = () => {
     }, [currentIndex]);
 
     // Function to handle swipe gesture events
-    const onGestureEvent = (event) => {
+    const onGestureEvent = (event: any) => {
         translateX.value = event.translationX; // Track the swipe gesture's translation on the X-axis
     };
 
     // Function to handle the end of the swipe gesture (e.g., when the user lifts their finger)
-    const onHandlerStateChange = (event) => {
+    const onHandlerStateChange = (event: any) => {
         if (event.nativeEvent.oldState === 4) { // 4 means the gesture has ended
             if (event.nativeEvent.translationX < -50 && currentIndex < tutorialPages.length - 1) {
                 // Swipe left to go to the next page
@@ -107,7 +107,7 @@ const Tutorial = () => {
     }));
 
     // Custom hook to handle the animation of the dots that represent tutorial pages
-    const useDotAnimatedStyle = (index) => {
+    const useDotAnimatedStyle = (index: number) => {
         const isActive = currentIndex === index; // Check if this dot corresponds to the active page
         const scale = useSharedValue(isActive ? 1.2 : 1); // Active dots are slightly bigger
 
