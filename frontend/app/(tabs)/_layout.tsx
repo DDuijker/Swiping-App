@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { PaperProvider, BottomNavigation, Appbar } from "react-native-paper";
+import { PaperProvider, BottomNavigation, Appbar, IconButton } from "react-native-paper";
 import { useWindowDimensions } from "react-native";
 import ListPage from "./lists";
 import GroupPage from "./groups";
 import ProfilePage from "./profile";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
+import { SPACING } from "@/constants/DesignValues";
 
 export default function BottomTabsLayout() {
   const { t } = useTranslation();
@@ -50,6 +51,10 @@ export default function BottomTabsLayout() {
     profile: ProfilePage,
   });
 
+  const handleAddGroup = () => {
+    console.log("Add Group Button Pressed");
+  };
+
   return (
     <ThemeProvider>
       <PaperProvider theme={theme}>
@@ -58,6 +63,14 @@ export default function BottomTabsLayout() {
             color={theme.colors.onBackground}
             title={getCurrentTitle()}
           />
+          {index === 1 && ( // Only show the button when on the groups tab
+            <IconButton 
+              icon="plus" // Add a plus icon
+              mode="contained" 
+              onPress={handleAddGroup} 
+              style={{ marginLeft: SPACING.large }} // Add some spacing
+            />
+          )}
         </Appbar.Header>
         <BottomNavigation
           navigationState={{ index, routes }}
