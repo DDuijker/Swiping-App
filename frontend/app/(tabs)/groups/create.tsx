@@ -24,6 +24,7 @@ export default function CreateGroup() {
         <SafeAreaView>
             <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
                 <Appbar.Header mode="center-aligned">
+                    <Appbar.BackAction onPress={() => router.back()} />
                     <Appbar.Content title={t('groups.create')} color={theme.colors.onBackground} />
                 </Appbar.Header>
 
