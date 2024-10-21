@@ -10,7 +10,8 @@ export default function RegisterPage() {
   const { width } = Dimensions.get("window");
   const isSmallDevice = width < 360;
 
-  // State to manage email and password inputs
+  // State to manage username, email and password inputs
+  const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -24,27 +25,35 @@ export default function RegisterPage() {
             {t("common.register")}
           </Text>
           
-          {/* Added TextInput for Email */}
           <TextInput
-            label="Email" // Email input label
-            value={email} // Bind state value
-            onChangeText={text => setEmail(text)} // Update state on change
-            style={styles.input} // Custom style for input
-            mode="outlined" // Outlined input style
-            numberOfLines={1} // Limit to one line
-            multiline={false} // Disable multiline
+            label="Username" 
+            value={username} 
+            onChangeText={text => setUsername(text)} 
+            style={styles.input} 
+            mode="outlined" 
+            numberOfLines={1} 
+            multiline={false} 
           />
 
-          {/* Added TextInput for Password */}
           <TextInput
-            label="Password" // Password input label
-            value={password} // Bind state value
-            onChangeText={text => setPassword(text)} // Update state on change
-            secureTextEntry // Hide password input
-            style={styles.input} // Custom style for input
-            mode="outlined" // Outlined input style
-            numberOfLines={1} // Limit to one line
-            multiline={false} // Disable multiline
+            label="Email" 
+            value={email} 
+            onChangeText={text => setEmail(text)} 
+            style={styles.input} 
+            mode="outlined" 
+            numberOfLines={1} 
+            multiline={false} 
+          />
+
+          <TextInput
+            label="Password" 
+            value={password}
+            onChangeText={text => setPassword(text)} 
+            secureTextEntry 
+            style={styles.input} 
+            mode="outlined" 
+            numberOfLines={1} 
+            multiline={false}
           />
         </View>
         
@@ -53,7 +62,7 @@ export default function RegisterPage() {
             mode="contained"
             style={styles.button}
             labelStyle={{ color: theme.colors.onPrimary }}
-            onPress={() => console.log("Register Pressed", { email, password })} // Log email and password
+            onPress={() => console.log("Register Pressed", { username, email, password })} // Log username, email and password
           >
             {t("common.register")}
           </Button>
@@ -94,12 +103,12 @@ function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
       marginTop: 20,
       marginBottom: 500,
       paddingTop: 20,
-      backgroundColor: theme.colors.surface, 
+      
       borderTopRightRadius: theme.roundness,
       borderTopLeftRadius: theme.roundness,
     },
     button: {
-      width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
+      width: Platform.OS === "web" ? "50%" : isSmallDevice ? "80%" : "50%",
       marginBottom: 20,
     },
   });
