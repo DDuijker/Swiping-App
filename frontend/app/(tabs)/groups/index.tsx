@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../../context/ThemeContext";
 
-export default function GroupPage() {
+export default function GroupIndex() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   

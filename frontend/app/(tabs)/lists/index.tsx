@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../../context/ThemeContext";
 
-export default function ProfilePage() {
-  const {t} = useTranslation();
-  const {theme} = useTheme();
+export default function ListIndex() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
   
   return (
     <View
@@ -15,7 +15,7 @@ export default function ProfilePage() {
         backgroundColor: theme.colors.background,
       }}
     >
-      <Text style={{color: theme.colors.onBackground}}>{t("profile.title")}</Text>
+      <Text style={{color: theme.colors.onBackground}}>{t("lists.title")}</Text>
     </View>
   );
 }
