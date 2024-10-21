@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { PaperProvider, BottomNavigation, Appbar } from "react-native-paper";
 import { useWindowDimensions } from "react-native";
-import ListPage from "./lists";
-import GroupPage from "./groups";
-import ProfilePage from "./profile";
+import ListIndex from "./lists/index";
+import GroupIndex from "./groups/index";
+import ProfileIndex from "./profile/index";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
 
@@ -14,7 +14,7 @@ export default function BottomTabsLayout() {
   const tabBarHeight = height > 700 ? 80 : 60;
 
   // State to manage the active route
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
 
   // Define routes for BottomNavigation
   const [routes] = useState([
@@ -45,9 +45,9 @@ export default function BottomTabsLayout() {
 
   // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
-    lists: ListPage,
-    groups: GroupPage,
-    profile: ProfilePage,
+    lists: ListIndex,
+    groups: GroupIndex,
+    profile: ProfileIndex,
   });
 
   return (
