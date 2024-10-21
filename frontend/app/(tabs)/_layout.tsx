@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { PaperProvider, BottomNavigation, Appbar } from "react-native-paper";
 import { useWindowDimensions } from "react-native";
 import ListIndex from "./lists/index";
-import GroupIndex from "./groups/index";
+import GroupsLayout from "./groups/_layout";
 import ProfileIndex from "./profile/index";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
+import { SPACING } from "../../constants/DesignValues";
 
 export default function BottomTabsLayout() {
   const { t } = useTranslation();
@@ -38,34 +39,24 @@ export default function BottomTabsLayout() {
     },
   ]);
 
-  // Get the current tab title for the AppBar
-  const getCurrentTitle = () => {
-    return routes[index].title;
-  };
-
   // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
     lists: ListIndex,
-    groups: GroupIndex,
+    groups: GroupsLayout,
     profile: ProfileIndex,
   });
 
   return (
     <ThemeProvider>
       <PaperProvider theme={theme}>
-        <Appbar.Header mode="center-aligned">
-          <Appbar.Content
-            color={theme.colors.onBackground}
-            title={getCurrentTitle()}
-          />
-        </Appbar.Header>
+        
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
           barStyle={{
             height: tabBarHeight,
-            paddingBottom: 20,
+            paddingBottom: SPACING.large,
           }}
           sceneAnimationType="shifting"
           labeled={true}
