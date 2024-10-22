@@ -46,14 +46,9 @@ export default function BottomTabsLayout() {
     profile: ProfileIndex,
   });
 
-  const handleAddGroup = () => {
-    console.log("Add Group Button Pressed");
-  };
-
   return (
     <ThemeProvider>
       <PaperProvider theme={theme}>
-        
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}

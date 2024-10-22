@@ -25,7 +25,9 @@
     "previous": "Previous",
     "continue": "Continue",
     "welcome-to-brandname": "Welcome to BrandName!",
-    "language": "Language"
+    "language": "Language",
+    "pick_image": "Pick an image",
+    "reset_image": "Reset image"
   },
   "groups": {
     "title": "Groups",

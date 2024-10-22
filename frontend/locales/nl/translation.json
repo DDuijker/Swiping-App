@@ -25,7 +25,9 @@
     "previous": "Vorige",
     "continue": "Doorgaan",
     "welcome-to-brandname": "Welkom bij BrandName!",
-    "language": "Taal"
+    "language": "Taal",
+    "pick_image": "Kies een foto",
+    "reset_image": "Reset foto"
   },
   "groups": {
     "title": "Groepen",
