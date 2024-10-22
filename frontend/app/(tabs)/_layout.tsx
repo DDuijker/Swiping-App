@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { PaperProvider, BottomNavigation, Appbar, IconButton } from "react-native-paper";
 import { useWindowDimensions } from "react-native";
-import ListPage from "./lists";
-import GroupPage from "./groups";
-import ProfilePage from "./profile";
+import ListIndex from "./lists/index";
+import GroupsLayout from "./groups/_layout";
+import ProfileIndex from "./profile/index";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
-import { SPACING } from "@/constants/DesignValues";
+import { SPACING } from "../../constants/DesignValues";
 
 export default function BottomTabsLayout() {
   const { t } = useTranslation();
@@ -15,7 +15,7 @@ export default function BottomTabsLayout() {
   const tabBarHeight = height > 700 ? 80 : 60;
 
   // State to manage the active route
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
 
   // Define routes for BottomNavigation
   const [routes] = useState([
@@ -39,16 +39,11 @@ export default function BottomTabsLayout() {
     },
   ]);
 
-  // Get the current tab title for the AppBar
-  const getCurrentTitle = () => {
-    return routes[index].title;
-  };
-
   // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
-    lists: ListPage,
-    groups: GroupPage,
-    profile: ProfilePage,
+    lists: ListIndex,
+    groups: GroupsLayout,
+    profile: ProfileIndex,
   });
 
   const handleAddGroup = () => {
@@ -58,27 +53,14 @@ export default function BottomTabsLayout() {
   return (
     <ThemeProvider>
       <PaperProvider theme={theme}>
-        <Appbar.Header mode="center-aligned">
-          <Appbar.Content
-            color={theme.colors.onBackground}
-            title={getCurrentTitle()}
-          />
-          {index === 1 && ( // Only show the button when on the groups tab
-            <IconButton 
-              icon="plus" // Add a plus icon
-              mode="contained" 
-              onPress={handleAddGroup} 
-              style={{ marginLeft: SPACING.large }} // Add some spacing
-            />
-          )}
-        </Appbar.Header>
+        
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
           barStyle={{
             height: tabBarHeight,
-            paddingBottom: 20,
+            paddingBottom: SPACING.large,
           }}
           sceneAnimationType="shifting"
           labeled={true}
