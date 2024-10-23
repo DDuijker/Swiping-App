@@ -28,7 +28,8 @@
     "welcome-to-brandname": "Welcome to BrandName!",
     "language": "Language",
     "pickImage": "Pick an image",
-    "resetImage": "Reset image"
+    "resetImage": "Reset image",
+    "permissionDenied": "Permission denied",
   },
   "groups": {
     "title": "Groups",

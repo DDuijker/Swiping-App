@@ -28,7 +28,8 @@
     "welcome-to-brandname": "Welkom bij BrandName!",
     "language": "Taal",
     "pickImage": "Kies een foto",
-    "resetImage": "Reset foto"
+    "resetImage": "Reset foto",
+    "permissionDenied": "Toestemming geweigerd"
   },
   "groups": {
     "title": "Groepen",

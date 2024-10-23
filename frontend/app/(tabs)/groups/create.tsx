@@ -1,48 +1,21 @@
 import { useTheme } from "../../../context/ThemeContext";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import { View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import {
-  Appbar,
-  Button,
-  Avatar,
-  List,
-  Divider,
-  TextInput,
-  Text,
-} from "react-native-paper";
-import { useEffect, useState } from "react";
+import { Appbar, Button, Avatar, List, TextInput } from "react-native-paper";
+import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { SPACING } from "../../../constants/DesignValues";
 import { useTranslation } from "react-i18next";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-interface Member {
-  id: string;
-  name: string;
-  avatar: string;
-}
+import { useGroup } from "../../../context/GroupContext";
 
 export default function CreateGroup() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const router = useRouter();
-  const { selectedMembers: initialSelectedMembers } = useLocalSearchParams();
+  const { group, updateGroupDetails } = useGroup(); // Use group context
 
-  const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
-  const [image, setImage] = useState<string | null>(null);
-  const [groupName, setGroupName] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (initialSelectedMembers) {
-      try {
-        const parsedMembers = JSON.parse(initialSelectedMembers);
-        setSelectedMembers(parsedMembers);
-      } catch (error) {
-        console.error("Failed to parse selected members:", error);
-      }
-    }
-  }, [initialSelectedMembers]);
+  const [image, setImage] = useState<string | null>(group.image); // Local state for image
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -60,139 +33,119 @@ export default function CreateGroup() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      updateGroupDetails({ image: result.assets[0].uri });
     }
   };
-
-  const resetImage = () => setImage(null);
 
   const getAvatarSource = () => {
     return image
       ? { uri: image }
       : {
           uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            groupName || "Group"
+            group.groupName || "Group"
           )}`,
         };
   };
 
+  const resetImage = () => {
+    setImage(null);
+    updateGroupDetails({ image: null });
+  };
+
   const handleAddMembers = () => {
-    router.push({
-      pathname: "/groups/search-members",
-      params: {
-        selectedMembers: JSON.stringify(selectedMembers),
-        groupName,
-        description,
-        fromCreatePage: true,
-      },
-    });
+    router.push("/groups/search-members");
   };
 
   const handleCreateGroup = () => {
-    const finalImage = getAvatarSource().uri;
-    console.log(`Group Name: ${groupName}`);
-    console.log(`Description: ${description}`);
-    console.log(`Image URI: ${finalImage}`);
-    console.log(`Selected Members: ${JSON.stringify(selectedMembers)}`);
+    console.log("Group Data:", group); // Use group data from context
     router.push("/groups");
   };
 
   return (
-    <SafeAreaProvider
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <SafeAreaView style={styles.safeArea}>
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+        {/* Appbar */}
         <Appbar.Header mode="center-aligned">
           <Appbar.BackAction onPress={() => router.replace("/groups")} />
           <Appbar.Content title={t("groups.create")} />
         </Appbar.Header>
-
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          scrollEnabled={true}
-          showsVerticalScrollIndicator={true}
-          pointerEvents="auto"
-        >
-          {/* Avatar */}
-          <Avatar.Image
-            size={120}
-            source={getAvatarSource()}
-            style={styles.avatar}
-          />
-
-          {/* Image Actions */}
-          <View style={styles.buttonContainer}>
-            <Button mode="text" onPress={resetImage}>
-              {t("common.resetImage")}
-            </Button>
-            <Button mode="contained" onPress={pickImage}>
-              {t("common.pickImage")}
-            </Button>
-          </View>
-
-          {/* Group Name Input */}
-          <TextInput
-            mode="flat"
-            label={t("groups.name")}
-            value={groupName}
-            onChangeText={setGroupName}
-            style={styles.input}
-            theme={{ colors: { text: theme.colors.onSurface } }}
-          />
-
-          {/* Group Description Input */}
-          <TextInput
-            mode="flat"
-            label={t("groups.description")}
-            value={description}
-            onChangeText={setDescription}
-            style={styles.input}
-            theme={{ colors: { text: theme.colors.onSurface } }}
-          />
-
-          {/* Add Members Button */}
-          <Button mode="outlined" onPress={handleAddMembers}>
-            {t("groups.addMembers")}
-          </Button>
-
-          {/* Selected Members List */}
-          {selectedMembers.length > 0 && (
-            <View style={styles.members}>
-              <Text variant="headlineSmall">{t("groups.members")}</Text>
-              {selectedMembers.map((item) => (
-                <List.Item
-                  key={item.id}
-                  title={item.name}
-                  left={() => (
-                    <Avatar.Image source={{ uri: item.avatar }} size={40} />
-                  )}
-                  right={() => (
-                    <Button
-                      mode="text"
-                      onPress={() =>
-                        setSelectedMembers(
-                          selectedMembers.filter((m) => m.id !== item.id)
-                        )
-                      }
-                    >
-                      {t("common.remove")}
-                    </Button>
-                  )}
-                />
-              ))}
+        {/* Content */}
+        <View style={styles.content}>
+          <ScrollView>
+            <Avatar.Image
+              style={styles.avatar}
+              size={120}
+              source={getAvatarSource()}
+            />
+            <View style={styles.buttonContainer}>
+              <Button onPress={resetImage}>{t("common.resetImage")}</Button>
+              <Button mode="contained-tonal" onPress={pickImage}>
+                {t("common.pickImage")}
+              </Button>
             </View>
-          )}
 
-          {/* Action Buttons */}
-          <View style={styles.buttonContainer}>
-            <Button onPress={() => router.push("/groups")}>
-              {t("common.cancel")}
+            <TextInput
+              mode="flat"
+              label={t("groups.name")}
+              value={group.groupName}
+              onChangeText={(text) => updateGroupDetails({ groupName: text })}
+              style={styles.input}
+              theme={{ colors: { text: theme.colors.onSurface } }}
+            />
+
+            <TextInput
+              mode="flat"
+              label={t("groups.description")}
+              value={group.description}
+              onChangeText={(text) => updateGroupDetails({ description: text })}
+              style={styles.input}
+              theme={{ colors: { text: theme.colors.onSurface } }}
+            />
+
+            <Button mode="outlined" onPress={handleAddMembers}>
+              {t("groups.addMembers")}
             </Button>
-            <Button mode="contained" onPress={handleCreateGroup}>
-              {t("common.save")}
-            </Button>
-          </View>
-        </ScrollView>
+
+            {/* Display Selected Members */}
+            {group.selectedMembers.length > 0 && (
+              <View style={styles.members}>
+                {group.selectedMembers.map((member) => (
+                  <List.Item
+                    key={member.id}
+                    title={member.username}
+                    left={() => (
+                      <Avatar.Image size={40} source={{ uri: member.avatar }} />
+                    )}
+                    right={() => (
+                      <Button
+                        onPress={() =>
+                          updateGroupDetails({
+                            selectedMembers: group.selectedMembers.filter(
+                              (m) => m.id !== member.id
+                            ),
+                          })
+                        }
+                      >
+                        {t("common.remove")}
+                      </Button>
+                    )}
+                  />
+                ))}
+              </View>
+            )}
+            {/* Action Buttons */}
+            <View style={styles.buttonContainer}>
+              <Button onPress={() => router.push("/groups")}>
+                {t("common.cancel")}
+              </Button>
+              <Button mode="contained" onPress={handleCreateGroup}>
+                {t("common.save")}
+              </Button>
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -209,6 +162,10 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.large,
     paddingHorizontal: SPACING.medium,
     flexGrow: 1,
+  },
+  content: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     marginBottom: SPACING.medium,
