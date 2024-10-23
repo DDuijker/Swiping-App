@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  PaperProvider,
-  BottomNavigation,
-  Appbar,
-  IconButton,
-} from "react-native-paper";
+import { PaperProvider, BottomNavigation } from "react-native-paper";
 import { useWindowDimensions } from "react-native";
 import ListIndex from "./lists/index";
 import GroupsLayout from "./groups/_layout";
@@ -47,7 +42,7 @@ export default function BottomTabsLayout() {
   // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
     lists: ListIndex,
-    groups: GroupsLayout,
+    groups: GroupsLayout, // If this is your groups layout, make sure it's correctly configured to handle child routes
     profile: ProfileIndex,
   });
 

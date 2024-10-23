@@ -80,6 +80,8 @@ export default function CreateGroup() {
       pathname: "/groups/search-members",
       params: {
         selectedMembers: JSON.stringify(selectedMembers),
+        groupName,
+        description,
         fromCreatePage: true,
       },
     });
@@ -100,20 +102,16 @@ export default function CreateGroup() {
     >
       <SafeAreaView style={styles.safeArea}>
         <Appbar.Header mode="center-aligned">
-          <Appbar.BackAction
-            onPress={() =>
-              router.canGoBack() ? router.back() : router.replace("/groups")
-            }
-          />
+          <Appbar.BackAction onPress={() => router.replace("/groups")} />
           <Appbar.Content title={t("groups.create")} />
         </Appbar.Header>
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled" // This ensures the keyboard does not interfere with scrolling.
-          scrollEnabled={true} // Explicitly enabling scrolling
-          showsVerticalScrollIndicator={true} // To show the scrollbar
-          pointerEvents="auto" // Ensures the scrollview handles touch events properly
+          keyboardShouldPersistTaps="handled"
+          scrollEnabled={true}
+          showsVerticalScrollIndicator={true}
+          pointerEvents="auto"
         >
           {/* Avatar */}
           <Avatar.Image

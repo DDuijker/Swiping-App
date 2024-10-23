@@ -1,14 +1,13 @@
 import * as React from "react";
 import { Link } from "expo-router";
-import { SafeAreaView, View, Dimensions, Platform } from "react-native";
 import {
-  Appbar,
-  Button,
-  Text,
-  Menu,
-  MD3Theme,
-  Provider,
-} from "react-native-paper";
+  SafeAreaView,
+  View,
+  Dimensions,
+  Platform,
+  StyleSheet,
+} from "react-native";
+import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 
@@ -86,7 +85,7 @@ export default function Index() {
               style={styles.button}
               labelStyle={{ color: theme.colors.primary }}
             >
-              {t("common.groups")}
+              {t("groups.title")}
             </Button>
           </Link>
         </View>
@@ -96,8 +95,8 @@ export default function Index() {
 }
 
 // Function to create styles
-function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
-  return {
+const createStyles = (theme, isSmallDevice) =>
+  StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: "space-between",
@@ -126,5 +125,4 @@ function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
       width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
       marginBottom: 20,
     },
-  };
-}
+  });
