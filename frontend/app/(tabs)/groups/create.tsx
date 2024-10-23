@@ -111,110 +111,107 @@ export default function CreateGroup() {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
+    <SafeAreaView style={styles.container}>
+      {/* Header with back navigation */}
+      <Appbar.Header mode="center-aligned">
+        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.Content title={t("groups.create")} />
+      </Appbar.Header>
+
+      {/* Scrollable content */}
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
       >
-        {/* Header with back navigation */}
-        <Appbar.Header mode="center-aligned">
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title={t("groups.create")} />
-        </Appbar.Header>
+        {/* Avatar image for group */}
+        <Avatar.Image
+          size={120}
+          source={getAvatarSource()}
+          style={styles.avatar}
+        />
 
-        {/* Scrollable content */}
-        <ScrollView contentContainerStyle={styles.content}>
-          {/* Avatar image for group */}
-          <Avatar.Image
-            size={120}
-            source={getAvatarSource()}
-            style={styles.avatar}
-          />
-
-          {/* Buttons for image actions */}
-          <View style={styles.buttonContainer}>
-            <Button mode="text" onPress={resetImage}>
-              {t("common.resetImage")}
-            </Button>
-            <Button mode="contained" onPress={pickImage}>
-              {t("common.pickImage")}
-            </Button>
-          </View>
-
-          {/* Input for group name */}
-          <View>
-            <TextInput
-              mode="flat"
-              label={t("groups.name")}
-              value={groupName}
-              onChangeText={setGroupName}
-              style={styles.input}
-              theme={{ colors: { text: theme.colors.onSurface } }}
-            />
-
-            {/* Input for group description */}
-            <TextInput
-              mode="flat"
-              label={t("groups.description")}
-              value={description}
-              onChangeText={setDescription}
-              style={styles.input}
-              theme={{ colors: { text: theme.colors.onSurface } }}
-            />
-          </View>
-          <Divider />
-
-          {/* Button to add members */}
-          <Button mode="outlined" onPress={handleAddMembers}>
-            {t("groups.addMembers")}
+        {/* Buttons for image actions */}
+        <View style={styles.buttonContainer}>
+          <Button mode="text" onPress={resetImage}>
+            {t("common.resetImage")}
           </Button>
+          <Button mode="contained" onPress={pickImage}>
+            {t("common.pickImage")}
+          </Button>
+        </View>
 
-          {/* FlatList for displaying selected members */}
-          {selectedMembers.length && (
-            <View style={styles.members}>
-              <Text>{t("groups.members")}</Text>
-              <FlatList
-                data={selectedMembers}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <List.Item
-                    title={item.name}
-                    left={() => (
-                      <Avatar.Image source={{ uri: item.avatar }} size={40} />
-                    )}
-                    right={() => (
-                      <Button
-                        mode="text"
-                        onPress={() =>
-                          setSelectedMembers(
-                            selectedMembers.filter((m) => m.id !== item.id)
-                          )
-                        }
-                      >
-                        {t("common.remove")}
-                      </Button>
-                    )}
-                  />
-                )}
-                horizontal={false}
-              />
-            </View>
-          )}
+        {/* Input for group name */}
+        <TextInput
+          mode="flat"
+          label={t("groups.name")}
+          value={groupName}
+          onChangeText={setGroupName}
+          style={styles.input}
+          theme={{ colors: { text: theme.colors.onSurface } }}
+        />
 
-          {/* Cancel and Save buttons */}
-          <View style={styles.buttonContainer}>
-            <Button onPress={() => router.push("/groups")}>
-              {t("common.cancel")}
-            </Button>
-            <Button
-              mode="contained"
-              onPress={handleCreateGroup}
-              style={styles.button}
-            >
-              {t("common.save")}
-            </Button>
+        {/* Input for group description */}
+        <TextInput
+          mode="flat"
+          label={t("groups.description")}
+          value={description}
+          onChangeText={setDescription}
+          style={styles.input}
+          theme={{ colors: { text: theme.colors.onSurface } }}
+        />
+        <Divider />
+
+        {/* Button to add members */}
+        <Button mode="outlined" onPress={handleAddMembers}>
+          {t("groups.addMembers")}
+        </Button>
+
+        {/* FlatList for displaying selected members */}
+        {selectedMembers.length > 0 && (
+          <View style={styles.members}>
+            <Text variant="headlineSmall">{t("groups.members")}</Text>
+            <FlatList
+              data={selectedMembers}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <List.Item
+                  title={item.name}
+                  left={() => (
+                    <Avatar.Image source={{ uri: item.avatar }} size={40} />
+                  )}
+                  right={() => (
+                    <Button
+                      mode="text"
+                      onPress={() =>
+                        setSelectedMembers(
+                          selectedMembers.filter((m) => m.id !== item.id)
+                        )
+                      }
+                    >
+                      {t("common.remove")}
+                    </Button>
+                  )}
+                />
+              )}
+              horizontal={false}
+            />
           </View>
-        </ScrollView>
-      </View>
+        )}
+
+        {/* Cancel and Save buttons */}
+        <View style={styles.buttonContainer}>
+          <Button onPress={() => router.push("/groups")}>
+            {t("common.cancel")}
+          </Button>
+          <Button
+            mode="contained"
+            onPress={handleCreateGroup}
+            style={styles.button}
+          >
+            {t("common.save")}
+          </Button>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -222,16 +219,21 @@ export default function CreateGroup() {
 // Styles for the component
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: SPACING.xLarge,
-    justifyContent: "center",
+    flexGrow: 1,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  scrollContainer: {
+    flex: 1, // Ensures ScrollView takes full height
+  },
+  scrollContent: {
+    flexGrow: 1, // Allows the ScrollView content to grow and enable scrolling
+    paddingBottom: SPACING.xLarge, // Adding bottom padding to avoid content being cut off
+    padding: SPACING.xLarge,
   },
   avatar: {
     marginBottom: SPACING.medium,
+    alignSelf: "center",
   },
   members: {
     marginTop: SPACING.large,
@@ -241,8 +243,6 @@ const styles = StyleSheet.create({
     marginTop: SPACING.large,
     marginBottom: SPACING.large,
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
     width: "100%",
     maxWidth: 200,
   },

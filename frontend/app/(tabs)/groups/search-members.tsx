@@ -112,7 +112,7 @@ export default function SearchMembers() {
     >
       <Appbar.Header mode="center-aligned">
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={t("groups.searchMembers")} />
+        <Appbar.Content title={t("groups.searchForPeople")} />
       </Appbar.Header>
 
       <View style={styles.content}>
