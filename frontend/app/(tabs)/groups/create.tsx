@@ -1,12 +1,6 @@
 import { useTheme } from "../../../context/ThemeContext";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import {
   Appbar,
   Button,
@@ -20,6 +14,7 @@ import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { SPACING } from "../../../constants/DesignValues";
 import { useTranslation } from "react-i18next";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface Member {
   id: string;
@@ -28,19 +23,16 @@ interface Member {
 }
 
 export default function CreateGroup() {
-  const { t } = useTranslation(); // Translation hook
-  const { theme } = useTheme(); // Theme hook for styling
+  const { t } = useTranslation();
+  const { theme } = useTheme();
   const router = useRouter();
-
   const { selectedMembers: initialSelectedMembers } = useLocalSearchParams();
 
-  // States for the component
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
   const [image, setImage] = useState<string | null>(null);
-  const [groupName, setGroupName] = useState(""); // Group name input
-  const [description, setDescription] = useState(""); // Group description input
+  const [groupName, setGroupName] = useState("");
+  const [description, setDescription] = useState("");
 
-  // Effect to update selected members from params (parsed as JSON)
   useEffect(() => {
     if (initialSelectedMembers) {
       try {
@@ -52,7 +44,6 @@ export default function CreateGroup() {
     }
   }, [initialSelectedMembers]);
 
-  // Function to allow users to pick an image for the group
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -72,12 +63,8 @@ export default function CreateGroup() {
     }
   };
 
-  // Function to reset the image back to default
-  const resetImage = () => {
-    setImage(null);
-  };
+  const resetImage = () => setImage(null);
 
-  // Function to generate avatar source (either from image or placeholder)
   const getAvatarSource = () => {
     return image
       ? { uri: image }
@@ -88,7 +75,6 @@ export default function CreateGroup() {
         };
   };
 
-  // Navigate to the "Add Members" screen to select members
   const handleAddMembers = () => {
     router.push({
       pathname: "/groups/search-members",
@@ -99,82 +85,85 @@ export default function CreateGroup() {
     });
   };
 
-  // Handle creating a new group (save action)
   const handleCreateGroup = () => {
     const finalImage = getAvatarSource().uri;
     console.log(`Group Name: ${groupName}`);
     console.log(`Description: ${description}`);
     console.log(`Image URI: ${finalImage}`);
     console.log(`Selected Members: ${JSON.stringify(selectedMembers)}`);
-
-    router.push("/groups"); // Redirect after saving
+    router.push("/groups");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with back navigation */}
-      <Appbar.Header mode="center-aligned">
-        <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={t("groups.create")} />
-      </Appbar.Header>
+    <SafeAreaProvider
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <Appbar.Header mode="center-aligned">
+          <Appbar.BackAction
+            onPress={() =>
+              router.canGoBack() ? router.back() : router.replace("/groups")
+            }
+          />
+          <Appbar.Content title={t("groups.create")} />
+        </Appbar.Header>
 
-      {/* Scrollable content */}
-      <ScrollView
-        style={styles.scrollContainer}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Avatar image for group */}
-        <Avatar.Image
-          size={120}
-          source={getAvatarSource()}
-          style={styles.avatar}
-        />
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled" // This ensures the keyboard does not interfere with scrolling.
+          scrollEnabled={true} // Explicitly enabling scrolling
+          showsVerticalScrollIndicator={true} // To show the scrollbar
+          pointerEvents="auto" // Ensures the scrollview handles touch events properly
+        >
+          {/* Avatar */}
+          <Avatar.Image
+            size={120}
+            source={getAvatarSource()}
+            style={styles.avatar}
+          />
 
-        {/* Buttons for image actions */}
-        <View style={styles.buttonContainer}>
-          <Button mode="text" onPress={resetImage}>
-            {t("common.resetImage")}
+          {/* Image Actions */}
+          <View style={styles.buttonContainer}>
+            <Button mode="text" onPress={resetImage}>
+              {t("common.resetImage")}
+            </Button>
+            <Button mode="contained" onPress={pickImage}>
+              {t("common.pickImage")}
+            </Button>
+          </View>
+
+          {/* Group Name Input */}
+          <TextInput
+            mode="flat"
+            label={t("groups.name")}
+            value={groupName}
+            onChangeText={setGroupName}
+            style={styles.input}
+            theme={{ colors: { text: theme.colors.onSurface } }}
+          />
+
+          {/* Group Description Input */}
+          <TextInput
+            mode="flat"
+            label={t("groups.description")}
+            value={description}
+            onChangeText={setDescription}
+            style={styles.input}
+            theme={{ colors: { text: theme.colors.onSurface } }}
+          />
+
+          {/* Add Members Button */}
+          <Button mode="outlined" onPress={handleAddMembers}>
+            {t("groups.addMembers")}
           </Button>
-          <Button mode="contained" onPress={pickImage}>
-            {t("common.pickImage")}
-          </Button>
-        </View>
 
-        {/* Input for group name */}
-        <TextInput
-          mode="flat"
-          label={t("groups.name")}
-          value={groupName}
-          onChangeText={setGroupName}
-          style={styles.input}
-          theme={{ colors: { text: theme.colors.onSurface } }}
-        />
-
-        {/* Input for group description */}
-        <TextInput
-          mode="flat"
-          label={t("groups.description")}
-          value={description}
-          onChangeText={setDescription}
-          style={styles.input}
-          theme={{ colors: { text: theme.colors.onSurface } }}
-        />
-        <Divider />
-
-        {/* Button to add members */}
-        <Button mode="outlined" onPress={handleAddMembers}>
-          {t("groups.addMembers")}
-        </Button>
-
-        {/* FlatList for displaying selected members */}
-        {selectedMembers.length > 0 && (
-          <View style={styles.members}>
-            <Text variant="headlineSmall">{t("groups.members")}</Text>
-            <FlatList
-              data={selectedMembers}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
+          {/* Selected Members List */}
+          {selectedMembers.length > 0 && (
+            <View style={styles.members}>
+              <Text variant="headlineSmall">{t("groups.members")}</Text>
+              {selectedMembers.map((item) => (
                 <List.Item
+                  key={item.id}
                   title={item.name}
                   left={() => (
                     <Avatar.Image source={{ uri: item.avatar }} size={40} />
@@ -192,44 +181,36 @@ export default function CreateGroup() {
                     </Button>
                   )}
                 />
-              )}
-              horizontal={false}
-            />
-          </View>
-        )}
+              ))}
+            </View>
+          )}
 
-        {/* Cancel and Save buttons */}
-        <View style={styles.buttonContainer}>
-          <Button onPress={() => router.push("/groups")}>
-            {t("common.cancel")}
-          </Button>
-          <Button
-            mode="contained"
-            onPress={handleCreateGroup}
-            style={styles.button}
-          >
-            {t("common.save")}
-          </Button>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          {/* Action Buttons */}
+          <View style={styles.buttonContainer}>
+            <Button onPress={() => router.push("/groups")}>
+              {t("common.cancel")}
+            </Button>
+            <Button mode="contained" onPress={handleCreateGroup}>
+              {t("common.save")}
+            </Button>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
-// Styles for the component
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
   },
-  scrollContainer: {
+  safeArea: {
     flex: 1,
   },
   scrollContent: {
+    paddingVertical: SPACING.large,
+    paddingHorizontal: SPACING.medium,
     flexGrow: 1,
-    paddingBottom: SPACING.xLarge,
-    padding: SPACING.xLarge,
   },
   avatar: {
     marginBottom: SPACING.medium,
@@ -241,17 +222,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: SPACING.large,
-    marginBottom: SPACING.large,
     flexDirection: "row",
-    width: "100%",
-    maxWidth: 200,
-  },
-  button: {
-    flex: 1,
-    marginHorizontal: SPACING.small,
+    justifyContent: "center",
+    marginBottom: SPACING.xLarge,
+    gap: SPACING.medium,
   },
   input: {
     width: "100%",
-    marginBottom: SPACING.medium,
+    marginBottom: SPACING.large,
   },
 });

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { PaperProvider, BottomNavigation, Appbar, IconButton } from "react-native-paper";
+import {
+  PaperProvider,
+  BottomNavigation,
+  Appbar,
+  IconButton,
+} from "react-native-paper";
 import { useWindowDimensions } from "react-native";
 import ListIndex from "./lists/index";
 import GroupsLayout from "./groups/_layout";

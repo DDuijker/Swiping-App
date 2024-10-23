@@ -3,12 +3,16 @@ import { View } from "react-native";
 
 export default function GroupsLayout() {
   return (
-    <View>
-      <Stack>
-        {/* All screens in the groups folder will use this stack layout */}
-        <Stack.Screen name="index" />
-        <Stack.Screen name="create" />
-      </Stack>
-    </View>
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* Main Groups screen */}
+      <Stack.Screen name="index" options={{ title: "Groups" }} />
+      {/* Create Group screen */}
+      <Stack.Screen name="create" options={{ title: "Create Group" }} />
+      {/* Search Members screen */}
+      <Stack.Screen
+        name="search-members"
+        options={{ title: "Search Members" }}
+      />
+    </Stack>
   );
 }
