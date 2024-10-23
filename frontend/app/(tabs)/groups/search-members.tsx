@@ -9,7 +9,7 @@ import {
   Avatar,
   Checkbox,
 } from "react-native-paper";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { SPACING } from "../../../constants/DesignValues";
 import { useTranslation } from "react-i18next";
 import { Member } from "../../../interfaces/groupTypes";
@@ -46,6 +46,14 @@ export default function SearchMembers() {
   const { group, updateGroupDetails } = useGroup(); // Use group context
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [initialSelectedMembers, setInitialSelectedMembers] = useState<
+    Member[]
+  >([]);
+
+  // Store the initial selected members when the component mounts
+  useEffect(() => {
+    setInitialSelectedMembers(group.selectedMembers);
+  }, []);
 
   // Filter members based on the search query
   const filteredMembers = useMemo(
@@ -75,12 +83,13 @@ export default function SearchMembers() {
     }
   };
 
-  // Handle cancelling saving members, and go back to the create screen
+  // Handle cancelling adding new members, and restore the initial state
   const handleCancel = () => {
-    updateGroupDetails({ selectedMembers: [] });
+    updateGroupDetails({ selectedMembers: initialSelectedMembers });
     router.replace("/groups/create");
   };
-  // Handle saving selected members and go back to the previous screen
+
+  // Handle saving selected members and go back to the create screen
   const handleSaveMembers = () => {
     router.push("/groups/create");
   };
