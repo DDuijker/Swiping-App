@@ -75,6 +75,11 @@ export default function SearchMembers() {
     }
   };
 
+  // Handle cancelling saving members, and go back to the create screen
+  const handleCancel = () => {
+    updateGroupDetails({ selectedMembers: [] });
+    router.replace("/groups/create");
+  };
   // Handle saving selected members and go back to the previous screen
   const handleSaveMembers = () => {
     router.push("/groups/create");
@@ -122,9 +127,7 @@ export default function SearchMembers() {
         />
 
         <View style={styles.buttonContainer}>
-          <Button onPress={() => router.push("/groups/create")}>
-            {t("common.cancel")}
-          </Button>
+          <Button onPress={handleCancel}>{t("common.cancel")}</Button>
           <Button mode="contained" onPress={handleSaveMembers}>
             {t("common.save")}
           </Button>
