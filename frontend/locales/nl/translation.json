@@ -26,8 +26,8 @@
     "continue": "Doorgaan",
     "welcome-to-brandname": "Welkom bij BrandName!",
     "language": "Taal",
-    "pick_image": "Kies een foto",
-    "reset_image": "Reset foto"
+    "pickImage": "Kies een foto",
+    "resetImage": "Reset foto"
   },
   "groups": {
     "title": "Groepen",
@@ -43,7 +43,8 @@
     "leaveGroup": "Groep verlaten",
     "joinGroup": "Groep lid worden",
     "groupNotFound": "Groep niet gevonden",
-    "noMembers": "Deze groep heeft nog geen leden."
+    "noMembers": "Deze groep heeft nog geen leden.",
+    "addFriends": "Voeg vrienden toe"
   },
   "lists": {
     "title": "Lijsten",

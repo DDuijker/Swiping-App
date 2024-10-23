@@ -26,8 +26,8 @@
     "continue": "Continue",
     "welcome-to-brandname": "Welcome to BrandName!",
     "language": "Language",
-    "pick_image": "Pick an image",
-    "reset_image": "Reset image"
+    "pickImage": "Pick an image",
+    "resetImage": "Reset image"
   },
   "groups": {
     "title": "Groups",
@@ -43,7 +43,8 @@
     "leaveGroup": "Leave Group",
     "joinGroup": "Join Group",
     "groupNotFound": "Group not found",
-    "noMembers": "This group has no members yet."
+    "noMembers": "This group has no members yet.",
+    "addFriends": "Add Friends"
   },
   "lists": {
     "title": "Lists",
