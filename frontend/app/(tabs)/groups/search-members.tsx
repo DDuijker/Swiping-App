@@ -142,13 +142,13 @@ const styles = StyleSheet.create({
   content: {
     justifyContent: "center",
     alignItems: "center",
+    padding: SPACING.xLarge,
   },
   searchbar: {
-    marginBottom: SPACING.medium,
-    marginHorizontal: SPACING.medium,
+    marginBottom: SPACING.xLarge,
   },
   buttonContainer: {
-    marginTop: SPACING.large,
+    marginTop: SPACING.xLarge,
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: SPACING.xLarge,
