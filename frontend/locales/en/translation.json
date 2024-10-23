@@ -18,6 +18,7 @@
     "save": "Save",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "remove": "Remove",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
@@ -44,7 +45,8 @@
     "joinGroup": "Join Group",
     "groupNotFound": "Group not found",
     "noMembers": "This group has no members yet.",
-    "addFriends": "Add Friends"
+    "addMembers": "Add Members",
+    "searchForPeople": "Search for people you want to add"
   },
   "lists": {
     "title": "Lists",

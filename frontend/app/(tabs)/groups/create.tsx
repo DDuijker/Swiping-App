@@ -1,31 +1,66 @@
 import { useTheme } from "../../../context/ThemeContext";
-import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
-import { View, StyleSheet, SafeAreaView } from "react-native";
-import { Appbar, Button, TextInput, Avatar } from "react-native-paper";
-import { SPACING } from "../../../constants/DesignValues";
-import { useState } from "react";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+} from "react-native";
+import {
+  Appbar,
+  Button,
+  Avatar,
+  List,
+  Divider,
+  TextInput,
+  Text,
+} from "react-native-paper";
+import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import { SPACING } from "../../../constants/DesignValues";
+import { useTranslation } from "react-i18next";
+
+interface Member {
+  id: string;
+  name: string;
+  avatar: string;
+}
 
 export default function CreateGroup() {
-  const { t } = useTranslation();
-  const { theme } = useTheme();
+  const { t } = useTranslation(); // Translation hook
+  const { theme } = useTheme(); // Theme hook for styling
   const router = useRouter();
 
-  const [image, setImage] = useState<string | null>(null); // State for the group image
-  const [groupName, setGroupName] = useState(""); // State for the group name
-  const [description, setDescription] = useState(""); // State for the group description
-  const [selectedFriends, setSelectedFriends] = useState([]); // State for selected friends
+  const { selectedMembers: initialSelectedMembers } = useLocalSearchParams();
 
-  // Function to pick an image from the device
+  // States for the component
+  const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
+  const [image, setImage] = useState<string | null>(null);
+  const [groupName, setGroupName] = useState(""); // Group name input
+  const [description, setDescription] = useState(""); // Group description input
+
+  // Effect to update selected members from params (parsed as JSON)
+  useEffect(() => {
+    if (initialSelectedMembers) {
+      try {
+        const parsedMembers = JSON.parse(initialSelectedMembers);
+        setSelectedMembers(parsedMembers);
+      } catch (error) {
+        console.error("Failed to parse selected members:", error);
+      }
+    }
+  }, [initialSelectedMembers]);
+
+  // Function to allow users to pick an image for the group
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("Permission denied to access media library");
+      alert(t("common.permissionDenied"));
       return;
     }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -33,38 +68,46 @@ export default function CreateGroup() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri); // Save the image URI in state
+      setImage(result.assets[0].uri);
     }
   };
 
+  // Function to reset the image back to default
   const resetImage = () => {
     setImage(null);
   };
 
-  // Function to handle the creation of a group
+  // Function to generate avatar source (either from image or placeholder)
+  const getAvatarSource = () => {
+    return image
+      ? { uri: image }
+      : {
+          uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            groupName || "Group"
+          )}`,
+        };
+  };
+
+  // Navigate to the "Add Members" screen to select members
+  const handleAddMembers = () => {
+    router.push({
+      pathname: "/groups/search-members",
+      params: {
+        selectedMembers: JSON.stringify(selectedMembers),
+        fromCreatePage: true,
+      },
+    });
+  };
+
+  // Handle creating a new group (save action)
   const handleCreateGroup = () => {
-    const finalImage = image
-      ? image
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          groupName || "Jane Doe"
-        )}`;
+    const finalImage = getAvatarSource().uri;
     console.log(`Group Name: ${groupName}`);
     console.log(`Description: ${description}`);
     console.log(`Image URI: ${finalImage}`);
-    console.log(
-      `Selected Friends: ${selectedFriends.map((friend) => friend.name)}`
-    );
+    console.log(`Selected Members: ${JSON.stringify(selectedMembers)}`);
 
-    // Here you would send the image and group data to your backend/database
-    router.push("/groups");
-  };
-
-  // Function to handle navigating to the friend search screen
-  const handleAddFriends = () => {
-    router.push({
-      pathname: "/groups/search-friends",
-      params: { selectedFriends },
-    });
+    router.push("/groups"); // Redirect after saving
   };
 
   return (
@@ -72,29 +115,22 @@ export default function CreateGroup() {
       <View
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <View>
-          <Appbar.Header mode="center-aligned">
-            <Appbar.BackAction onPress={() => router.back()} />
-            <Appbar.Content
-              title={t("groups.create")}
-              color={theme.colors.onBackground}
-            />
-          </Appbar.Header>
-        </View>
-        <View style={styles.content}>
+        {/* Header with back navigation */}
+        <Appbar.Header mode="center-aligned">
+          <Appbar.BackAction onPress={() => router.back()} />
+          <Appbar.Content title={t("groups.create")} />
+        </Appbar.Header>
+
+        {/* Scrollable content */}
+        <ScrollView contentContainerStyle={styles.content}>
+          {/* Avatar image for group */}
           <Avatar.Image
             size={120}
-            source={
-              image
-                ? { uri: image }
-                : {
-                    uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      groupName
-                    )}`,
-                  }
-            }
+            source={getAvatarSource()}
             style={styles.avatar}
           />
+
+          {/* Buttons for image actions */}
           <View style={styles.buttonContainer}>
             <Button mode="text" onPress={resetImage}>
               {t("common.resetImage")}
@@ -104,37 +140,71 @@ export default function CreateGroup() {
             </Button>
           </View>
 
-          <TextInput
-            mode="flat"
-            label={t("groups.name")}
-            value={groupName}
-            onChangeText={setGroupName}
-            style={styles.input}
-            theme={{ colors: { text: theme.colors.onSurface } }}
-          />
-          <TextInput
-            mode="flat"
-            label={t("groups.description")}
-            value={description}
-            onChangeText={setDescription}
-            style={styles.input}
-            theme={{ colors: { text: theme.colors.onSurface } }}
-          />
+          {/* Input for group name */}
+          <View>
+            <TextInput
+              mode="flat"
+              label={t("groups.name")}
+              value={groupName}
+              onChangeText={setGroupName}
+              style={styles.input}
+              theme={{ colors: { text: theme.colors.onSurface } }}
+            />
 
-          {/* Button to navigate to the friend search screen */}
-          <Button
-            mode="outlined"
-            onPress={handleAddFriends}
-            style={styles.addFriendsButton}
-          >
-            {t("groups.addFriends")}
+            {/* Input for group description */}
+            <TextInput
+              mode="flat"
+              label={t("groups.description")}
+              value={description}
+              onChangeText={setDescription}
+              style={styles.input}
+              theme={{ colors: { text: theme.colors.onSurface } }}
+            />
+          </View>
+          <Divider />
+
+          {/* Button to add members */}
+          <Button mode="outlined" onPress={handleAddMembers}>
+            {t("groups.addMembers")}
           </Button>
 
+          {/* FlatList for displaying selected members */}
+          {selectedMembers.length && (
+            <View style={styles.members}>
+              <Text>{t("groups.members")}</Text>
+              <FlatList
+                data={selectedMembers}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <List.Item
+                    title={item.name}
+                    left={() => (
+                      <Avatar.Image source={{ uri: item.avatar }} size={40} />
+                    )}
+                    right={() => (
+                      <Button
+                        mode="text"
+                        onPress={() =>
+                          setSelectedMembers(
+                            selectedMembers.filter((m) => m.id !== item.id)
+                          )
+                        }
+                      >
+                        {t("common.remove")}
+                      </Button>
+                    )}
+                  />
+                )}
+                horizontal={false}
+              />
+            </View>
+          )}
+
+          {/* Cancel and Save buttons */}
           <View style={styles.buttonContainer}>
-            <Button mode="text" onPress={() => router.push("/groups")}>
+            <Button onPress={() => router.push("/groups")}>
               {t("common.cancel")}
             </Button>
-
             <Button
               mode="contained"
               onPress={handleCreateGroup}
@@ -143,12 +213,13 @@ export default function CreateGroup() {
               {t("common.save")}
             </Button>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -158,13 +229,13 @@ const styles = StyleSheet.create({
     padding: SPACING.xLarge,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: SPACING.large,
-  },
-  input: {
-    marginBottom: SPACING.medium,
   },
   avatar: {
     marginBottom: SPACING.medium,
+  },
+  members: {
+    marginTop: SPACING.large,
+    marginBottom: SPACING.large,
   },
   buttonContainer: {
     marginTop: SPACING.large,
@@ -179,7 +250,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: SPACING.small,
   },
-  addFriendsButton: {
+  input: {
+    width: "100%",
     marginBottom: SPACING.medium,
   },
 });

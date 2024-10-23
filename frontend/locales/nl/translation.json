@@ -18,6 +18,7 @@
     "save": "Opslaan",
     "cancel": "Annuleren",
     "confirm": "Bevestigen",
+    "remove": "Verwijderen",
     "loading": "Laden...",
     "error": "Er is een fout opgetreden",
     "success": "Succesvol",
@@ -44,7 +45,8 @@
     "joinGroup": "Groep lid worden",
     "groupNotFound": "Groep niet gevonden",
     "noMembers": "Deze groep heeft nog geen leden.",
-    "addFriends": "Voeg vrienden toe"
+    "addMembers": "Voeg leden toe",
+    "searchForPeople": "Zoek voor mensen die je wilt toevoegen"
   },
   "lists": {
     "title": "Lijsten",
