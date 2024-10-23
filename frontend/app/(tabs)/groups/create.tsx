@@ -224,11 +224,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   scrollContainer: {
-    flex: 1, // Ensures ScrollView takes full height
+    flex: 1,
   },
   scrollContent: {
-    flexGrow: 1, // Allows the ScrollView content to grow and enable scrolling
-    paddingBottom: SPACING.xLarge, // Adding bottom padding to avoid content being cut off
+    flexGrow: 1,
+    paddingBottom: SPACING.xLarge,
     padding: SPACING.xLarge,
   },
   avatar: {
