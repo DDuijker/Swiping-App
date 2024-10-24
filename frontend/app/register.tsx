@@ -1,8 +1,25 @@
 import * as React from "react";
-import { SafeAreaView, View, Dimensions, Platform, StyleSheet, Alert } from "react-native";
-import { Button, Text, Provider, TextInput, MD3Theme, HelperText } from "react-native-paper"; 
+import {
+  SafeAreaView,
+  View,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import {
+  Button,
+  Text,
+  Provider,
+  TextInput,
+  MD3Theme,
+  HelperText,
+  Appbar,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from "../context/ThemeContext";
+import { router } from "expo-router";
+import { SPACING } from "../constants/DesignValues";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -11,50 +28,50 @@ export default function RegisterPage() {
   const isSmallDevice = width < 360;
 
   // State to manage username, email and password inputs
-  const [username, setUsername] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-  const [usernameError, setUsernameError] = React.useState('');
-  const [emailError, setEmailError] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState('');
+  const [usernameError, setUsernameError] = React.useState("");
+  const [emailError, setEmailError] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
 
   const styles = createStyles(theme, isSmallDevice);
 
-// Function to handle registration
+  // Function to handle registration
   const handleRegister = async () => {
-    console.log("Register Pressed", { username, email, password })
-        // Reset error messages
-      setUsernameError('');
-      setEmailError('');
-      setPasswordError('');
+    console.log("Register Pressed", { username, email, password });
+    // Reset error messages
+    setUsernameError("");
+    setEmailError("");
+    setPasswordError("");
 
-      // Validate inputs before making the request
-      if (!username) {
-        setUsernameError("Username is required");
-        return;
-      }
-      if (!email) {
-        setEmailError("Email is required");
-        return;
-      }
-      if (!password) {
-        setPasswordError("Password is required");
-        return;
-      }
+    // Validate inputs before making the request
+    if (!username) {
+      setUsernameError("Username is required");
+      return;
+    }
+    if (!email) {
+      setEmailError("Email is required");
+      return;
+    }
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
     try {
-      const response = await fetch('http://localhost:5001/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5001/api/users/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username,
           email,
-          password
-        })
+          password,
+        }),
       });
-  
+
       if (response.status === 201) {
         Alert.alert("Success", "User registered successfully");
       } else if (response.status === 400) {
@@ -70,63 +87,69 @@ export default function RegisterPage() {
 
   return (
     <Provider theme={theme}>
-      <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.background}]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+        <Appbar.Header mode="center-aligned">
+          <Appbar.BackAction
+            onPress={() => {
+              router.replace("/");
+            }}
+          />
+          <Appbar.Content title={t("common.register")} />
+        </Appbar.Header>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>
-            {t("common.register")}
-          </Text>
-          
           <TextInput
-            label="Username" 
-            value={username} 
-            onChangeText={text => setUsername(text)} 
-            style={styles.input} 
-            mode="flat" 
-            numberOfLines={1} 
+            label="Username"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+            style={styles.input}
+            mode="flat"
+            numberOfLines={1}
             multiline={false}
-            error={!!usernameError} 
+            error={!!usernameError}
           />
           <HelperText type="error" visible={!!usernameError}>
             {usernameError}
           </HelperText>
           <TextInput
-            label="Email" 
-            value={email} 
-            onChangeText={text => setEmail(text)} 
-            style={styles.input} 
-            mode="flat" 
-            numberOfLines={1} 
-            multiline={false} 
+            label="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+            mode="flat"
+            numberOfLines={1}
+            multiline={false}
             error={!!emailError}
           />
           <HelperText type="error" visible={!!emailError}>
             {emailError}
           </HelperText>
           <TextInput
-            label="Password" 
+            label="Password"
             value={password}
-            onChangeText={text => setPassword(text)} 
-            secureTextEntry 
-            style={styles.input} 
-            mode="flat" 
-            numberOfLines={1} 
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+            style={styles.input}
+            mode="flat"
+            numberOfLines={1}
             multiline={false}
             error={!!passwordError}
           />
           <HelperText type="error" visible={!!passwordError}>
-          {passwordError}
+            {passwordError}
           </HelperText>
-        </View>
-        
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            style={styles.button}
-            labelStyle={{ color: theme.colors.onPrimary }}
-            onPress={handleRegister} // Log username, email and password
+          <View style={styles.buttonContainer}>
+            <Button mode="text">{t("common.cancel")}</Button>
+            <Button
+              mode="contained"
+              style={styles.button}
+              labelStyle={{ color: theme.colors.onPrimary }}
+              onPress={handleRegister} // Log username, email and password
             >
-            {t("common.register")}
-          </Button>
+              {t("common.register")}
+            </Button>
+          </View>
         </View>
       </SafeAreaView>
     </Provider>
@@ -134,43 +157,30 @@ export default function RegisterPage() {
 }
 
 // Function to create styles
-function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
+function createStyles() {
   return StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: "space-between",
-      alignItems: 'center',
-      backgroundColor: theme.colors.surfaceVariant, 
-    },
-    title: {
-      padding: 20,
-      textAlign: "center",
-      fontSize: theme.fonts.headlineLarge.fontSize,
-      fontWeight: "bold",
-      color: theme.colors.onSurface,
     },
     formContainer: {
-      width: '80%', 
-      alignItems: 'center', 
+      flex: 1,
+      padding: SPACING.xLarge,
+      alignItems: "center",
+      paddingTop: SPACING.xLarge,
     },
     input: {
-      width: "100%", 
-      height: 50,
-      marginBottom: 20, 
+      marginBottom: SPACING.large,
+      width: "80%",
     },
     buttonContainer: {
-      alignItems: 'center',
-      width: "80%",
-      marginTop: 20,
-      marginBottom: 500,
-      paddingTop: 20,
-      
-      borderTopRightRadius: theme.roundness,
-      borderTopLeftRadius: theme.roundness,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: SPACING.xLarge,
+      gap: SPACING.medium,
     },
     button: {
-      width: Platform.OS === "web" ? "50%" : isSmallDevice ? "80%" : "50%",
-      marginBottom: 20,
+      marginTop: SPACING.large,
     },
   });
 }
