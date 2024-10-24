@@ -11,7 +11,10 @@ export default function RootLayout() {
       <PaperProvider>
         <I18nextProvider i18n={i18n}>
           <Stack screenOptions={{ headerShown: false }}>
+            {/* All screens not in the tab folder*/}
             <Stack.Screen name="index" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
           </Stack>
         </I18nextProvider>
       </PaperProvider>
