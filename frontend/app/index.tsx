@@ -17,7 +17,6 @@ export default function Index() {
   const { isDarkTheme, theme, toggleTheme } = useTheme(); // Get the user's preferred color scheme (light or dark)
 
   const { width } = Dimensions.get("window");
-  const isSmallDevice = width < 360;
 
   const [visible, setVisible] = React.useState(false); // State for managing the menu visibility
 
@@ -90,16 +89,7 @@ export default function Index() {
           <Link href="/register" asChild>
             <Button
               mode="contained"
-              style={[
-                styles.button,
-                {
-                  width: isSmallDevice
-                    ? "80%"
-                    : Platform.OS === "web"
-                    ? "30%"
-                    : "50%",
-                },
-              ]}
+              style={[styles.button]}
               labelStyle={{ color: theme.colors.onPrimary }}
             >
               {t("common.register")}
