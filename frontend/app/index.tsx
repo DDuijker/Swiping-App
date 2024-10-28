@@ -10,13 +10,7 @@ import {
 import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
-
-export const SPACING = {
-  small: 8,
-  medium: 16,
-  large: 24,
-  xLarge: 32,
-};
+import { SPACING } from "../constants/DesignValues";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
