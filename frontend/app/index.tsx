@@ -1,9 +1,22 @@
 import * as React from "react";
 import { Link } from "expo-router";
-import { SafeAreaView, View, Dimensions, Platform } from "react-native";
-import { Appbar, Button, Text, Menu, MD3Theme, Provider } from "react-native-paper";
+import {
+  SafeAreaView,
+  View,
+  Dimensions,
+  Platform,
+  StyleSheet,
+} from "react-native";
+import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from "../context/ThemeContext";
+
+export const SPACING = {
+  small: 8,
+  medium: 16,
+  large: 24,
+  xLarge: 32,
+};
 
 export default function Index() {
   const { t, i18n } = useTranslation();
@@ -19,38 +32,80 @@ export default function Index() {
     setVisible(false); // Close the menu after selecting
   };
 
-  const styles = createStyles(theme, isSmallDevice);
-
   return (
     <Provider theme={theme}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.surfaceVariant },
+        ]}
+      >
         <View>
           {/* AppBar with Language Selector and Theme Toggle */}
-          <Appbar.Header style={styles.appBar} mode="center-aligned">
+          <Appbar.Header
+            style={[
+              styles.appBar,
+              { backgroundColor: theme.colors.elevation.level0 },
+            ]}
+          >
             {/* Theme Toggle Button */}
-            <Appbar.Action 
-              icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"} 
+            <Appbar.Action
+              icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme} // Use toggleTheme from context
             />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
-              anchor={<Appbar.Action icon="translate" onPress={() => setVisible(true)} />} // Language button on the right
+              anchor={
+                <Appbar.Action
+                  icon="translate"
+                  onPress={() => setVisible(true)}
+                />
+              } // Language button on the right
             >
               <Menu.Item onPress={() => changeLanguage("en")} title="English" />
-              <Menu.Item onPress={() => changeLanguage("nl")} title="Nederlands" />
+              <Menu.Item
+                onPress={() => changeLanguage("nl")}
+                title="Nederlands"
+              />
             </Menu>
           </Appbar.Header>
-          <Text style={styles.title}>
+          <Text
+            style={[
+              styles.title,
+              {
+                fontSize: theme.fonts.headlineLarge.fontSize,
+                color: theme.colors.onSurface,
+              },
+            ]}
+          >
             {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
           </Text>
         </View>
         {/* Buttons on the bottom area */}
-        <View style={styles.buttonContainer}>
+        <View
+          style={[
+            styles.buttonContainer,
+            {
+              backgroundColor: theme.colors.surface,
+              borderTopRightRadius: theme.roundness,
+              borderTopLeftRadius: theme.roundness,
+            },
+          ]}
+        >
           <Link href="/register" asChild>
             <Button
               mode="contained"
-              style={styles.button}
+              style={[
+                styles.button,
+                {
+                  width: isSmallDevice
+                    ? "80%"
+                    : Platform.OS === "web"
+                    ? "30%"
+                    : "50%",
+                },
+              ]}
               labelStyle={{ color: theme.colors.onPrimary }}
             >
               {t("common.register")}
@@ -71,36 +126,26 @@ export default function Index() {
   );
 }
 
-// Function to create styles
-function createStyles(theme: MD3Theme, isSmallDevice: boolean) {
-  return {
-    container: {
-      flex: 1,
-      justifyContent: "space-between",
-      backgroundColor: theme.colors.surfaceVariant,
-    },
-    appBar: {
-      backgroundColor: theme.colors.elevation.level0,
-      justifyContent: "space-between",
-    },
-    title: {
-      padding: 20,
-      textAlign: "center",
-      fontSize: theme.fonts.headlineLarge.fontSize,
-      fontWeight: "bold",
-      color: theme.colors.onSurface,
-    },
-    buttonContainer: {
-      alignItems: "center",
-      width: "100%",
-      paddingTop: 20,
-      backgroundColor: theme.colors.surface,
-      borderTopRightRadius: theme.roundness,
-      borderTopLeftRadius: theme.roundness,
-    },
-    button: {
-      width: Platform.OS === "web" ? "30%" : isSmallDevice ? "80%" : "50%",
-      marginBottom: 20,
-    },
-  };
-}
+// Stylesheet using SPACING values
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  appBar: {
+    justifyContent: "space-between",
+  },
+  title: {
+    padding: SPACING.large,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    alignItems: "center",
+    width: "100%",
+    paddingTop: SPACING.medium,
+  },
+  button: {
+    marginBottom: SPACING.medium,
+  },
+});
