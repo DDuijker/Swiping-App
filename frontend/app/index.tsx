@@ -1,12 +1,6 @@
 import * as React from "react";
 import { Link } from "expo-router";
-import {
-  SafeAreaView,
-  View,
-  Dimensions,
-  Platform,
-  StyleSheet,
-} from "react-native";
+import { SafeAreaView, View, StyleSheet } from "react-native";
 import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
@@ -15,8 +9,6 @@ import { SPACING } from "../constants/DesignValues";
 export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme(); // Get the user's preferred color scheme (light or dark)
-
-  const { width } = Dimensions.get("window");
 
   const [visible, setVisible] = React.useState(false); // State for managing the menu visibility
 
