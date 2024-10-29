@@ -1,5 +1,3 @@
- # app
- 
-Contains the app's navigation, which is file-based. The file structure of the app directory determines the app's navigation.
+# app
 
-The app has two routes defined by two files: app/(tabs)/index.tsx and app/(tabs)/explore.tsx. The layout file in app/(tabs)/_layout.tsx sets up the tab navigator.
+Contains the app's navigation, which is file-based. The file structure of the app directory determines the app's navigation.
