@@ -28,9 +28,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-frontend-
 
-      - name: Navigate to frontend folder
-        working-directory: ./frontend
-
       - name: Install dependencies (Frontend)
         run: npm install
         working-directory: ./frontend
@@ -70,9 +67,6 @@ jobs:
           key: ${{ runner.os }}-backend-${{ hashFiles('backend/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-backend-
-
-      - name: Navigate to backend folder
-        working-directory: ./backend
 
       - name: Install dependencies (Backend)
         run: npm install
