@@ -1,9 +1,16 @@
 import * as React from "react";
 import { Link } from "expo-router";
 import { SafeAreaView, View, Dimensions, Platform } from "react-native";
-import { Appbar, Button, Text, Menu, MD3Theme, Provider } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  Text,
+  Menu,
+  MD3Theme,
+  Provider,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from "../context/ThemeContext";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
@@ -28,17 +35,25 @@ export default function Index() {
           {/* AppBar with Language Selector and Theme Toggle */}
           <Appbar.Header style={styles.appBar} mode="center-aligned">
             {/* Theme Toggle Button */}
-            <Appbar.Action 
-              icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"} 
+            <Appbar.Action
+              icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme} // Use toggleTheme from context
             />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
-              anchor={<Appbar.Action icon="translate" onPress={() => setVisible(true)} />} // Language button on the right
+              anchor={
+                <Appbar.Action
+                  icon="translate"
+                  onPress={() => setVisible(true)}
+                />
+              } // Language button on the right
             >
               <Menu.Item onPress={() => changeLanguage("en")} title="English" />
-              <Menu.Item onPress={() => changeLanguage("nl")} title="Nederlands" />
+              <Menu.Item
+                onPress={() => changeLanguage("nl")}
+                title="Nederlands"
+              />
             </Menu>
           </Appbar.Header>
           <Text style={styles.title}>
