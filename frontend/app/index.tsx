@@ -18,6 +18,7 @@ export default function Index() {
     onPress: () => void;
   }
 
+  // This component uses React.forwardRef to enable passing a ref from the parent component in the language menu ( <MenuButton ref={ref} /> )
   const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
     <Appbar.Action
       icon="translate"
