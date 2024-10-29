@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
-    jest: true, // add this if you're using Jest
+    jest: true,
   },
   extends: [
     "eslint:recommended",
@@ -21,4 +21,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint", "jest"],
+  rules: {
+    "react/prop-types": "off",
+  },
 };

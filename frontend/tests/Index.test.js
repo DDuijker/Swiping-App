@@ -2,7 +2,6 @@ import * as React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import Index from "../app/index";
 import { useTheme } from "../context/ThemeContext";
-import { useTranslation } from "react-i18next";
 
 // Mock ThemeContext and Translation functions
 jest.mock("../context/ThemeContext", () => ({
