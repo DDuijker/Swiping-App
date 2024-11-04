@@ -18,9 +18,10 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
         const user = await login(username, password);
+        console.log(user)
        router.replace('/(tabs)/groups')
     } catch (error) {
-      console.log("error")
+      console.log("error", error)
     }
 };
 
