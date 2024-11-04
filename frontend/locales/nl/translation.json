@@ -2,6 +2,8 @@
   "common": {
     "register": "Registreren",
     "login": "Inloggen",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
     "alreadyHaveAnAccount": "U heeft al een account",
     "logout": "Uitloggen",
     "about": "Over ons",

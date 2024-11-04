@@ -1,15 +1,66 @@
-import { Text, View } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Appbar, Button, Provider, TextInput } from "react-native-paper";
+import { useTranslation } from "react-i18next";
+import { login } from '../api/userService'
+import { router } from "expo-router";
+import { useTheme } from "../context/ThemeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SPACING } from "../constants/DesignValues";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
+  const {theme} = useTheme();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+        const user = await login(username, password);
+       router.replace('/(tabs)/groups')
+    } catch (error) {
+      console.log("error")
+    }
+};
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Login Page</Text>
-    </View>
+    <Provider theme={theme}>
+      <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.background}]}>
+        <View>
+          <Appbar.Header mode="center-aligned">
+            <Appbar.Content title={t("common.login")} />
+          </Appbar.Header>
+
+        </View>
+        <View>
+          <TextInput 
+              label={t("common.username")}
+              placeholder={t("common.username")}
+              onChangeText={setUsername}
+              style={styles.input}
+              autoCapitalize="none"
+          />
+          <TextInput 
+              label={t("common.password")}
+              placeholder={t("common.password")}
+              onChangeText={setPassword}
+              secureTextEntry
+          />
+          <Button mode="contained" onPress={handleLogin}>
+                {t("common.login")}
+            </Button>
+        </View>
+      </SafeAreaView>
+    </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1
+  },
+  input: {
+    marginBottom: SPACING.medium
+  }
+});

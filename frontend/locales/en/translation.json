@@ -2,6 +2,8 @@
   "common": {
     "register": "Register",
     "login": "Login",
+    "username": "Username",
+    "password": "Password",
     "alreadyHaveAnAccount": "You already have an account",
     "logout": "Logout",
     "about": "About Us",
