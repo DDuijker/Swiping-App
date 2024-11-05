@@ -69,6 +69,7 @@
     "uploadPicture": "Upload Profile Picture",
     "uploadPictureButton": "Upload",
     "uploadPictureError": "An error occurred while uploading the profile picture",
+    "removePictureButton": "Remove picture",
     "username": "Username",
     "email": "Email",
     "password": "Password",

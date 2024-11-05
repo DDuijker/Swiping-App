@@ -32,12 +32,14 @@ export default function Index() {
               styles.appBar,
               { backgroundColor: theme.colors.elevation.level0 },
             ]}
+            mode="center-aligned"
           >
             {/* Theme Toggle Button */}
             <Appbar.Action
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme} // Use toggleTheme from context
             />
+            <Appbar.Content title={t("common.welcome-to-brandname").replace("BrandName", "Binge")} />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
@@ -55,17 +57,6 @@ export default function Index() {
               />
             </Menu>
           </Appbar.Header>
-          <Text
-            style={[
-              styles.title,
-              {
-                fontSize: theme.fonts.headlineLarge.fontSize,
-                color: theme.colors.onSurface,
-              },
-            ]}
-          >
-            {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
-          </Text>
         </View>
         {/* Buttons on the bottom area */}
         <View
@@ -79,7 +70,7 @@ export default function Index() {
           ]}
         >
             <Button
-            onPress={() => router.navigate('/register')}
+            onPress={() => router.replace('/register')}
               mode="contained"
               style={[styles.button]}
               labelStyle={{ color: theme.colors.onPrimary }}
@@ -87,7 +78,7 @@ export default function Index() {
               {t("common.register")}
             </Button>
             <Button
-              onPress={() => router.navigate('/login')}
+              onPress={() => router.replace('/login')}
               mode="text"
               style={styles.button}
               labelStyle={{ color: theme.colors.primary }}

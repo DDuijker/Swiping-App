@@ -19,7 +19,7 @@ export default function LoginPage() {
     try {
         const user = await login(username, password);
         console.log(user)
-       router.replace('/(tabs)/groups')
+       router.navigate('/(tabs)/groups')
     } catch (error) {
       console.log("error", error)
     }
@@ -30,25 +30,24 @@ export default function LoginPage() {
       <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.background}]}>
         <View>
           <Appbar.Header mode="center-aligned">
+            <Appbar.BackAction onPress={() => router.replace("/")}/>
             <Appbar.Content title={t("common.login")} />
           </Appbar.Header>
 
         </View>
-        <View>
+        <View style={styles.form}>
           <TextInput 
               label={t("common.username")}
-              placeholder={t("common.username")}
               onChangeText={setUsername}
               style={styles.input}
               autoCapitalize="none"
           />
           <TextInput 
               label={t("common.password")}
-              placeholder={t("common.password")}
               onChangeText={setPassword}
               secureTextEntry
           />
-          <Button mode="contained" onPress={handleLogin}>
+          <Button style={styles.button} mode="contained" onPress={handleLogin}>
                 {t("common.login")}
             </Button>
         </View>
@@ -63,5 +62,12 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: SPACING.medium
+  },
+  form: {
+    margin: SPACING.xLarge,
+    padding: SPACING.xLarge,
+  },
+  button: {
+    margin: SPACING.xLarge
   }
 });
