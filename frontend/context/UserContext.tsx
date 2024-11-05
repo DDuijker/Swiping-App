@@ -7,9 +7,21 @@ import {
   isAuthenticated,
 } from "../api/userService";
 
-const UserContext = createContext();
+// Define a default context value
+const defaultContextValue = {
+  user: null,
+  loading: true,
+  login: () => {},
+  logout: () => {},
+};
 
-export const UserProvider = ({ children }) => {
+interface UserProviderProps {
+  children: ReactNode; // Explicitly define the type of children
+}
+
+const UserContext = createContext(defaultContextValue);
+
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // Initial loading state for checking authentication
 

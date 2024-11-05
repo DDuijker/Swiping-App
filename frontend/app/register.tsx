@@ -24,13 +24,13 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [avatar, setAvatar] = useState(null); // Avatar image URI
+  const [avatar, setAvatar] = useState(""); // Avatar image URI
   const [favoriteGenres, setFavoriteGenres] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Error handling functions
-  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
   const handleRegister = async () => {
     setError(""); // Clear previous errors
@@ -99,7 +99,7 @@ export default function RegisterPage() {
 
   // Remove selected image to revert to generated avatar
   const removeImage = () => {
-    setAvatar(null);
+    setAvatar("");
   };
 
   return (
