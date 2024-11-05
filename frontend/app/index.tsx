@@ -5,7 +5,7 @@ import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
-
+import 'react-native-reanimated';
 
 export default function Index() {
   const { t, i18n } = useTranslation();

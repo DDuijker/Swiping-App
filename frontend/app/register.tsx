@@ -3,7 +3,14 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Provider, Appbar, Button, TextInput, HelperText, Avatar } from "react-native-paper";
+import {
+  Provider,
+  Appbar,
+  Button,
+  TextInput,
+  HelperText,
+  Avatar,
+} from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { register } from "../api/userService";
 import { useTheme } from "../context/ThemeContext";
@@ -12,7 +19,7 @@ import { View, StyleSheet, Alert } from "react-native";
 export default function RegisterPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +49,13 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const user = await register(username, password, email, avatar, favoriteGenres);
+      const user = await register(
+        username,
+        password,
+        email,
+        avatar,
+        favoriteGenres
+      );
       console.log(user);
       setLoading(false);
       Alert.alert(t("common.success"), t("profile.registerSuccess"));
@@ -54,7 +67,8 @@ export default function RegisterPage() {
 
   // Image picker for avatar
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       alert(t("profile.avatarPermissionDenied"));
       return;
@@ -72,12 +86,16 @@ export default function RegisterPage() {
     }
   };
 
-    // Function to get the avatar source, either user-selected or generated based on the name
-    const getAvatarSource = () => {
-      return avatar
-        ? { uri: avatar }
-        : { uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(username || "User")}` };
-    };
+  // Function to get the avatar source, either user-selected or generated based on the name
+  const getAvatarSource = () => {
+    return avatar
+      ? { uri: avatar }
+      : {
+          uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            username || "User"
+          )}`,
+        };
+  };
 
   // Remove selected image to revert to generated avatar
   const removeImage = () => {
@@ -86,7 +104,9 @@ export default function RegisterPage() {
 
   return (
     <Provider theme={theme}>
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
         <View>
           <Appbar.Header mode="center-aligned">
             <Appbar.BackAction onPress={() => router.replace("/")} />
@@ -98,12 +118,15 @@ export default function RegisterPage() {
           <View style={styles.avatarContainer}>
             <Avatar.Image size={100} source={getAvatarSource()} />
             <View style={styles.avatarButtons}>
-             
               {avatar && (
-                <Button onPress={removeImage} mode="outlined" style={styles.removeButton}>
+                <Button
+                  onPress={removeImage}
+                  mode="outlined"
+                  style={styles.removeButton}
+                >
                   {t("profile.removePictureButton")}
                 </Button>
-              )} 
+              )}
               <Button onPress={pickImage} mode="outlined">
                 {t("profile.uploadPictureButton")}
               </Button>
@@ -140,18 +163,21 @@ export default function RegisterPage() {
             secureTextEntry
             style={styles.input}
           />
-          
-          {error ? <HelperText type="error">{error}</HelperText> : null}
 
-          <Button
-            style={styles.button}
-            mode="contained"
-            onPress={handleRegister}
-            loading={loading}
-            disabled={loading}
-          >
-            {t("common.register")}
-          </Button>
+          {error ? <HelperText type="error">{error}</HelperText> : null}
+          <View style={styles.buttons}>
+            <Button
+              mode="contained"
+              onPress={handleRegister}
+              loading={loading}
+              disabled={loading}
+            >
+              {t("common.register")}
+            </Button>
+            <Button onPress={() => router.replace("/login")}>
+              {t("common.login")}
+            </Button>
+          </View>
         </View>
       </SafeAreaView>
     </Provider>
@@ -159,15 +185,15 @@ export default function RegisterPage() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
   },
   avatarContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: SPACING.medium,
   },
   avatarButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: SPACING.medium,
   },
   removeButton: {
@@ -180,7 +206,7 @@ const styles = StyleSheet.create({
     margin: SPACING.xLarge,
     padding: SPACING.xLarge,
   },
-  button: {
+  buttons: {
     margin: SPACING.xLarge,
   },
 });
