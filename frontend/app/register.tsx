@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react";
 import { SPACING } from "../constants/DesignValues";
 import { router } from "expo-router";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -10,6 +10,7 @@ import {
   TextInput,
   HelperText,
   Avatar,
+  Chip,
 } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { register } from "../api/userService";
@@ -22,22 +23,54 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { TMDB_API_KEY } from 'react-native-dotenv';
 
 export default function RegisterPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { theme } = useTheme();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [avatar, setAvatar] = useState(""); // Avatar image URI
+  const [avatar, setAvatar] = useState("");
+  const [genres, setGenres] = useState([]); // List of genres
   const [favoriteGenres, setFavoriteGenres] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Fetch genres from TMDb API with dynamic language
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${TMDB_API_KEY}&language=${i18n.language}`
+        );
+        const data = await response.json();
+        console.log("Fetched data:", data); // Log the data to inspect the structure
+        setGenres(data.genres || []); // Use fallback to an empty array if `genres` is undefined
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+        setError(t("common.errorLoadingGenres"));
+      }
+    };
+
+    fetchGenres();
+  }, [i18n.language]);
+
+  // Function to toggle genre selection
+  const toggleGenre = (genre) => {
+    setFavoriteGenres((prevGenres) => {
+      if (prevGenres.some((g) => g.id === genre.id)) {
+        return prevGenres.filter((g) => g.id !== genre.id);
+      } else {
+        return [...prevGenres, genre];
+      }
+    });
+  };
+
   // Error handling functions
-  const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
+  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const handleRegister = async () => {
     setError(""); // Clear previous errors
@@ -89,11 +122,11 @@ export default function RegisterPage() {
     });
 
     if (!result.canceled) {
-      setAvatar(result.assets[0].uri); // Set the avatar URI
+      setAvatar(result.assets[0].uri);
     }
   };
 
-  // Function to get the avatar source, either user-selected or generated based on the name
+  // Function to get the avatar source
   const getAvatarSource = () => {
     return avatar
       ? { uri: avatar }
@@ -125,7 +158,6 @@ export default function RegisterPage() {
               </Appbar.Header>
             </View>
             <View style={styles.form}>
-              {/* Centered Avatar with options to upload or remove */}
               <View style={styles.avatarContainer}>
                 <Avatar.Image size={100} source={getAvatarSource()} />
                 <View style={styles.avatarButtons}>
@@ -144,7 +176,6 @@ export default function RegisterPage() {
                 </View>
               </View>
 
-              {/* Registration Form Inputs */}
               <TextInput
                 label={t("common.username")}
                 value={username}
@@ -174,6 +205,20 @@ export default function RegisterPage() {
                 secureTextEntry
                 style={styles.input}
               />
+
+              {/* Genre Selection Chips */}
+              <View style={styles.genreContainer}>
+                {genres.map((genre) => (
+                  <Chip
+                    key={genre.id}
+                    selected={favoriteGenres.some((g) => g.id === genre.id)}
+                    onPress={() => toggleGenre(genre)}
+                    style={styles.genreChip}
+                  >
+                    {genre.name}
+                  </Chip>
+                ))}
+              </View>
 
               {error ? <HelperText type="error">{error}</HelperText> : null}
               <View style={styles.buttons}>
@@ -221,5 +266,13 @@ const styles = StyleSheet.create({
   },
   buttons: {
     margin: SPACING.xLarge,
+  },
+  genreContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: SPACING.medium,
+  },
+  genreChip: {
+    margin: SPACING.small,
   },
 });
