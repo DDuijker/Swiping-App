@@ -45,10 +45,10 @@ export default function BottomTabsLayout() {
 
   // Redirect to home or login if user is not authenticated
   useEffect(() => {
-    if (!loading && !user) {
+    if (!user) {
       router.replace("/"); // Redirect to the home or login screen
     }
-  }, [loading, user, router]);
+  }, [user, router]);
 
   // Show a loading indicator while checking authentication
   if (loading) {

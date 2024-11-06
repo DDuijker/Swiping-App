@@ -21,13 +21,6 @@ export default function MainLayout() {
   }, [loading, user, router]);
 
   // Show a loading indicator while checking authentication
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
 
   return (
     <AppProviders>
