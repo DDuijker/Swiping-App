@@ -1,5 +1,11 @@
 // context/UserContext.js
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import {
   login as userServiceLogin,
   logout as userServiceLogout,
@@ -11,16 +17,15 @@ import {
 const defaultContextValue = {
   user: null,
   loading: true,
-  login: () => {},
+  login: async (username: string, password: string) => {},
   logout: () => {},
 };
+
+const UserContext = createContext(defaultContextValue);
 
 interface UserProviderProps {
   children: ReactNode; // Explicitly define the type of children
 }
-
-const UserContext = createContext(defaultContextValue);
-
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // Initial loading state for checking authentication
@@ -39,8 +44,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
+  // interface for the login function
+  interface LoginFunction {
+    (username: string, password: string): Promise<void>;
+  }
+
   // Function to handle login
-  const login = async (username, password) => {
+  const login: LoginFunction = async (username, password) => {
     const userData = await userServiceLogin(username, password);
     setUser(userData);
   };
