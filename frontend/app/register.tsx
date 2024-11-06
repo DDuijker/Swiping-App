@@ -14,7 +14,14 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { register } from "../api/userService";
 import { useTheme } from "../context/ThemeContext";
-import { View, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+} from "react-native";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -107,78 +114,84 @@ export default function RegisterPage() {
       <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <View>
-          <Appbar.Header mode="center-aligned">
-            <Appbar.BackAction onPress={() => router.replace("/")} />
-            <Appbar.Content title={t("common.register")} />
-          </Appbar.Header>
-        </View>
-        <View style={styles.form}>
-          {/* Centered Avatar with options to upload or remove */}
-          <View style={styles.avatarContainer}>
-            <Avatar.Image size={100} source={getAvatarSource()} />
-            <View style={styles.avatarButtons}>
-              {avatar && (
-                <Button
-                  onPress={removeImage}
-                  mode="outlined"
-                  style={styles.removeButton}
-                >
-                  {t("profile.removePictureButton")}
-                </Button>
-              )}
-              <Button onPress={pickImage} mode="outlined">
-                {t("profile.uploadPictureButton")}
-              </Button>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <ScrollView>
+            <View>
+              <Appbar.Header mode="center-aligned">
+                <Appbar.BackAction onPress={() => router.replace("/")} />
+                <Appbar.Content title={t("common.register")} />
+              </Appbar.Header>
             </View>
-          </View>
+            <View style={styles.form}>
+              {/* Centered Avatar with options to upload or remove */}
+              <View style={styles.avatarContainer}>
+                <Avatar.Image size={100} source={getAvatarSource()} />
+                <View style={styles.avatarButtons}>
+                  {avatar && (
+                    <Button
+                      onPress={removeImage}
+                      mode="outlined"
+                      style={styles.removeButton}
+                    >
+                      {t("profile.removePictureButton")}
+                    </Button>
+                  )}
+                  <Button onPress={pickImage} mode="outlined">
+                    {t("profile.uploadPictureButton")}
+                  </Button>
+                </View>
+              </View>
 
-          {/* Registration Form Inputs */}
-          <TextInput
-            label={t("common.username")}
-            value={username}
-            onChangeText={setUsername}
-            style={styles.input}
-            autoCapitalize="none"
-          />
-          <TextInput
-            label={t("profile.email")}
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-          <TextInput
-            label={t("common.password")}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          <TextInput
-            label={t("profile.passwordRepeat")}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            style={styles.input}
-          />
+              {/* Registration Form Inputs */}
+              <TextInput
+                label={t("common.username")}
+                value={username}
+                onChangeText={setUsername}
+                style={styles.input}
+                autoCapitalize="none"
+              />
+              <TextInput
+                label={t("profile.email")}
+                value={email}
+                onChangeText={setEmail}
+                style={styles.input}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+              <TextInput
+                label={t("common.password")}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                style={styles.input}
+              />
+              <TextInput
+                label={t("profile.passwordRepeat")}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                style={styles.input}
+              />
 
-          {error ? <HelperText type="error">{error}</HelperText> : null}
-          <View style={styles.buttons}>
-            <Button
-              mode="contained"
-              onPress={handleRegister}
-              loading={loading}
-              disabled={loading}
-            >
-              {t("common.register")}
-            </Button>
-            <Button onPress={() => router.replace("/login")}>
-              {t("common.login")}
-            </Button>
-          </View>
-        </View>
+              {error ? <HelperText type="error">{error}</HelperText> : null}
+              <View style={styles.buttons}>
+                <Button
+                  mode="contained"
+                  onPress={handleRegister}
+                  loading={loading}
+                  disabled={loading}
+                >
+                  {t("common.register")}
+                </Button>
+                <Button onPress={() => router.replace("/login")}>
+                  {t("common.login")}
+                </Button>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Provider>
   );
