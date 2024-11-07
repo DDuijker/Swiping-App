@@ -11,6 +11,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "context/UserContext.tsx"
+    "context/UserContext.tsx",
+    "context/ThemeContext.tsx"
   ]
 }

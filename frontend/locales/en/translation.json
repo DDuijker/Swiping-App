@@ -27,7 +27,13 @@
     "previous": "Previous",
     "continue": "Continue",
     "welcome-to-brandname": "Welcome to BrandName!",
-    "language": "Language"
+    "language": "Language",
+    "favoriteGenres": "Favorite genres",
+    "selectFavoriteMovieGenres": "Select your favorite genres",
+    "selectFavoriteTVGenres": "Select your favorite TV genres",
+    "errorFields": "Errors were found in the form",
+    "noGenresAvailable": "No genres available",
+    "errorLoadingGenres": "There were errors loading the genres"
   },
   "groups": {
     "title": "Groups",
@@ -72,6 +78,7 @@
     "removePictureButton": "Remove picture",
     "username": "Username",
     "email": "Email",
+    "emailInvalid": "Email invalid",
     "password": "Password",
     "passwordRepeat": "Repeat Password",
     "passwordMismatch": "Passwords do not match",

@@ -19,7 +19,7 @@ export default function LoginPage() {
     try {
       const user = await login(username, password);
       console.log(user);
-      router.navigate("/(tabs)/groups");
+      router.navigate("/groups");
     } catch (error) {
       console.log("error", error);
     }

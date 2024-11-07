@@ -5,7 +5,7 @@ import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
-import 'react-native-reanimated';
+import "react-native-reanimated";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
@@ -39,7 +39,12 @@ export default function Index() {
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme} // Use toggleTheme from context
             />
-            <Appbar.Content title={t("common.welcome-to-brandname").replace("BrandName", "Binge")} />
+            <Appbar.Content
+              title={t("common.welcome-to-brandname").replace(
+                "BrandName",
+                "Binge"
+              )}
+            />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
@@ -69,22 +74,22 @@ export default function Index() {
             },
           ]}
         >
-            <Button
-            onPress={() => router.replace('/register')}
-              mode="contained"
-              style={[styles.button]}
-              labelStyle={{ color: theme.colors.onPrimary }}
-            >
-              {t("common.register")}
-            </Button>
-            <Button
-              onPress={() => router.replace('/login')}
-              mode="text"
-              style={styles.button}
-              labelStyle={{ color: theme.colors.primary }}
-            >
-              {t("common.login")}
-            </Button>
+          <Button
+            onPress={() => router.replace("/register")}
+            mode="contained"
+            style={[styles.button]}
+            labelStyle={{ color: theme.colors.onPrimary }}
+          >
+            {t("common.register")}
+          </Button>
+          <Button
+            onPress={() => router.replace("/login")}
+            mode="text"
+            style={styles.button}
+            labelStyle={{ color: theme.colors.primary }}
+          >
+            {t("common.login")}
+          </Button>
         </View>
       </SafeAreaView>
     </Provider>

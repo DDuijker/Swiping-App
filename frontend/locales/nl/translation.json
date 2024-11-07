@@ -27,7 +27,13 @@
     "previous": "Vorige",
     "continue": "Doorgaan",
     "welcome-to-brandname": "Welkom bij BrandName!",
-    "language": "Taal"
+    "language": "Taal",
+    "favoritegenres": "Favoriete genres",
+    "selectFavoriteMovieGenres": "Selecteer uw favoriete film genres",
+    "selectFavoriteTVGenres": "Selecteer uw favoriete TV genres",
+    "errorFields": "Er zijn fouten in het formulier gevonden",
+    "noGenresAvailable": "Geen genres beschikbaar",
+    "errorLoadingGenres": "Er zijn fouten opgetreden bij het laden van de genres"
   },
   "groups": {
     "title": "Groepen",
@@ -72,6 +78,7 @@
     "removePictureButton": "Foto verwijderen",
     "username": "Gebruikersnaam",
     "email": "E-mail",
+    "emailInvalid": "Email ongeldig",
     "password": "Wachtwoord",
     "passwordRepeat": "Herhaal wachtwoord",
     "passwordMismatch": "Wachtwoorden komen niet overeen",

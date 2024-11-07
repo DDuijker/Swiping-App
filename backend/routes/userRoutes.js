@@ -6,7 +6,14 @@ const router = express.Router();
 
 // Register a new user
 router.post("/register", async (req, res) => {
-  const { username, email, password, avatar, favoriteGenres } = req.body;
+  const {
+    username,
+    email,
+    password,
+    avatar,
+    favoriteMovieGenres,
+    favoriteTVGenres,
+  } = req.body;
 
   try {
     // Check if username or email already exists
@@ -21,7 +28,8 @@ router.post("/register", async (req, res) => {
       email,
       password,
       avatar,
-      favoriteGenres,
+      favoriteMovieGenres,
+      favoriteTVGenres,
     });
     await newUser.save();
 
