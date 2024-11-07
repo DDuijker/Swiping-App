@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
         username: user.username,
         email: user.email,
         avatar: user.avatar,
-        favoriteGenres: user.favoriteGenres,
+        favoriteMovieGenres: user.favoriteMovieGenres,
       },
     });
   } catch (error) {

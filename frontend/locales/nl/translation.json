@@ -33,7 +33,9 @@
     "selectFavoriteTVGenres": "Selecteer uw favoriete TV genres",
     "errorFields": "Er zijn fouten in het formulier gevonden",
     "noGenresAvailable": "Geen genres beschikbaar",
-    "errorLoadingGenres": "Er zijn fouten opgetreden bij het laden van de genres"
+    "errorLoadingGenres": "Er zijn fouten opgetreden bij het laden van de genres",
+    "registeredSuccesfully": "Succesvol geregistreerd",
+    "registrationError": "Registratiefout"
   },
   "groups": {
     "title": "Groepen",

@@ -1,20 +1,56 @@
 import * as React from "react";
 import { router } from "expo-router";
 import { SafeAreaView, View, StyleSheet } from "react-native";
-import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  Menu,
+  Provider,
+  ActivityIndicator,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
+import { useUser } from "../context/UserContext"; // Import the useUser hook
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
-  const { isDarkTheme, theme, toggleTheme } = useTheme(); // Get the user's preferred color scheme (light or dark)
-  const [visible, setVisible] = React.useState(false); // State for managing the menu visibility
+  const { isDarkTheme, theme, toggleTheme } = useTheme();
+  const { user, loading: userLoading } = useUser(); // Access user and loading state
+  const [visible, setVisible] = React.useState(false);
+
+  // Effect to handle user authentication redirection
+  React.useEffect(() => {
+    // Only navigate if loading is complete
+    if (!userLoading) {
+      if (user) {
+        router.replace("/(tabs)/groups"); // Redirect to groups if logged in
+      }
+    }
+  }, [userLoading, user, router]);
+
+  // Show a loading indicator while checking authentication
+  if (userLoading) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.surfaceVariant },
+        ]}
+      >
+        <ActivityIndicator
+          size="large"
+          color={theme.colors.primary}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        />
+      </SafeAreaView>
+    );
+  }
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
-    setVisible(false); // Close the menu after selecting
+    setVisible(false);
   };
 
   return (
@@ -26,7 +62,6 @@ export default function Index() {
         ]}
       >
         <View>
-          {/* AppBar with Language Selector and Theme Toggle */}
           <Appbar.Header
             style={[
               styles.appBar,
@@ -34,10 +69,9 @@ export default function Index() {
             ]}
             mode="center-aligned"
           >
-            {/* Theme Toggle Button */}
             <Appbar.Action
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
-              onPress={toggleTheme} // Use toggleTheme from context
+              onPress={toggleTheme}
             />
             <Appbar.Content
               title={t("common.welcome-to-brandname").replace(
@@ -53,7 +87,7 @@ export default function Index() {
                   icon="translate"
                   onPress={() => setVisible(true)}
                 />
-              } // Language button on the right
+              }
             >
               <Menu.Item onPress={() => changeLanguage("en")} title="English" />
               <Menu.Item
@@ -63,7 +97,6 @@ export default function Index() {
             </Menu>
           </Appbar.Header>
         </View>
-        {/* Buttons on the bottom area */}
         <View
           style={[
             styles.buttonContainer,
@@ -77,7 +110,7 @@ export default function Index() {
           <Button
             onPress={() => router.replace("/register")}
             mode="contained"
-            style={[styles.button]}
+            style={styles.button}
             labelStyle={{ color: theme.colors.onPrimary }}
           >
             {t("common.register")}
@@ -104,11 +137,6 @@ const styles = StyleSheet.create({
   },
   appBar: {
     justifyContent: "space-between",
-  },
-  title: {
-    padding: SPACING.large,
-    textAlign: "center",
-    fontWeight: "bold",
   },
   buttonContainer: {
     alignItems: "center",

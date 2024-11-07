@@ -33,7 +33,9 @@
     "selectFavoriteTVGenres": "Select your favorite TV genres",
     "errorFields": "Errors were found in the form",
     "noGenresAvailable": "No genres available",
-    "errorLoadingGenres": "There were errors loading the genres"
+    "errorLoadingGenres": "There were errors loading the genres",
+    "registrationSuccess": "Succesfully registered",
+    "registrationError": "Registration error"
   },
   "groups": {
     "title": "Groups",

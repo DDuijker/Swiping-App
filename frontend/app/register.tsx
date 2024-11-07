@@ -12,7 +12,8 @@ import {
   Avatar,
   Chip,
   Text,
-  ActivityIndicator, // Import ActivityIndicator
+  ActivityIndicator,
+  Snackbar,
 } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { register } from "../api/userService";
@@ -20,7 +21,6 @@ import { useTheme } from "../context/ThemeContext";
 import {
   View,
   StyleSheet,
-  Alert,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -44,7 +44,11 @@ export default function RegisterPage() {
   const [favoriteMovieGenres, setMovieFavoriteGenres] = useState<Genre[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isGenresLoading, setIsGenresLoading] = useState(true); // Track loading state for genres
+  const [isGenresLoading, setIsGenresLoading] = useState(true);
+
+  // Snackbar state
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // Fetch genres from TMDb API with dynamic language
   useEffect(() => {
@@ -67,7 +71,7 @@ export default function RegisterPage() {
         console.error("Error fetching genres:", error);
         setError(t("common.errorLoadingGenres"));
       } finally {
-        setIsGenresLoading(false); // Set loading state to false after fetch
+        setIsGenresLoading(false);
       }
     };
 
@@ -85,42 +89,8 @@ export default function RegisterPage() {
     });
   };
 
-  // Error handling functions
+  // Email validation
   const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
-
-  const handleRegister = async () => {
-    setError(""); // Clear previous errors
-    if (!username || !email || !password || !confirmPassword) {
-      setError(t("common.errorFields"));
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setError(t("profile.emailInvalid"));
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError(t("profile.passwordRepeatMismatch"));
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const user = await register(
-        username,
-        password,
-        email,
-        avatar,
-        favoriteMovieGenres
-      );
-      console.log(user);
-      setLoading(false);
-      // Show success message and redirect to login
-      router.replace("/groups");
-    } catch (error) {
-      setError(t("common.error"));
-      setLoading(false);
-    }
-  };
 
   // Image picker for avatar
   const pickImage = async () => {
@@ -143,7 +113,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Function to get the avatar source
+  // Get avatar source
   const getAvatarSource = () => {
     return avatar
       ? { uri: avatar }
@@ -154,10 +124,58 @@ export default function RegisterPage() {
         };
   };
 
-  // Remove selected image to revert to generated avatar
+  // Remove selected image
   const removeImage = () => {
     setAvatar("");
   };
+
+  // Handle registration
+  const handleRegister = async () => {
+    setError(""); // Clear previous errors
+
+    if (!username || !email || !password || !confirmPassword) {
+      setError(t("common.errorFields"));
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setError(t("profile.emailInvalid"));
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError(t("profile.passwordRepeatMismatch"));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const favoriteMovieGenresIds = favoriteMovieGenres.map(
+        (genre) => genre.id
+      );
+      const user = await register(
+        username,
+        password,
+        email,
+        avatar,
+        favoriteMovieGenresIds
+      );
+      console.log(user);
+      setSnackbarMessage(t("common.registrationSuccess")); // Set success message
+      setSnackbarVisible(true); // Show snackbar
+      setLoading(false);
+      // Redirect after a short delay to allow the snackbar to display
+      setTimeout(() => {
+        router.replace("/groups");
+      }, 2000);
+    } catch (error) {
+      setError(t("common.error"));
+      setSnackbarMessage(t("common.registrationError")); // Set error message
+      setSnackbarVisible(true); // Show snackbar
+      setLoading(false);
+    }
+  };
+
+  // Handle snackbar dismiss
+  const onDismissSnackbar = () => setSnackbarVisible(false);
 
   return (
     <Provider theme={theme}>
@@ -249,8 +267,8 @@ export default function RegisterPage() {
                       favoriteMovieGenres.some((g: Genre) => g.id === genre.id)
                         ? "flat"
                         : "outlined"
-                    } // Set mode based on selection
-                    style={styles.genreChip} // Keep the base styling here
+                    }
+                    style={styles.genreChip}
                   >
                     {genre.name}
                   </Chip>
@@ -275,6 +293,16 @@ export default function RegisterPage() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={onDismissSnackbar}
+        action={{
+          label: "Close",
+          onPress: onDismissSnackbar, // Dismiss on close
+        }}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </Provider>
   );
 }

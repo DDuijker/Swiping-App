@@ -33,7 +33,7 @@ export const register = async (
   password,
   email,
   avatar = "",
-  favoriteGenres = []
+  favoriteMovieGenres = []
 ) => {
   try {
     const response = await fetch(`${API_URL}/register`, {
@@ -44,7 +44,7 @@ export const register = async (
         password,
         email,
         avatar,
-        favoriteGenres,
+        favoriteMovieGenres,
       }),
     });
 
@@ -55,7 +55,7 @@ export const register = async (
       await AsyncStorage.setItem("token", data.token);
       await AsyncStorage.setItem("user", JSON.stringify(data.user));
 
-      console.log("User registered successfully:", data.user);
+      console.log("User registered successfully:", data);
       return data.user;
     } else {
       throw new Error(data.msg || "Registration failed");
