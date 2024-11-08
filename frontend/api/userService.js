@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.1.100:27017/api/user";
+const API_URL = `http://${process.env.EXPO_PUBLIC_API_URL}/api/user`;
 
 // Function to login user
 export const login = async (username, password) => {
@@ -16,7 +16,6 @@ export const login = async (username, password) => {
       // Store token and user info in AsyncStorage
       await AsyncStorage.setItem("token", data.token);
       await AsyncStorage.setItem("user", JSON.stringify(data.user));
-      console.log(data.user);
       return data.user;
     } else {
       throw new Error(data.msg || "Login failed");
@@ -71,10 +70,11 @@ export const register = async (
 // Function to get logged-in user info
 export const getUser = async () => {
   try {
-    const user = await AsyncStorage.getItem("user");
-    return JSON.parse(user);
+    const userString = await AsyncStorage.getItem("user");
+    if (!userString) return null;
+    return JSON.parse(userString);
   } catch (error) {
-    console.error("Error getting user:", error);
+    console.log("Error getting user:", error);
     return null;
   }
 };

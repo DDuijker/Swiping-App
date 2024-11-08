@@ -44,6 +44,7 @@
     },
     "success": {
       "registration": "Succesvol geregistreerd",
+      "login": "Successvol ingelogd",
       "general": "Succes"
     },
     "states": {

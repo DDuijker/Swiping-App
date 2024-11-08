@@ -37,7 +37,7 @@ export default function Index() {
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme}
             />
-            <Appbar.Content title={t("welcome.title")} />
+            <Appbar.Content title={t("common.welcome.title")} />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
