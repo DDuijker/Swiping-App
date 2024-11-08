@@ -34,7 +34,7 @@ const GenreChips: React.FC<GenreChipsProps> = ({
         console.log("Fetching genres for:", genreType);
         const language = i18n.language; // Get the current language
         const response = await fetch(
-          `https://api.themoviedb.org/3/genre/${genreType}/list?&language=${language}?api_key=${process.env.TMDB_API_KEY}`, // Use the current language
+          `https://api.themoviedb.org/3/genre/${genreType}/list?&language=${language}}`, // Use the current language
           {
             method: "GET",
             headers: {
