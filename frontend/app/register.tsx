@@ -84,6 +84,12 @@ export default function RegisterPage() {
     setAvatar("");
   };
 
+  // Check for a valid email
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   // Handle registration
   const handleRegister = async () => {
     setError(""); // Clear previous errors
@@ -94,6 +100,10 @@ export default function RegisterPage() {
     }
     if (!email) {
       setError(t("common.errorEmail"));
+      return;
+    }
+    if (!email || !isValidEmail(email)) {
+      setError(t("common.errorInvalidEmail"));
       return;
     }
     if (!password) {

@@ -1,56 +1,17 @@
 import * as React from "react";
 import { router } from "expo-router";
 import { SafeAreaView, View, StyleSheet } from "react-native";
-import {
-  Appbar,
-  Button,
-  Menu,
-  Provider,
-  ActivityIndicator,
-} from "react-native-paper";
+import { Appbar, Button, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
-import { useUser } from "../context/UserContext"; // Import the useUser hook
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
-import { isAuthenticated } from "../api/userService";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme();
-  const { loading: userLoading } = useUser();
   const [visible, setVisible] = React.useState(false);
 
-  // Check authentication status when component mounts
-  React.useEffect(() => {
-    const checkAuth = async () => {
-      const isUserAuthenticated = await isAuthenticated();
-      if (isUserAuthenticated) {
-        router.push("/(tabs)/groups");
-      }
-    };
-
-    if (!userLoading) {
-      checkAuth();
-    }
-  }, []);
-
-  if (userLoading) {
-    return (
-      <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
-        <ActivityIndicator
-          size="large"
-          color={theme.colors.primary}
-          style={styles.loader}
-        />
-      </SafeAreaView>
-    );
-  }
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
     setVisible(false);
