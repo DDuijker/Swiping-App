@@ -22,7 +22,7 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import GenreChips from "../components/GenreChips"; // Import the new GenreChips component
+import GenreChips from "../components/GenreChips";
 
 interface Genre {
   id: string;
@@ -88,8 +88,20 @@ export default function RegisterPage() {
   const handleRegister = async () => {
     setError(""); // Clear previous errors
 
-    if (!username || !email || !password || !confirmPassword) {
-      setError(t("common.errorFields"));
+    if (!username) {
+      setError(t("common.errorUsername"));
+      return;
+    }
+    if (!email) {
+      setError(t("common.errorEmail"));
+      return;
+    }
+    if (!password) {
+      setError(t("common.errorPassword"));
+      return;
+    }
+    if (!confirmPassword) {
+      setError(t("common.errorConfirmPassword"));
       return;
     }
     if (password !== confirmPassword) {
@@ -137,6 +149,7 @@ export default function RegisterPage() {
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
         >
           <ScrollView>
             <View>
@@ -149,7 +162,7 @@ export default function RegisterPage() {
               <View style={styles.avatarContainer}>
                 <Avatar.Image size={100} source={getAvatarSource()} />
                 <View style={styles.avatarButtons}>
-                  {avatar && (
+                  {avatar ? (
                     <Button
                       onPress={removeImage}
                       mode="outlined"
@@ -157,7 +170,7 @@ export default function RegisterPage() {
                     >
                       {t("profile.removePictureButton")}
                     </Button>
-                  )}
+                  ) : null}
                   <Button onPress={pickImage} mode="outlined">
                     {t("profile.uploadPictureButton")}
                   </Button>
@@ -193,35 +206,39 @@ export default function RegisterPage() {
                 secureTextEntry
                 style={styles.input}
               />
-              {/* TV Genre Chips */}
-              <GenreChips
-                selectedGenres={favoriteTVGenres}
-                onToggleGenre={(genre) => {
-                  setTVFavoriteGenres((prevGenres) =>
-                    prevGenres.some((g) => g.id === genre.id)
-                      ? prevGenres.filter((g) => g.id !== genre.id)
-                      : [...prevGenres, genre]
-                  );
-                }}
-                title={t("common.selectFavoriteTVGenres")}
-                genreType="tv"
-              />
 
-              {/* Movie Genre Chips */}
-              <GenreChips
-                selectedGenres={favoriteMovieGenres}
-                onToggleGenre={(genre) => {
-                  setMovieFavoriteGenres((prevGenres) =>
-                    prevGenres.some((g) => g.id === genre.id)
-                      ? prevGenres.filter((g) => g.id !== genre.id)
-                      : [...prevGenres, genre]
-                  );
-                }}
-                title={t("common.selectFavoriteMovieGenres")}
-                genreType="movie"
-              />
+              <View>
+                <GenreChips
+                  selectedGenres={favoriteTVGenres}
+                  onToggleGenre={(genre) => {
+                    setTVFavoriteGenres((prevGenres) =>
+                      prevGenres.some((g) => g.id === genre.id)
+                        ? prevGenres.filter((g) => g.id !== genre.id)
+                        : [...prevGenres, genre]
+                    );
+                  }}
+                  title={t("common.selectFavoriteTVGenres")}
+                  genreType="tv"
+                />
+              </View>
+
+              <View>
+                <GenreChips
+                  selectedGenres={favoriteMovieGenres}
+                  onToggleGenre={(genre) => {
+                    setMovieFavoriteGenres((prevGenres) =>
+                      prevGenres.some((g) => g.id === genre.id)
+                        ? prevGenres.filter((g) => g.id !== genre.id)
+                        : [...prevGenres, genre]
+                    );
+                  }}
+                  title={t("common.selectFavoriteMovieGenres")}
+                  genreType="movie"
+                />
+              </View>
 
               {error ? <HelperText type="error">{error}</HelperText> : null}
+
               <View style={styles.buttons}>
                 <Button
                   mode="contained"
@@ -244,7 +261,7 @@ export default function RegisterPage() {
         onDismiss={onDismissSnackbar}
         action={{
           label: t("common.close"),
-          onPress: onDismissSnackbar, // Dismiss on close
+          onPress: onDismissSnackbar,
         }}
       >
         {snackbarMessage}

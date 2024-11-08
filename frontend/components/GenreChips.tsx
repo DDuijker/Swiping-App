@@ -3,6 +3,7 @@ import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { Chip, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { SPACING } from "../constants/DesignValues";
+import { useTheme } from "../context/ThemeContext";
 
 interface Genre {
   id: string;
@@ -23,22 +24,22 @@ const GenreChips: React.FC<GenreChipsProps> = ({
   genreType,
 }) => {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch genres from TMDb API
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         console.log("Fetching genres for:", genreType);
-        const language = i18n.language; // Get the current language
+        const language = i18n.language;
+
         const response = await fetch(
-          `https://api.themoviedb.org/3/genre/${genreType}/list?&language=${language}}`, // Use the current language
+          `https://api.themoviedb.org/3/genre/${genreType}/list?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&language=${language}`,
           {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
               "Content-Type": "application/json",
             },
           }
@@ -63,28 +64,22 @@ const GenreChips: React.FC<GenreChipsProps> = ({
     };
 
     fetchGenres();
-  }, [genreType, i18n.language]); // Include i18n.language in the dependency array
+  }, [t, genreType, i18n.language]);
 
   if (loading) {
-    return <ActivityIndicator size="small" color="primary" />;
+    return <ActivityIndicator size="small" color={theme.colors.primary} />;
   }
 
-  if (error) {
+  if (error && typeof error === "string") {
     return <Text style={styles.errorText}>{error}</Text>;
   }
 
   return (
-    <>
+    <View>
       <Text style={styles.title} variant="titleLarge">
         {title}
       </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginBottom: SPACING.medium,
-        }}
-      >
+      <View style={styles.genreContainer}>
         {genres.map((genre: Genre) => (
           <Chip
             key={genre.id}
@@ -95,13 +90,13 @@ const GenreChips: React.FC<GenreChipsProps> = ({
                 ? "flat"
                 : "outlined"
             }
-            style={{ margin: 4 }}
+            style={{ margin: SPACING.small }}
           >
             {genre.name}
           </Chip>
         ))}
       </View>
-    </>
+    </View>
   );
 };
 
@@ -109,11 +104,15 @@ const styles = StyleSheet.create({
   title: {
     marginTop: SPACING.medium,
     marginBottom: SPACING.medium,
-    fontWeight: "bold",
   },
   errorText: {
     color: "red",
     textAlign: "center",
+  },
+  genreContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: SPACING.medium,
   },
 });
 
