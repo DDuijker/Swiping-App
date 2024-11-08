@@ -30,7 +30,7 @@ export default function LoginPage() {
       router.navigate("/(tabs)/groups");
     } catch (error) {
       console.log("error", error);
-      setSnackbarMessage(t("common.loginError"));
+      setSnackbarMessage(t("errors.auth.invalidCredentials"));
       setSnackbarVisible(true);
     }
   };
@@ -43,25 +43,25 @@ export default function LoginPage() {
         <View>
           <Appbar.Header mode="center-aligned">
             <Appbar.BackAction onPress={() => router.replace("/")} />
-            <Appbar.Content title={t("common.login")} />
+            <Appbar.Content title={t("common.actions.login")} />
           </Appbar.Header>
         </View>
         <View style={styles.form}>
           <TextInput
-            label={t("common.username")}
+            label={t("common.fields.username")}
             value={username || ""}
             onChangeText={setUsername}
             style={styles.input}
             autoCapitalize="none"
           />
           <TextInput
-            label={t("common.password")}
+            label={t("common.fields.password")}
             value={password || ""}
             onChangeText={setPassword}
             secureTextEntry
           />
           <Button style={styles.button} mode="contained" onPress={handleLogin}>
-            {t("common.login")}
+            {t("common.actions.login")}
           </Button>
         </View>
         <Snackbar

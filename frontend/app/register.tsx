@@ -94,28 +94,34 @@ export default function RegisterPage() {
   const handleRegister = async () => {
     setError(""); // Clear previous errors
 
-    if (!username) {
-      setError(t("common.errorUsername"));
+    // Handle validation
+    if (!username || username.length < 3) {
+      setError(t("validation.username.minLength"));
       return;
     }
+
     if (!email) {
-      setError(t("common.errorEmail"));
+      setError(t("validation.email.required"));
       return;
     }
-    if (!email || !isValidEmail(email)) {
-      setError(t("common.errorInvalidEmail"));
+
+    if (!isValidEmail(email)) {
+      setError(t("validation.email.format"));
       return;
     }
+
     if (!password) {
-      setError(t("common.errorPassword"));
+      setError(t("validation.password.required"));
       return;
     }
-    if (!confirmPassword) {
-      setError(t("common.errorConfirmPassword"));
+
+    if (password.length < 8) {
+      setError(t("validation.password.minLength"));
       return;
     }
+
     if (password !== confirmPassword) {
-      setError(t("profile.passwordRepeatMismatch"));
+      setError(t("validation.password.match"));
       return;
     }
 
@@ -134,7 +140,7 @@ export default function RegisterPage() {
         favoriteTVGenresIds
       );
       console.log(user);
-      setSnackbarMessage(t("common.registrationSuccess")); // Set success message
+      setSnackbarMessage(t("succes.registration")); // Set success message
       setSnackbarVisible(true); // Show snackbar
       setLoading(false);
 
@@ -143,9 +149,9 @@ export default function RegisterPage() {
         router.replace("/(tabs)/groups");
       }, 2000);
     } catch (error) {
-      setError(`${error}`);
-      setSnackbarMessage(t("common.registrationError")); // Set error message
-      setSnackbarVisible(true); // Show snackbar
+      setError(t("errors.auth.invalidCredentials"));
+      setSnackbarMessage(t("errors.auth.invalidCredentials"));
+      setSnackbarVisible(true);
       setLoading(false);
     }
   };
@@ -163,40 +169,39 @@ export default function RegisterPage() {
           style={{ flex: 1 }}
         >
           <ScrollView>
-            <View>
-              <Appbar.Header mode="center-aligned">
-                <Appbar.BackAction onPress={() => router.replace("/")} />
-                <Appbar.Content title={t("common.register")} />
-              </Appbar.Header>
-            </View>
+            <Appbar.Header mode="center-aligned">
+              <Appbar.BackAction onPress={() => router.replace("/")} />
+              <Appbar.Content title={t("common.actions.register")} />
+            </Appbar.Header>
+
             <View style={styles.form}>
               <View style={styles.avatarContainer}>
                 <Avatar.Image size={100} source={getAvatarSource()} />
                 <View style={styles.avatarButtons}>
-                  {avatar ? (
+                  {avatar && (
                     <Button
                       onPress={removeImage}
                       mode="outlined"
                       style={styles.removeButton}
                     >
-                      {t("profile.removePictureButton")}
+                      {t("profile.actions.removePicture")}
                     </Button>
-                  ) : null}
+                  )}
                   <Button onPress={pickImage} mode="outlined">
-                    {t("profile.uploadPictureButton")}
+                    {t("profile.actions.uploadPicture")}
                   </Button>
                 </View>
               </View>
 
               <TextInput
-                label={t("common.username")}
+                label={t("common.fields.username")}
                 value={username}
                 onChangeText={setUsername}
                 style={styles.input}
                 autoCapitalize="none"
               />
               <TextInput
-                label={t("profile.email")}
+                label={t("common.fields.email")}
                 value={email}
                 onChangeText={setEmail}
                 style={styles.input}
@@ -204,50 +209,47 @@ export default function RegisterPage() {
                 keyboardType="email-address"
               />
               <TextInput
-                label={t("common.password")}
+                label={t("common.fields.password")}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 style={styles.input}
               />
               <TextInput
-                label={t("profile.passwordRepeat")}
+                label={t("profile.fields.passwordRepeat")}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
                 style={styles.input}
               />
 
-              <View>
-                <GenreChips
-                  selectedGenres={favoriteMovieGenres}
-                  onToggleGenre={(genre) => {
-                    setMovieFavoriteGenres((prevGenres) =>
-                      prevGenres.some((g) => g.id === genre.id)
-                        ? prevGenres.filter((g) => g.id !== genre.id)
-                        : [...prevGenres, genre]
-                    );
-                  }}
-                  title={t("common.selectFavoriteMovieGenres")}
-                  genreType="movie"
-                />
-              </View>
-              <View>
-                <GenreChips
-                  selectedGenres={favoriteTVGenres}
-                  onToggleGenre={(genre) => {
-                    setTVFavoriteGenres((prevGenres) =>
-                      prevGenres.some((g) => g.id === genre.id)
-                        ? prevGenres.filter((g) => g.id !== genre.id)
-                        : [...prevGenres, genre]
-                    );
-                  }}
-                  title={t("common.selectFavoriteTVGenres")}
-                  genreType="tv"
-                />
-              </View>
+              <GenreChips
+                selectedGenres={favoriteMovieGenres}
+                onToggleGenre={(genre) => {
+                  setMovieFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.preferences.genres.selectMovie")}
+                genreType="movie"
+              />
 
-              {error ? <HelperText type="error">{error}</HelperText> : null}
+              <GenreChips
+                selectedGenres={favoriteTVGenres}
+                onToggleGenre={(genre) => {
+                  setTVFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.preferences.genres.selectTV")}
+                genreType="tv"
+              />
+
+              {error && <HelperText type="error">{error}</HelperText>}
 
               <View style={styles.buttons}>
                 <Button
@@ -256,21 +258,22 @@ export default function RegisterPage() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {t("common.register")}
+                  {t("common.actions.register")}
                 </Button>
                 <Button onPress={() => router.replace("/login")}>
-                  {t("common.login")}
+                  {t("common.actions.login")}
                 </Button>
               </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
       <Snackbar
         visible={snackbarVisible}
         onDismiss={onDismissSnackbar}
         action={{
-          label: t("common.close"),
+          label: t("common.actions.close"),
           onPress: onDismissSnackbar,
         }}
       >
