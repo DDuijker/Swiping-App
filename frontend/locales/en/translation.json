@@ -35,7 +35,9 @@
     "noGenresAvailable": "No genres available",
     "errorLoadingGenres": "There were errors loading the genres",
     "registrationSuccess": "Succesfully registered",
-    "registrationError": "Registration error"
+    "registrationError": "Registration error",
+    "loginError": "Login Error",
+    "close": "Close"
   },
   "groups": {
     "title": "Groups",

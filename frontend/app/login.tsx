@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Appbar, Button, Provider, TextInput } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  Provider,
+  TextInput,
+  Snackbar,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { login } from "../api/userService";
 import { router } from "expo-router";
@@ -14,14 +20,18 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleLogin = async () => {
     try {
       const user = await login(username, password);
       console.log(user);
-      router.navigate("/groups");
+      router.navigate("/(tabs)/groups");
     } catch (error) {
       console.log("error", error);
+      setSnackbarMessage(t("common.loginError"));
+      setSnackbarVisible(true);
     }
   };
 
@@ -39,12 +49,14 @@ export default function LoginPage() {
         <View style={styles.form}>
           <TextInput
             label={t("common.username")}
+            value={username || ""}
             onChangeText={setUsername}
             style={styles.input}
             autoCapitalize="none"
           />
           <TextInput
             label={t("common.password")}
+            value={password || ""}
             onChangeText={setPassword}
             secureTextEntry
           />
@@ -52,6 +64,13 @@ export default function LoginPage() {
             {t("common.login")}
           </Button>
         </View>
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          duration={Snackbar.DURATION_SHORT}
+        >
+          {snackbarMessage}
+        </Snackbar>
       </SafeAreaView>
     </Provider>
   );

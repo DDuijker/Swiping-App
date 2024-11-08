@@ -35,7 +35,9 @@
     "noGenresAvailable": "Geen genres beschikbaar",
     "errorLoadingGenres": "Er zijn fouten opgetreden bij het laden van de genres",
     "registeredSuccesfully": "Succesvol geregistreerd",
-    "registrationError": "Registratiefout"
+    "registrationError": "Registratiefout",
+    "loginError": "Login Error",
+    "close": "Sluiten"
   },
   "groups": {
     "title": "Groepen",

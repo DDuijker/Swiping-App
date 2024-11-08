@@ -7,7 +7,9 @@ import { ThemeProvider } from "../context/ThemeContext";
 import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const AppProviders = ({ children }) => {
+import { ReactNode } from "react";
+
+const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
     <SafeAreaProvider>
       <UserProvider>

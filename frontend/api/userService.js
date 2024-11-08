@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.1.100:27017/api/user"; // Adjust URL as needed
+const API_URL = "http://192.168.1.100:27017/api/user";
 
 // Function to login user
 export const login = async (username, password) => {
@@ -33,7 +33,8 @@ export const register = async (
   password,
   email,
   avatar = "",
-  favoriteMovieGenres = []
+  favoriteMovieGenres = [],
+  favoriteTVGenres = []
 ) => {
   try {
     const response = await fetch(`${API_URL}/register`, {
@@ -45,6 +46,7 @@ export const register = async (
         email,
         avatar,
         favoriteMovieGenres,
+        favoriteTVGenres,
       }),
     });
 
@@ -91,4 +93,5 @@ export const isAuthenticated = async () => {
 export const logout = async () => {
   await AsyncStorage.removeItem("token");
   await AsyncStorage.removeItem("user");
+  console.log("logged out");
 };

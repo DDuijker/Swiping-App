@@ -13,22 +13,30 @@ import { useTheme } from "../context/ThemeContext";
 import { useUser } from "../context/UserContext"; // Import the useUser hook
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
+import { isAuthenticated } from "../api/userService"; // Ensure this is an async function
 
 export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme();
   const { user, loading: userLoading } = useUser(); // Access user and loading state
+  const [isAuthenticatedStatus, setIsAuthenticatedStatus] =
+    React.useState(false); // State for authentication status
   const [visible, setVisible] = React.useState(false);
 
-  // Effect to handle user authentication redirection
+  // Effect to check user authentication status
   React.useEffect(() => {
-    // Only navigate if loading is complete
-    if (!userLoading) {
-      if (user) {
-        router.replace("/(tabs)/groups"); // Redirect to groups if logged in
+    const checkAuthentication = async () => {
+      if (!userLoading) {
+        const authenticated = await isAuthenticated(); // Await the authentication status
+        setIsAuthenticatedStatus(authenticated);
+        if (authenticated) {
+          router.replace("/(tabs)/groups"); // Redirect to groups if logged in
+        }
       }
-    }
-  }, [userLoading, user, router]);
+    };
+
+    checkAuthentication();
+  }, [userLoading]); // Only run when userLoading changes
 
   // Show a loading indicator while checking authentication
   if (userLoading) {

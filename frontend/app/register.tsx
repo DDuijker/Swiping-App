@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SPACING } from "../constants/DesignValues";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -10,9 +10,6 @@ import {
   TextInput,
   HelperText,
   Avatar,
-  Chip,
-  Text,
-  ActivityIndicator,
   Snackbar,
 } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
@@ -25,6 +22,7 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import GenreChips from "../components/GenreChips"; // Import the new GenreChips component
 
 interface Genre {
   id: string;
@@ -32,7 +30,7 @@ interface Genre {
 }
 
 export default function RegisterPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { theme } = useTheme();
 
   const [username, setUsername] = useState("");
@@ -40,57 +38,14 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [genres, setGenres] = useState<Genre[]>([]);
   const [favoriteMovieGenres, setMovieFavoriteGenres] = useState<Genre[]>([]);
+  const [favoriteTVGenres, setTVFavoriteGenres] = useState<Genre[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isGenresLoading, setIsGenresLoading] = useState(true);
 
   // Snackbar state
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  // Fetch genres from TMDb API with dynamic language
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?&language=${i18n.language}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        console.log("Fetched data:", data);
-        setGenres(data.genres || []);
-      } catch (error) {
-        console.error("Error fetching genres:", error);
-        setError(t("common.errorLoadingGenres"));
-      } finally {
-        setIsGenresLoading(false);
-      }
-    };
-
-    fetchGenres();
-  }, [i18n.language]);
-
-  // Function to toggle genre selection
-  const toggleGenre = (genre: Genre) => {
-    setMovieFavoriteGenres((prevGenres: Genre[]) => {
-      if (prevGenres.some((g: Genre) => g.id === genre.id)) {
-        return prevGenres.filter((g: Genre) => g.id !== genre.id);
-      } else {
-        return [...prevGenres, genre];
-      }
-    });
-  };
-
-  // Email validation
-  const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
   // Image picker for avatar
   const pickImage = async () => {
@@ -137,10 +92,6 @@ export default function RegisterPage() {
       setError(t("common.errorFields"));
       return;
     }
-    if (!isValidEmail(email)) {
-      setError(t("profile.emailInvalid"));
-      return;
-    }
     if (password !== confirmPassword) {
       setError(t("profile.passwordRepeatMismatch"));
       return;
@@ -151,12 +102,14 @@ export default function RegisterPage() {
       const favoriteMovieGenresIds = favoriteMovieGenres.map(
         (genre) => genre.id
       );
+      const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
       const user = await register(
         username,
         password,
         email,
         avatar,
-        favoriteMovieGenresIds
+        favoriteMovieGenresIds,
+        favoriteTVGenresIds // Pass TV genres to the register function
       );
       console.log(user);
       setSnackbarMessage(t("common.registrationSuccess")); // Set success message
@@ -240,40 +193,33 @@ export default function RegisterPage() {
                 secureTextEntry
                 style={styles.input}
               />
+              {/* TV Genre Chips */}
+              <GenreChips
+                selectedGenres={favoriteTVGenres}
+                onToggleGenre={(genre) => {
+                  setTVFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.selectFavoriteTVGenres")}
+                genreType="tv"
+              />
 
-              {/* Genre Selection Text */}
-              {isGenresLoading ? (
-                <ActivityIndicator size="small" color={theme.colors.primary} />
-              ) : genres.length > 0 ? (
-                <Text style={styles.genreText} variant="titleLarge">
-                  {t("common.selectFavoriteMovieGenres")}
-                </Text>
-              ) : (
-                <Text style={styles.genreText}>
-                  {t("common.noGenresAvailable")}
-                </Text>
-              )}
-
-              {/* Genre Selection Chips */}
-              <View style={styles.genreContainer}>
-                {genres.map((genre: Genre) => (
-                  <Chip
-                    key={genre.id}
-                    selected={favoriteMovieGenres.some(
-                      (g: Genre) => g.id === genre.id
-                    )}
-                    onPress={() => toggleGenre(genre)}
-                    mode={
-                      favoriteMovieGenres.some((g: Genre) => g.id === genre.id)
-                        ? "flat"
-                        : "outlined"
-                    }
-                    style={styles.genreChip}
-                  >
-                    {genre.name}
-                  </Chip>
-                ))}
-              </View>
+              {/* Movie Genre Chips */}
+              <GenreChips
+                selectedGenres={favoriteMovieGenres}
+                onToggleGenre={(genre) => {
+                  setMovieFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.selectFavoriteMovieGenres")}
+                genreType="movie"
+              />
 
               {error ? <HelperText type="error">{error}</HelperText> : null}
               <View style={styles.buttons}>
@@ -297,7 +243,7 @@ export default function RegisterPage() {
         visible={snackbarVisible}
         onDismiss={onDismissSnackbar}
         action={{
-          label: "Close",
+          label: t("common.close"),
           onPress: onDismissSnackbar, // Dismiss on close
         }}
       >
@@ -331,18 +277,5 @@ const styles = StyleSheet.create({
   },
   buttons: {
     margin: SPACING.xLarge,
-  },
-  genreContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: SPACING.medium,
-  },
-  genreText: {
-    alignItems: "center",
-    marginTop: SPACING.medium,
-    marginBottom: SPACING.medium,
-  },
-  genreChip: {
-    margin: SPACING.small,
   },
 });
