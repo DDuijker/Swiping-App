@@ -67,7 +67,13 @@ const GenreChips: React.FC<GenreChipsProps> = ({
   }, [t, genreType, i18n.language]);
 
   if (loading) {
-    return <ActivityIndicator size="small" color={theme.colors.primary} />;
+    return (
+      <ActivityIndicator
+        size="small"
+        style={{ margin: SPACING.small }}
+        color={theme.colors.primary}
+      />
+    );
   }
 
   if (error && typeof error === "string") {

@@ -13,32 +13,28 @@ import { useTheme } from "../context/ThemeContext";
 import { useUser } from "../context/UserContext"; // Import the useUser hook
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
-import { isAuthenticated } from "../api/userService"; // Ensure this is an async function
+import { isAuthenticated } from "../api/userService";
 
 export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme();
-  const { user, loading: userLoading } = useUser(); // Access user and loading state
-  const [isAuthenticatedStatus, setIsAuthenticatedStatus] =
-    React.useState(false); // State for authentication status
+  const { loading: userLoading } = useUser();
   const [visible, setVisible] = React.useState(false);
 
-  // Effect to check user authentication status
+  // Check authentication status when component mounts
   React.useEffect(() => {
-    const checkAuthentication = async () => {
-      if (!userLoading) {
-        const authenticated = await isAuthenticated(); // Await the authentication status
-        setIsAuthenticatedStatus(authenticated);
-        if (authenticated) {
-          router.replace("/(tabs)/groups"); // Redirect to groups if logged in
-        }
+    const checkAuth = async () => {
+      const isUserAuthenticated = await isAuthenticated();
+      if (isUserAuthenticated) {
+        router.push("/(tabs)/groups");
       }
     };
 
-    checkAuthentication();
-  }, [userLoading]); // Only run when userLoading changes
+    if (!userLoading) {
+      checkAuth();
+    }
+  }, []);
 
-  // Show a loading indicator while checking authentication
   if (userLoading) {
     return (
       <SafeAreaView
@@ -50,12 +46,11 @@ export default function Index() {
         <ActivityIndicator
           size="large"
           color={theme.colors.primary}
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={styles.loader}
         />
       </SafeAreaView>
     );
   }
-
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
     setVisible(false);
@@ -142,6 +137,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   appBar: {
     justifyContent: "space-between",

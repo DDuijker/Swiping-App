@@ -121,18 +121,19 @@ export default function RegisterPage() {
         email,
         avatar,
         favoriteMovieGenresIds,
-        favoriteTVGenresIds // Pass TV genres to the register function
+        favoriteTVGenresIds
       );
       console.log(user);
       setSnackbarMessage(t("common.registrationSuccess")); // Set success message
       setSnackbarVisible(true); // Show snackbar
       setLoading(false);
+
       // Redirect after a short delay to allow the snackbar to display
       setTimeout(() => {
-        router.replace("/groups");
+        router.replace("/(tabs)/groups");
       }, 2000);
     } catch (error) {
-      setError(t("common.error"));
+      setError(`${error}`);
       setSnackbarMessage(t("common.registrationError")); // Set error message
       setSnackbarVisible(true); // Show snackbar
       setLoading(false);
@@ -209,21 +210,6 @@ export default function RegisterPage() {
 
               <View>
                 <GenreChips
-                  selectedGenres={favoriteTVGenres}
-                  onToggleGenre={(genre) => {
-                    setTVFavoriteGenres((prevGenres) =>
-                      prevGenres.some((g) => g.id === genre.id)
-                        ? prevGenres.filter((g) => g.id !== genre.id)
-                        : [...prevGenres, genre]
-                    );
-                  }}
-                  title={t("common.selectFavoriteTVGenres")}
-                  genreType="tv"
-                />
-              </View>
-
-              <View>
-                <GenreChips
                   selectedGenres={favoriteMovieGenres}
                   onToggleGenre={(genre) => {
                     setMovieFavoriteGenres((prevGenres) =>
@@ -234,6 +220,20 @@ export default function RegisterPage() {
                   }}
                   title={t("common.selectFavoriteMovieGenres")}
                   genreType="movie"
+                />
+              </View>
+              <View>
+                <GenreChips
+                  selectedGenres={favoriteTVGenres}
+                  onToggleGenre={(genre) => {
+                    setTVFavoriteGenres((prevGenres) =>
+                      prevGenres.some((g) => g.id === genre.id)
+                        ? prevGenres.filter((g) => g.id !== genre.id)
+                        : [...prevGenres, genre]
+                    );
+                  }}
+                  title={t("common.selectFavoriteTVGenres")}
+                  genreType="tv"
                 />
               </View>
 
