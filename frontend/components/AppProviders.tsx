@@ -11,15 +11,15 @@ import { ReactNode } from "react";
 
 const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
-    <SafeAreaProvider>
-      <UserProvider>
+    <I18nextProvider i18n={i18n}>
+      <SafeAreaProvider>
         <ThemeProvider>
           <PaperProvider>
-            <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+            <UserProvider>{children} </UserProvider>
           </PaperProvider>
         </ThemeProvider>
-      </UserProvider>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </I18nextProvider>
   );
 };
 

@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { PaperProvider, BottomNavigation, Appbar } from "react-native-paper";
-import { useWindowDimensions, ActivityIndicator, View } from "react-native";
-import ListIndex from "./lists/index";
-import GroupIndex from "./groups/index";
-import ProfileIndex from "./profile/index";
+import { Appbar, BottomNavigation } from "react-native-paper";
+import { useWindowDimensions, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
-import { useUser } from "../../context/UserContext";
-import { useRouter } from "expo-router";
+import React from "react";
+import ListScreen from "./lists/index";
+import GroupsScreen from "./groups/index";
+import ProfileScreen from "./profile/index";
+import AppProviders from "../../components/AppProviders";
 
-export default function BottomTabsLayout() {
+export default function TabsLayout() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { height } = useWindowDimensions();
   const tabBarHeight = height > 700 ? 80 : 60;
+  const [index, setIndex] = React.useState(1);
 
-  const { user, loading } = useUser();
-  const router = useRouter();
-
-  // State to manage the active route
-  const [index, setIndex] = useState(1);
-
-  // Define routes for BottomNavigation
-  const [routes] = useState([
+  const [routes] = React.useState([
     {
       key: "lists",
       title: t("lists.title"),
@@ -43,54 +36,40 @@ export default function BottomTabsLayout() {
     },
   ]);
 
-  // Redirect to home or login if user is not authenticated
-  useEffect(() => {
-    if (!user) {
-      router.replace("/"); // Redirect to the home or login screen
-    }
-  }, [user, router]);
-
-  // Show a loading indicator while checking authentication
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
-
-  // Get the current tab title for the AppBar
-  const getCurrentTitle = () => {
-    return routes[index].title;
-  };
-
-  // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
-    lists: ListIndex,
-    groups: GroupIndex,
-    profile: ProfileIndex,
+    lists: ListScreen,
+    groups: GroupsScreen,
+    profile: ProfileScreen,
   });
 
   return (
-    <PaperProvider theme={theme}>
-      <Appbar.Header mode="center-aligned">
-        <Appbar.Content
-          color={theme.colors.onBackground}
-          title={getCurrentTitle()}
+    <AppProviders>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <Appbar.Header
+          mode="center-aligned"
+          style={{
+            backgroundColor: "transparent",
+            elevation: 0,
+          }}
+        >
+          <Appbar.Content
+            color={theme.colors.onBackground}
+            title={routes[index].title}
+          />
+        </Appbar.Header>
+        <BottomNavigation
+          navigationState={{ index, routes }}
+          onIndexChange={setIndex}
+          renderScene={renderScene}
+          barStyle={{
+            height: tabBarHeight,
+            backgroundColor: theme.colors.elevation.level2,
+          }}
+          sceneAnimationType="shifting"
+          labeled={true}
+          theme={theme}
         />
-      </Appbar.Header>
-      <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-        barStyle={{
-          height: tabBarHeight,
-          paddingBottom: 20,
-          backgroundColor: theme.colors.background,
-        }}
-        sceneAnimationType="shifting"
-        labeled={true}
-      />
-    </PaperProvider>
+      </View>
+    </AppProviders>
   );
 }

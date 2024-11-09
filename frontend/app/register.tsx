@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SPACING } from "../constants/DesignValues";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,8 @@ import {
   Platform,
 } from "react-native";
 import GenreChips from "../components/GenreChips";
+import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
 
 interface Genre {
   id: string;
@@ -43,32 +45,60 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Snackbar state
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // Image picker for avatar
-  const pickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      alert(t("profile.avatarPermissionDenied"));
-      return;
-    }
+  const convertToBase64 = async (uri: string) => {
+    try {
+      // For already base64 encoded images
+      if (uri.startsWith("data:")) {
+        return uri.split(",")[1];
+      }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
-    });
+      // Compress image before converting to base64
+      const manipulateResult = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 300, height: 300 } }],
+        { compress: 0.3, format: ImageManipulator.SaveFormat.JPEG }
+      );
 
-    if (!result.canceled) {
-      setAvatar(result.assets[0].uri);
+      const base64 = await FileSystem.readAsStringAsync(manipulateResult.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error("Error converting image to base64:", error);
+      throw new Error("Failed to process image");
     }
   };
 
-  // Get avatar source
+  const pickImage = async () => {
+    try {
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResult.granted) {
+        alert(t("profile.avatarPermissionDenied"));
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+
+      if (!result.canceled) {
+        setAvatar(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Image picker error:", error);
+      alert(t("profile.errorPickingImage"));
+    }
+  };
+
   const getAvatarSource = () => {
     return avatar
       ? { uri: avatar }
@@ -79,78 +109,93 @@ export default function RegisterPage() {
         };
   };
 
-  // Remove selected image
   const removeImage = () => {
     setAvatar("");
   };
 
-  // Check for a valid email
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Handle registration
   const handleRegister = async () => {
-    setError(""); // Clear previous errors
+    setError("");
 
-    if (!username) {
-      setError(t("common.errorUsername"));
+    if (!username || username.length < 3) {
+      setError(t("validation.username.minLength"));
       return;
     }
+
     if (!email) {
-      setError(t("common.errorEmail"));
+      setError(t("validation.email.required"));
       return;
     }
-    if (!email || !isValidEmail(email)) {
-      setError(t("common.errorInvalidEmail"));
+
+    if (!isValidEmail(email)) {
+      setError(t("validation.email.format"));
       return;
     }
+
     if (!password) {
-      setError(t("common.errorPassword"));
+      setError(t("validation.password.required"));
       return;
     }
-    if (!confirmPassword) {
-      setError(t("common.errorConfirmPassword"));
+
+    if (password.length < 8) {
+      setError(t("validation.password.minLength"));
       return;
     }
+
     if (password !== confirmPassword) {
-      setError(t("profile.passwordRepeatMismatch"));
+      setError(t("validation.password.match"));
       return;
     }
 
     setLoading(true);
+
     try {
+      let processedAvatar;
+
+      if (avatar) {
+        try {
+          processedAvatar = await convertToBase64(avatar);
+        } catch (error) {
+          console.error("Error processing avatar:", error);
+          setError(t("profile.errorProcessingImage"));
+          setLoading(false);
+          return;
+        }
+      }
+
       const favoriteMovieGenresIds = favoriteMovieGenres.map(
         (genre) => genre.id
       );
       const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
+
       const user = await register(
         username,
         password,
         email,
-        avatar,
+        processedAvatar,
         favoriteMovieGenresIds,
         favoriteTVGenresIds
       );
-      console.log(user);
-      setSnackbarMessage(t("common.registeredSuccesfully")); // Set success message
-      setSnackbarVisible(true); // Show snackbar
+
+      setSnackbarMessage(t("succes.registration"));
+      setSnackbarVisible(true);
       setLoading(false);
 
-      // Redirect after a short delay to allow the snackbar to display
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
     } catch (error) {
-      setError(`${error}`);
-      setSnackbarMessage(t("common.registrationError")); // Set error message
-      setSnackbarVisible(true); // Show snackbar
+      setError(t("errors.auth.invalidCredentials"));
+      setSnackbarMessage(t("errors.auth.invalidCredentials"));
+      setSnackbarVisible(true);
       setLoading(false);
     }
   };
 
-  // Handle snackbar dismiss
   const onDismissSnackbar = () => setSnackbarVisible(false);
 
   return (
@@ -163,40 +208,39 @@ export default function RegisterPage() {
           style={{ flex: 1 }}
         >
           <ScrollView>
-            <View>
-              <Appbar.Header mode="center-aligned">
-                <Appbar.BackAction onPress={() => router.replace("/")} />
-                <Appbar.Content title={t("common.register")} />
-              </Appbar.Header>
-            </View>
+            <Appbar.Header mode="center-aligned">
+              <Appbar.BackAction onPress={() => router.replace("/")} />
+              <Appbar.Content title={t("common.actions.register")} />
+            </Appbar.Header>
+
             <View style={styles.form}>
               <View style={styles.avatarContainer}>
                 <Avatar.Image size={100} source={getAvatarSource()} />
                 <View style={styles.avatarButtons}>
-                  {avatar ? (
+                  {avatar && (
                     <Button
                       onPress={removeImage}
                       mode="outlined"
                       style={styles.removeButton}
                     >
-                      {t("profile.removePictureButton")}
+                      {t("profile.actions.removePicture")}
                     </Button>
-                  ) : null}
+                  )}
                   <Button onPress={pickImage} mode="outlined">
-                    {t("profile.uploadPictureButton")}
+                    {t("profile.actions.uploadPicture")}
                   </Button>
                 </View>
               </View>
 
               <TextInput
-                label={t("common.username")}
+                label={t("common.fields.username")}
                 value={username}
                 onChangeText={setUsername}
                 style={styles.input}
                 autoCapitalize="none"
               />
               <TextInput
-                label={t("profile.email")}
+                label={t("common.fields.email")}
                 value={email}
                 onChangeText={setEmail}
                 style={styles.input}
@@ -204,78 +248,76 @@ export default function RegisterPage() {
                 keyboardType="email-address"
               />
               <TextInput
-                label={t("common.password")}
+                label={t("common.fields.password")}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 style={styles.input}
               />
               <TextInput
-                label={t("profile.passwordRepeat")}
+                label={t("profile.fields.passwordRepeat")}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
                 style={styles.input}
               />
 
-              <View>
-                <GenreChips
-                  selectedGenres={favoriteMovieGenres}
-                  onToggleGenre={(genre) => {
-                    setMovieFavoriteGenres((prevGenres) =>
-                      prevGenres.some((g) => g.id === genre.id)
-                        ? prevGenres.filter((g) => g.id !== genre.id)
-                        : [...prevGenres, genre]
-                    );
-                  }}
-                  title={t("common.selectFavoriteMovieGenres")}
-                  genreType="movie"
-                />
-              </View>
-              <View>
-                <GenreChips
-                  selectedGenres={favoriteTVGenres}
-                  onToggleGenre={(genre) => {
-                    setTVFavoriteGenres((prevGenres) =>
-                      prevGenres.some((g) => g.id === genre.id)
-                        ? prevGenres.filter((g) => g.id !== genre.id)
-                        : [...prevGenres, genre]
-                    );
-                  }}
-                  title={t("common.selectFavoriteTVGenres")}
-                  genreType="tv"
-                />
-              </View>
+              <GenreChips
+                selectedGenres={favoriteMovieGenres}
+                onToggleGenre={(genre) => {
+                  setMovieFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.preferences.genres.selectMovie")}
+                genreType="movie"
+              />
 
-              {error ? <HelperText type="error">{error}</HelperText> : null}
+              <GenreChips
+                selectedGenres={favoriteTVGenres}
+                onToggleGenre={(genre) => {
+                  setTVFavoriteGenres((prevGenres) =>
+                    prevGenres.some((g) => g.id === genre.id)
+                      ? prevGenres.filter((g) => g.id !== genre.id)
+                      : [...prevGenres, genre]
+                  );
+                }}
+                title={t("common.preferences.genres.selectTV")}
+                genreType="tv"
+              />
 
-              <View style={styles.buttons}>
+              {error && <HelperText type="error">{error}</HelperText>}
+
+              <View>
                 <Button
                   mode="contained"
                   onPress={handleRegister}
                   loading={loading}
                   disabled={loading}
                 >
-                  {t("common.register")}
+                  {t("common.actions.register")}
                 </Button>
-                <Button onPress={() => router.replace("/login")}>
-                  {t("common.login")}
+                <Button mode="text" onPress={() => router.replace("/login")}>
+                  {t("common.actions.login")}
                 </Button>
               </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={onDismissSnackbar}
+          action={{
+            label: t("common.actions.close"),
+            onPress: onDismissSnackbar,
+          }}
+        >
+          {snackbarMessage}
+        </Snackbar>
       </SafeAreaView>
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={onDismissSnackbar}
-        action={{
-          label: t("common.close"),
-          onPress: onDismissSnackbar,
-        }}
-      >
-        {snackbarMessage}
-      </Snackbar>
     </Provider>
   );
 }

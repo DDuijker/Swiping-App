@@ -9,7 +9,7 @@ import {
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { login } from "../api/userService";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useTheme } from "../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SPACING } from "../constants/DesignValues";
@@ -22,16 +22,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      setSnackbarMessage(t("validation.fields.required"));
+      setSnackbarVisible(true);
+      return;
+    }
+
+    setLoading(true);
     try {
       const user = await login(username, password);
-      console.log(user);
-      router.navigate("/(tabs)/groups");
+      if (user) {
+        router.push("/(tabs)/groups");
+      }
     } catch (error) {
-      console.log("error", error);
-      setSnackbarMessage(t("common.loginError"));
+      setSnackbarMessage(t("errors.auth.invalidCredentials"));
       setSnackbarVisible(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,34 +50,40 @@ export default function LoginPage() {
       <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <View>
-          <Appbar.Header mode="center-aligned">
-            <Appbar.BackAction onPress={() => router.replace("/")} />
-            <Appbar.Content title={t("common.login")} />
-          </Appbar.Header>
-        </View>
+        <Appbar.Header mode="center-aligned">
+          <Appbar.BackAction onPress={() => router.replace("/")} />
+          <Appbar.Content title={t("common.actions.login")} />
+        </Appbar.Header>
         <View style={styles.form}>
           <TextInput
-            label={t("common.username")}
-            value={username || ""}
+            label={t("common.fields.username")}
+            value={username}
             onChangeText={setUsername}
             style={styles.input}
             autoCapitalize="none"
+            disabled={loading}
           />
           <TextInput
-            label={t("common.password")}
-            value={password || ""}
+            label={t("common.fields.password")}
+            value={password}
             onChangeText={setPassword}
             secureTextEntry
+            disabled={loading}
           />
-          <Button style={styles.button} mode="contained" onPress={handleLogin}>
-            {t("common.login")}
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={handleLogin}
+            loading={loading}
+            disabled={loading}
+          >
+            {t("common.actions.login")}
           </Button>
         </View>
         <Snackbar
           visible={snackbarVisible}
           onDismiss={() => setSnackbarVisible(false)}
-          duration={Snackbar.DURATION_SHORT}
+          duration={3000}
         >
           {snackbarMessage}
         </Snackbar>

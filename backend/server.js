@@ -10,8 +10,9 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 // Middleware
 app.use(cors()); // Enable CORS
-app.use(bodyParser.json()); // Parse JSON request bodies
-app.use(express.json());
+app.use(bodyParser.json({ limit: "10mb" })); // Parse JSON request bodies
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Sample route
 app.get("/", (req, res) => {
