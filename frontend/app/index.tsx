@@ -1,6 +1,6 @@
 import * as React from "react";
 import { router } from "expo-router";
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text } from "react-native";
 import { Appbar, Button, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
@@ -11,6 +11,19 @@ export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme();
   const [visible, setVisible] = React.useState(false);
+
+  interface MenuButtonProps {
+    onPress: () => void;
+  }
+
+  const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
+    <Appbar.Action
+      icon="translate"
+      onPress={props.onPress}
+      ref={ref}
+      testID="language-menu"
+    />
+  ));
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
@@ -36,26 +49,39 @@ export default function Index() {
             <Appbar.Action
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme}
+              testID="theme-toggle"
             />
-            <Appbar.Content title={t("common.welcome.title")} />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
-              anchor={
-                <Appbar.Action
-                  icon="translate"
-                  onPress={() => setVisible(true)}
-                />
-              }
+              anchor={<MenuButton onPress={() => setVisible(true)} />}
             >
-              <Menu.Item onPress={() => changeLanguage("en")} title="English" />
+              <Menu.Item
+                onPress={() => changeLanguage("en")}
+                title="English"
+                testID="language-item-english"
+              />
               <Menu.Item
                 onPress={() => changeLanguage("nl")}
                 title="Nederlands"
+                testID="language-item-dutch"
               />
             </Menu>
           </Appbar.Header>
+
+          <Text
+            style={[
+              styles.title,
+              {
+                fontSize: theme.fonts.headlineLarge.fontSize,
+                color: theme.colors.onSurface,
+              },
+            ]}
+          >
+            {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
+          </Text>
         </View>
+
         <View
           style={[
             styles.buttonContainer,
@@ -88,7 +114,6 @@ export default function Index() {
   );
 }
 
-// Stylesheet using SPACING values
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -109,5 +134,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: SPACING.medium,
+  },
+  title: {
+    textAlign: 'center',
+    marginTop: SPACING.large,
   },
 });
