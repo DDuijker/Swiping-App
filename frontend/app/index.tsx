@@ -51,6 +51,7 @@ export default function Index() {
               onPress={toggleTheme}
               testID="theme-toggle"
             />
+            <Appbar.Content title={t("common.welcome.title")} />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
@@ -68,18 +69,6 @@ export default function Index() {
               />
             </Menu>
           </Appbar.Header>
-
-          <Text
-            style={[
-              styles.title,
-              {
-                fontSize: theme.fonts.headlineLarge.fontSize,
-                color: theme.colors.onSurface,
-              },
-            ]}
-          >
-            {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
-          </Text>
         </View>
 
         <View
@@ -136,7 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.medium,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: SPACING.large,
   },
 });
