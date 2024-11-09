@@ -134,7 +134,7 @@ export default function RegisterPage() {
         favoriteTVGenresIds
       );
       console.log(user);
-      setSnackbarMessage(t("common.registrationSuccess")); // Set success message
+      setSnackbarMessage(t("common.registeredSuccesfully")); // Set success message
       setSnackbarVisible(true); // Show snackbar
       setLoading(false);
 
