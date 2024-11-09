@@ -7,18 +7,36 @@ import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
 
 export default function Index() {
-  const { t, i18n } = useTranslation();
-  const { isDarkTheme, theme, toggleTheme } = useTheme(); // Get the user's preferred color scheme (light or dark)
+  const { t, i18n } = useTranslation(); // i18n for translations
+  const { isDarkTheme, theme, toggleTheme } = useTheme(); // Context for theme and toggle
 
-  const [visible, setVisible] = React.useState(false); // State for managing the menu visibility
+  // State for controlling language menu visibility
+  const [visible, setVisible] = React.useState(false);
 
+  // Define MenuButton as a forwardRef component for accessibility and testability
+  interface MenuButtonProps {
+    onPress: () => void;
+  }
+
+  // This component uses React.forwardRef to enable passing a ref from the parent component in the language menu ( <MenuButton ref={ref} /> )
+  const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
+    <Appbar.Action
+      icon="translate"
+      onPress={props.onPress}
+      ref={ref}
+      testID="language-menu"
+    />
+  ));
+
+  // Function to change the app language
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
-    setVisible(false); // Close the menu after selecting
+    setVisible(false); // Close the menu after selection
   };
 
   return (
     <Provider theme={theme}>
+      {/* Main Container */}
       <SafeAreaView
         style={[
           styles.container,
@@ -26,35 +44,39 @@ export default function Index() {
         ]}
       >
         <View>
-          {/* AppBar with Language Selector and Theme Toggle */}
+          {/* AppBar containing theme toggle and language menu */}
           <Appbar.Header
             style={[
               styles.appBar,
               { backgroundColor: theme.colors.elevation.level0 },
             ]}
           >
-            {/* Theme Toggle Button */}
+            {/* Theme Toggle Button - toggles between light and dark modes */}
             <Appbar.Action
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
-              onPress={toggleTheme} // Use toggleTheme from context
+              onPress={toggleTheme}
+              testID="theme-toggle"
             />
+            {/* Language Menu - allows user to select app language */}
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
-              anchor={
-                <Appbar.Action
-                  icon="translate"
-                  onPress={() => setVisible(true)}
-                />
-              } // Language button on the right
+              anchor={<MenuButton onPress={() => setVisible(true)} />}
             >
-              <Menu.Item onPress={() => changeLanguage("en")} title="English" />
+              <Menu.Item
+                onPress={() => changeLanguage("en")}
+                title="English"
+                testID="language-item-english"
+              />
               <Menu.Item
                 onPress={() => changeLanguage("nl")}
                 title="Nederlands"
+                testID="language-item-dutch"
               />
             </Menu>
           </Appbar.Header>
+
+          {/* Welcome Text - shows greeting with app name */}
           <Text
             style={[
               styles.title,
@@ -67,7 +89,8 @@ export default function Index() {
             {t("common.welcome-to-brandname").replace("BrandName", "Binge")}
           </Text>
         </View>
-        {/* Buttons on the bottom area */}
+
+        {/* Bottom Area with Register and Login Buttons */}
         <View
           style={[
             styles.buttonContainer,
@@ -78,15 +101,17 @@ export default function Index() {
             },
           ]}
         >
+          {/* Register Button */}
           <Link href="/register" asChild>
             <Button
               mode="contained"
-              style={[styles.button]}
+              style={styles.button}
               labelStyle={{ color: theme.colors.onPrimary }}
             >
               {t("common.register")}
             </Button>
           </Link>
+          {/* Login Button */}
           <Link href="/login" asChild>
             <Button
               mode="text"
@@ -102,7 +127,7 @@ export default function Index() {
   );
 }
 
-// Stylesheet using SPACING values
+// Stylesheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
