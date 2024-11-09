@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SPACING } from "../constants/DesignValues";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,8 @@ import {
   Platform,
 } from "react-native";
 import GenreChips from "../components/GenreChips";
+import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
 
 interface Genre {
   id: string;
@@ -43,32 +45,60 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Snackbar state
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // Image picker for avatar
-  const pickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      alert(t("profile.avatarPermissionDenied"));
-      return;
-    }
+  const convertToBase64 = async (uri: string) => {
+    try {
+      // For already base64 encoded images
+      if (uri.startsWith("data:")) {
+        return uri.split(",")[1];
+      }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
-    });
+      // Compress image before converting to base64
+      const manipulateResult = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 300, height: 300 } }],
+        { compress: 0.3, format: ImageManipulator.SaveFormat.JPEG }
+      );
 
-    if (!result.canceled) {
-      setAvatar(result.assets[0].uri);
+      const base64 = await FileSystem.readAsStringAsync(manipulateResult.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      return `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+      console.error("Error converting image to base64:", error);
+      throw new Error("Failed to process image");
     }
   };
 
-  // Get avatar source
+  const pickImage = async () => {
+    try {
+      const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResult.granted) {
+        alert(t("profile.avatarPermissionDenied"));
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+
+      if (!result.canceled) {
+        setAvatar(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Image picker error:", error);
+      alert(t("profile.errorPickingImage"));
+    }
+  };
+
   const getAvatarSource = () => {
     return avatar
       ? { uri: avatar }
@@ -79,22 +109,18 @@ export default function RegisterPage() {
         };
   };
 
-  // Remove selected image
   const removeImage = () => {
     setAvatar("");
   };
 
-  // Check for a valid email
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Handle registration
   const handleRegister = async () => {
-    setError(""); // Clear previous errors
+    setError("");
 
-    // Handle validation
     if (!username || username.length < 3) {
       setError(t("validation.username.minLength"));
       return;
@@ -126,25 +152,39 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
+
     try {
+      let processedAvatar;
+
+      if (avatar) {
+        try {
+          processedAvatar = await convertToBase64(avatar);
+        } catch (error) {
+          console.error("Error processing avatar:", error);
+          setError(t("profile.errorProcessingImage"));
+          setLoading(false);
+          return;
+        }
+      }
+
       const favoriteMovieGenresIds = favoriteMovieGenres.map(
         (genre) => genre.id
       );
       const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
+
       const user = await register(
         username,
         password,
         email,
-        avatar,
+        processedAvatar,
         favoriteMovieGenresIds,
         favoriteTVGenresIds
       );
-      console.log(user);
-      setSnackbarMessage(t("succes.registration")); // Set success message
-      setSnackbarVisible(true); // Show snackbar
+
+      setSnackbarMessage(t("succes.registration"));
+      setSnackbarVisible(true);
       setLoading(false);
 
-      // Redirect after a short delay to allow the snackbar to display
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
@@ -156,7 +196,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Handle snackbar dismiss
   const onDismissSnackbar = () => setSnackbarVisible(false);
 
   return (
@@ -251,7 +290,7 @@ export default function RegisterPage() {
 
               {error && <HelperText type="error">{error}</HelperText>}
 
-              <View style={styles.buttons}>
+              <View>
                 <Button
                   mode="contained"
                   onPress={handleRegister}
@@ -260,25 +299,25 @@ export default function RegisterPage() {
                 >
                   {t("common.actions.register")}
                 </Button>
-                <Button onPress={() => router.replace("/login")}>
+                <Button mode="text" onPress={() => router.replace("/login")}>
                   {t("common.actions.login")}
                 </Button>
               </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
 
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={onDismissSnackbar}
-        action={{
-          label: t("common.actions.close"),
-          onPress: onDismissSnackbar,
-        }}
-      >
-        {snackbarMessage}
-      </Snackbar>
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={onDismissSnackbar}
+          action={{
+            label: t("common.actions.close"),
+            onPress: onDismissSnackbar,
+          }}
+        >
+          {snackbarMessage}
+        </Snackbar>
+      </SafeAreaView>
     </Provider>
   );
 }

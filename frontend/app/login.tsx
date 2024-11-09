@@ -35,7 +35,6 @@ export default function LoginPage() {
     try {
       const user = await login(username, password);
       if (user) {
-        console.log("Login successful, redirecting to tabs...");
         router.push("/(tabs)/groups");
       }
     } catch (error) {
@@ -51,12 +50,10 @@ export default function LoginPage() {
       <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <View>
-          <Appbar.Header mode="center-aligned">
-            <Appbar.BackAction onPress={() => router.replace("/")} />
-            <Appbar.Content title={t("common.actions.login")} />
-          </Appbar.Header>
-        </View>
+        <Appbar.Header mode="center-aligned">
+          <Appbar.BackAction onPress={() => router.replace("/")} />
+          <Appbar.Content title={t("common.actions.login")} />
+        </Appbar.Header>
         <View style={styles.form}>
           <TextInput
             label={t("common.fields.username")}

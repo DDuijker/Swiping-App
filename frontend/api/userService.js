@@ -28,41 +28,54 @@ export const login = async (username, password) => {
 
 // Function to register a user
 export const register = async (
-  username,
-  password,
-  email,
-  avatar = "",
-  favoriteMovieGenres = [],
-  favoriteTVGenres = []
+  username: string,
+  password: string,
+  email: string,
+  avatar?: string,
+  favoriteMovieGenres?: string[],
+  favoriteTVGenres?: string[]
 ) => {
   try {
-    const response = await fetch(`${API_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        password,
-        email,
-        avatar,
-        favoriteMovieGenres,
-        favoriteTVGenres,
-      }),
-    });
+    // Compress the image before sending
+    let processedAvatar = avatar;
+    if (avatar && avatar.length > 1000000) {
+      // If larger than ~1MB
+      const compressionRatio = 1000000 / avatar.length;
+      const quality = Math.min(0.95, Math.max(0.1, compressionRatio));
+      // Remove the data:image prefix if present
+      processedAvatar = avatar.includes("base64,")
+        ? avatar.split("base64,")[1]
+        : avatar;
+    }
+
+    const response = await fetch(
+      "http://192.168.1.100:27017/api/user/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          email,
+          avatar: processedAvatar,
+          favoriteMovieGenres,
+          favoriteTVGenres,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Registration failed: ${response.status} ${errorText}`);
+    }
 
     const data = await response.json();
-
-    if (response.ok) {
-      // Store token and user info in AsyncStorage
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("user", JSON.stringify(data.user));
-
-      console.log("User registered successfully:", data);
-      return data.user;
-    } else {
-      throw new Error(data.msg || "Registration failed");
-    }
+    return data;
   } catch (error) {
-    console.error("Error during registration:", error);
+    console.error("Registration error:", error);
     throw error;
   }
 };
