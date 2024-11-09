@@ -16,7 +16,7 @@ import {
 // Define a default context value
 const defaultContextValue = {
   user: null,
-  loading: true,
+  loading: false,
   login: async (username: string, password: string) => {},
   logout: () => {},
 };

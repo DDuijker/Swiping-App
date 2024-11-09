@@ -14,7 +14,7 @@ export default function ProfileIndex() {
       await logout();
       router.navigate("/login");
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error(t("errors.auth.logout"), error);
     }
   };
 
@@ -30,7 +30,7 @@ export default function ProfileIndex() {
       <Text style={{ color: theme.colors.onBackground }}>
         {t("profile.title")}
       </Text>
-      <Button onPress={handleLogout}>{t("common.logout")}</Button>
+      <Button onPress={handleLogout}>{t("common.actions.logout")}</Button>
     </View>
   );
 }

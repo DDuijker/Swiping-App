@@ -37,12 +37,7 @@ export default function Index() {
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme}
             />
-            <Appbar.Content
-              title={t("common.welcome-to-brandname").replace(
-                "BrandName",
-                "Binge"
-              )}
-            />
+            <Appbar.Content title={t("common.welcome.title")} />
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
@@ -77,7 +72,7 @@ export default function Index() {
             style={styles.button}
             labelStyle={{ color: theme.colors.onPrimary }}
           >
-            {t("common.register")}
+            {t("common.actions.register")}
           </Button>
           <Button
             onPress={() => router.replace("/login")}
@@ -85,7 +80,7 @@ export default function Index() {
             style={styles.button}
             labelStyle={{ color: theme.colors.primary }}
           >
-            {t("common.login")}
+            {t("common.actions.login")}
           </Button>
         </View>
       </SafeAreaView>
