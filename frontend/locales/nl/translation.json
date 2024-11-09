@@ -142,7 +142,10 @@
       "passwordRequired": "Wachtwoord is verplicht",
       "passwordRepeatRequired": "Herhaal wachtwoord is verplicht",
       "passwordRepeatMismatch": "Herhaald wachtwoord komt niet overeen",
-      "uploadPicture": "Er is een fout opgetreden bij het uploaden van de profielfoto"
+      "uploadPicture": "Er is een fout opgetreden bij het uploaden van de profielfoto",
+      "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
+      "errorPickingImage": "There was an error picking the image",
+      "errorProcessingImage": "There was an error processing the image"
     },
     "success": {
       "accountDeleted": "Account succesvol verwijderd",

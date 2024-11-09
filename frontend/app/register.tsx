@@ -79,7 +79,7 @@ export default function RegisterPage() {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (!permissionResult.granted) {
-        alert(t("profile.avatarPermissionDenied"));
+        alert(t("profile.errors.avatarPermissionDenied"));
         return;
       }
 
@@ -95,7 +95,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       console.error("Image picker error:", error);
-      alert(t("profile.errorPickingImage"));
+      alert(t("profile.errors.errorPickingImage"));
     }
   };
 

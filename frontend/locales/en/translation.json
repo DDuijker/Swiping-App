@@ -142,7 +142,10 @@
       "passwordRequired": "Password is required",
       "passwordRepeatRequired": "Repeat password is required",
       "passwordRepeatMismatch": "Repeat password does not match",
-      "uploadPicture": "An error occurred while uploading the profile picture"
+      "uploadPicture": "An error occurred while uploading the profile picture",
+      "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
+      "errorPickingImage": "Er is een fout opgetreden bij het selecteren van de afbeelding",
+      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding"
     },
     "success": {
       "accountDeleted": "Account successfully deleted",
