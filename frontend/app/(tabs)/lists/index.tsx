@@ -5,7 +5,7 @@ import { useTheme } from "../../../context/ThemeContext";
 export default function ListIndex() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  
+
   return (
     <View
       style={{
@@ -15,7 +15,9 @@ export default function ListIndex() {
         backgroundColor: theme.colors.background,
       }}
     >
-      <Text style={{color: theme.colors.onBackground}}>{t("lists.title")}</Text>
+      <Text style={{ color: theme.colors.onBackground }}>
+        {t("lists.title")}
+      </Text>
     </View>
   );
 }

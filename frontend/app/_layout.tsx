@@ -1,23 +1,45 @@
-import 'intl-pluralrules';
-import { Stack } from "expo-router";
-import { I18nextProvider } from "react-i18next";
-import i18n from "../locales/I18n";
-import { ThemeProvider } from "../context/ThemeContext";
-import { PaperProvider } from "react-native-paper";
+import React from "react";
+import AppProviders from "../components/AppProviders";
+import { router, Stack } from "expo-router";
+import { useUser } from "../context/UserContext";
+import { View, ActivityIndicator } from "react-native";
 
 export default function RootLayout() {
+  const { user, loading } = useUser();
+
+  React.useEffect(() => {
+    if (user) {
+      router.replace("/(tabs)");
+    } else {
+      router.replace("/");
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
-    <ThemeProvider>
-      <PaperProvider>
-        <I18nextProvider i18n={i18n}>
-          <Stack screenOptions={{ headerShown: false }}>
-            {/* All screens not in the tab folder*/}
-            <Stack.Screen name="index" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="register" />
-          </Stack>
-        </I18nextProvider>
-      </PaperProvider>
-    </ThemeProvider>
+    <AppProviders>
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* Public Routes */}
+        <Stack.Screen name="index" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+
+        {/* Protected Routes */}
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            animation: "fade",
+            headerShown: false,
+          }}
+        />
+      </Stack>
+    </AppProviders>
   );
 }

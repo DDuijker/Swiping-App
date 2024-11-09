@@ -1,24 +1,21 @@
 import * as React from "react";
-import { Link } from "expo-router";
-import { SafeAreaView, View, StyleSheet } from "react-native";
-import { Appbar, Button, Text, Menu, Provider } from "react-native-paper";
+import { router } from "expo-router";
+import { SafeAreaView, View, StyleSheet, Text } from "react-native";
+import { Appbar, Button, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
+import "react-native-reanimated";
 
 export default function Index() {
-  const { t, i18n } = useTranslation(); // i18n for translations
-  const { isDarkTheme, theme, toggleTheme } = useTheme(); // Context for theme and toggle
-
-  // State for controlling language menu visibility
+  const { t, i18n } = useTranslation();
+  const { isDarkTheme, theme, toggleTheme } = useTheme();
   const [visible, setVisible] = React.useState(false);
 
-  // Define MenuButton as a forwardRef component for accessibility and testability
   interface MenuButtonProps {
     onPress: () => void;
   }
 
-  // This component uses React.forwardRef to enable passing a ref from the parent component in the language menu ( <MenuButton ref={ref} /> )
   const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
     <Appbar.Action
       icon="translate"
@@ -28,15 +25,13 @@ export default function Index() {
     />
   ));
 
-  // Function to change the app language
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
-    setVisible(false); // Close the menu after selection
+    setVisible(false);
   };
 
   return (
     <Provider theme={theme}>
-      {/* Main Container */}
       <SafeAreaView
         style={[
           styles.container,
@@ -44,20 +39,18 @@ export default function Index() {
         ]}
       >
         <View>
-          {/* AppBar containing theme toggle and language menu */}
           <Appbar.Header
             style={[
               styles.appBar,
               { backgroundColor: theme.colors.elevation.level0 },
             ]}
+            mode="center-aligned"
           >
-            {/* Theme Toggle Button - toggles between light and dark modes */}
             <Appbar.Action
               icon={isDarkTheme ? "weather-sunny" : "moon-waxing-crescent"}
               onPress={toggleTheme}
               testID="theme-toggle"
             />
-            {/* Language Menu - allows user to select app language */}
             <Menu
               visible={visible}
               onDismiss={() => setVisible(false)}
@@ -76,7 +69,6 @@ export default function Index() {
             </Menu>
           </Appbar.Header>
 
-          {/* Welcome Text - shows greeting with app name */}
           <Text
             style={[
               styles.title,
@@ -90,7 +82,6 @@ export default function Index() {
           </Text>
         </View>
 
-        {/* Bottom Area with Register and Login Buttons */}
         <View
           style={[
             styles.buttonContainer,
@@ -101,45 +92,40 @@ export default function Index() {
             },
           ]}
         >
-          {/* Register Button */}
-          <Link href="/register" asChild>
-            <Button
-              mode="contained"
-              style={styles.button}
-              labelStyle={{ color: theme.colors.onPrimary }}
-            >
-              {t("common.register")}
-            </Button>
-          </Link>
-          {/* Login Button */}
-          <Link href="/login" asChild>
-            <Button
-              mode="text"
-              style={styles.button}
-              labelStyle={{ color: theme.colors.primary }}
-            >
-              {t("common.login")}
-            </Button>
-          </Link>
+          <Button
+            onPress={() => router.replace("/register")}
+            mode="contained"
+            style={styles.button}
+            labelStyle={{ color: theme.colors.onPrimary }}
+          >
+            {t("common.actions.register")}
+          </Button>
+          <Button
+            onPress={() => router.replace("/login")}
+            mode="text"
+            style={styles.button}
+            labelStyle={{ color: theme.colors.primary }}
+          >
+            {t("common.actions.login")}
+          </Button>
         </View>
       </SafeAreaView>
     </Provider>
   );
 }
 
-// Stylesheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
   },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   appBar: {
     justifyContent: "space-between",
-  },
-  title: {
-    padding: SPACING.large,
-    textAlign: "center",
-    fontWeight: "bold",
   },
   buttonContainer: {
     alignItems: "center",
@@ -148,5 +134,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: SPACING.medium,
+  },
+  title: {
+    textAlign: 'center',
+    marginTop: SPACING.large,
   },
 });
