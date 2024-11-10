@@ -48,24 +48,21 @@ export const register = async (
         : avatar;
     }
 
-    const response = await fetch(
-      "http://192.168.1.100:27017/api/user/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-          email,
-          avatar: processedAvatar,
-          favoriteMovieGenres,
-          favoriteTVGenres,
-        }),
-      }
-    );
+    const response = await fetch(`${API_URL}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+        avatar: processedAvatar,
+        favoriteMovieGenres,
+        favoriteTVGenres,
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
