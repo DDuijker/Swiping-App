@@ -16,8 +16,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.PSEMO.Binge"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
