@@ -12,6 +12,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "context/UserContext.tsx",
-    "context/ThemeContext.tsx"
+    "context/ThemeContext.tsx",
+    "declarations.d.ts"
   ]
 }
