@@ -24,6 +24,7 @@ export default function Index() {
       testID="language-menu"
     />
   ));
+  MenuButton.displayName = "MenuButton";
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
