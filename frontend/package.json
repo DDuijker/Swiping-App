@@ -46,7 +46,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
     "react-paper": "^0.0.2",
-    "expo-image-manipulator": "~12.0.5"
+    "expo-image-manipulator": "~12.0.5",
+    "react-native-svg": "15.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
