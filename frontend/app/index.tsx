@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
+import Tutorial from "@/components/Tutorial";
 
 // Interface for the MenuButton component
 interface MenuButtonProps {
@@ -73,7 +74,7 @@ export default function Index() {
             </Menu>
           </Appbar.Header>
         </View>
-
+        <Tutorial />
         <View
           style={[
             styles.buttonContainer,
