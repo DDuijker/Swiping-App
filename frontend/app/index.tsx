@@ -1,30 +1,32 @@
 import * as React from "react";
 import { router } from "expo-router";
-import { SafeAreaView, View, StyleSheet, Text } from "react-native";
+import { SafeAreaView, View, StyleSheet } from "react-native";
 import { Appbar, Button, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
 
+// Interface for the MenuButton component
+interface MenuButtonProps {
+  onPress: () => void;
+}
+
+// Custom MenuButton component, in order to make use of react-native-paper's Appbar.Action
+const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
+  <Appbar.Action
+    icon="translate"
+    onPress={props.onPress}
+    ref={ref}
+    testID="language-menu"
+  />
+));
+MenuButton.displayName = "MenuButton";
+
 export default function Index() {
   const { t, i18n } = useTranslation();
   const { isDarkTheme, theme, toggleTheme } = useTheme();
   const [visible, setVisible] = React.useState(false);
-
-  interface MenuButtonProps {
-    onPress: () => void;
-  }
-
-  const MenuButton = React.forwardRef<View, MenuButtonProps>((props, ref) => (
-    <Appbar.Action
-      icon="translate"
-      onPress={props.onPress}
-      ref={ref}
-      testID="language-menu"
-    />
-  ));
-  MenuButton.displayName = "MenuButton";
 
   const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
