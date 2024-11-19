@@ -1,24 +1,21 @@
-import React, { useState } from "react";
-import { PaperProvider, BottomNavigation } from "react-native-paper";
-import { useWindowDimensions } from "react-native";
-import ListIndex from "./lists/index";
-import GroupsLayout from "./groups/_layout";
-import ProfileIndex from "./profile/index";
+import { Appbar, BottomNavigation } from "react-native-paper";
+import { useWindowDimensions, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { ThemeProvider, useTheme } from "../../context/ThemeContext";
-import { SPACING } from "../../constants/DesignValues";
+import { useTheme } from "../../context/ThemeContext";
+import React from "react";
+import ListScreen from "./lists/index";
+import GroupsScreen from "./groups/index";
+import ProfileScreen from "./profile/index";
+import AppProviders from "../../components/AppProviders";
 
-export default function BottomTabsLayout() {
+export default function TabsLayout() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { height } = useWindowDimensions();
   const tabBarHeight = height > 700 ? 80 : 60;
+  const [index, setIndex] = React.useState(1);
 
-  // State to manage the active route
-  const [index, setIndex] = useState(1);
-
-  // Define routes for BottomNavigation
-  const [routes] = useState([
+  const [routes] = React.useState([
     {
       key: "lists",
       title: t("lists.title"),
@@ -39,28 +36,40 @@ export default function BottomTabsLayout() {
     },
   ]);
 
-  // Map each route key to its component
   const renderScene = BottomNavigation.SceneMap({
-    lists: ListIndex,
-    groups: GroupsLayout, // If this is your groups layout, make sure it's correctly configured to handle child routes
-    profile: ProfileIndex,
+    lists: ListScreen,
+    groups: GroupsScreen,
+    profile: ProfileScreen,
   });
 
   return (
-    <ThemeProvider>
-      <PaperProvider theme={theme}>
+    <AppProviders>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <Appbar.Header
+          mode="center-aligned"
+          style={{
+            backgroundColor: "transparent",
+            elevation: 0,
+          }}
+        >
+          <Appbar.Content
+            color={theme.colors.onBackground}
+            title={routes[index].title}
+          />
+        </Appbar.Header>
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
           barStyle={{
             height: tabBarHeight,
-            paddingBottom: SPACING.large,
+            backgroundColor: theme.colors.elevation.level2,
           }}
           sceneAnimationType="shifting"
           labeled={true}
+          theme={theme}
         />
-      </PaperProvider>
-    </ThemeProvider>
+      </View>
+    </AppProviders>
   );
 }

@@ -1,40 +1,22 @@
-import { useRouter } from "expo-router";
-import { View, StyleSheet } from "react-native";
-import { Appbar, Text } from "react-native-paper";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../context/ThemeContext";
 import { SPACING } from "../../../constants/DesignValues";
+import { View, StyleSheet } from "react-native";
+import { Text } from "react-native-paper";
 
 export default function GroupsIndex() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const router = useRouter();
+  console.log("Groups screen mounted");
 
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {/* Appbar Header */}
-      <Appbar.Header mode="center-aligned">
-        <Appbar.Content
-          title={t("groups.title")}
-          color={theme.colors.onBackground}
-        />
-        <Appbar.Action
-          icon="plus"
-          mode="contained"
-          onPress={() => router.push("/groups/create")}
-        />
-      </Appbar.Header>
-
-      {/* Content */}
-      <View style={styles.content}>
-        <Text
-          style={{ fontSize: SPACING.large, color: theme.colors.onBackground }}
-        >
-          {t("groups.title")}
-        </Text>
-      </View>
+      <Text style={{ color: theme.colors.onBackground }}>
+        {t("groups.title")}
+      </Text>
     </View>
   );
 }
