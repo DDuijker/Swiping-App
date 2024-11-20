@@ -21,6 +21,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Text,
 } from "react-native";
 import GenreChips from "../components/GenreChips";
 import * as FileSystem from "expo-file-system";
@@ -184,7 +185,7 @@ export default function RegisterPage() {
       setSnackbarMessage(t("succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
-
+      register(user);
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
@@ -223,11 +224,11 @@ export default function RegisterPage() {
                       mode="outlined"
                       style={styles.removeButton}
                     >
-                      {t("profile.actions.removePicture")}
+                      <Text>{t("profile.actions.removePicture")}</Text>
                     </Button>
                   )}
                   <Button onPress={pickImage} mode="outlined">
-                    {t("profile.actions.uploadPicture")}
+                    <Text>{t("profile.actions.uploadPicture")}</Text>
                   </Button>
                 </View>
               </View>
@@ -297,10 +298,10 @@ export default function RegisterPage() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {t("common.actions.register")}
+                  <Text>{t("common.actions.register")}</Text>
                 </Button>
                 <Button mode="text" onPress={() => router.replace("/login")}>
-                  {t("common.actions.login")}
+                  <Text>{t("common.actions.login")}</Text>
                 </Button>
               </View>
             </View>

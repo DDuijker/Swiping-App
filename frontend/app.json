@@ -9,7 +9,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "permissions": ["INTERNET"],
+    "permissions": ["INTERNET", "CAMERA", "CAMERA_ROLL"],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

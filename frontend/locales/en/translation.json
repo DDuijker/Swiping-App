@@ -165,7 +165,8 @@
       "requireLowercase": "Include at least one lowercase letter",
       "requireNumber": "Include at least one number",
       "requireSpecial": "Include at least one special character (!@#$%^&*)",
-      "match": "Passwords must match"
+      "match": "Passwords must match",
+      "required": "Password is required"
     },
     "username": {
       "minLength": "Username must be at least 3 characters",

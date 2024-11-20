@@ -98,7 +98,7 @@ const GenreChips: React.FC<GenreChipsProps> = ({
             }
             style={{ margin: SPACING.small }}
           >
-            {genre.name}
+            <Text>{genre.name}</Text>
           </Chip>
         ))}
       </View>

@@ -165,7 +165,8 @@
       "requireLowercase": "Gebruik minimaal één kleine letter",
       "requireNumber": "Gebruik minimaal één cijfer",
       "requireSpecial": "Gebruik minimaal één speciaal teken (!@#$%^&*)",
-      "match": "Wachtwoorden moeten overeenkomen"
+      "match": "Wachtwoorden moeten overeenkomen",
+      "required": "Wachtwoord is verplicht"
     },
     "username": {
       "minLength": "Gebruikersnaam moet minimaal 3 tekens bevatten",
