@@ -32,7 +32,6 @@ const GenreChips: React.FC<GenreChipsProps> = ({
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        console.log("Fetching genres for:", genreType);
         const language = i18n.language;
 
         const response = await fetch(
@@ -53,7 +52,6 @@ const GenreChips: React.FC<GenreChipsProps> = ({
         }
 
         const data = await response.json();
-        console.log("Fetched genres:", data.genres);
         setGenres(data.genres || []);
       } catch (error) {
         console.error("Error fetching genres:", error);

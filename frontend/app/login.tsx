@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Appbar,
@@ -9,7 +9,7 @@ import {
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { login } from "../api/userService";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useTheme } from "../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SPACING } from "../constants/DesignValues";

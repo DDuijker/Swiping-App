@@ -51,12 +51,10 @@ export default function RegisterPage() {
 
   const convertToBase64 = async (uri: string) => {
     try {
-      // For already base64 encoded images
       if (uri.startsWith("data:")) {
         return uri.split(",")[1];
       }
 
-      // Compress image before converting to base64
       const manipulateResult = await ImageManipulator.manipulateAsync(
         uri,
         [{ resize: { width: 300, height: 300 } }],
@@ -218,17 +216,19 @@ export default function RegisterPage() {
               <View style={styles.avatarContainer}>
                 <Avatar.Image size={100} source={getAvatarSource()} />
                 <View style={styles.avatarButtons}>
-                  {avatar && (
+                  {avatar ? (
                     <Button
                       onPress={removeImage}
                       mode="outlined"
                       style={styles.removeButton}
                     >
-                      <Text>{t("profile.actions.removePicture")}</Text>
+                      {t("profile.actions.removePicture")}
                     </Button>
+                  ) : (
+                    <></>
                   )}
                   <Button onPress={pickImage} mode="outlined">
-                    <Text>{t("profile.actions.uploadPicture")}</Text>
+                    {t("profile.actions.uploadPicture")}
                   </Button>
                 </View>
               </View>
@@ -289,7 +289,7 @@ export default function RegisterPage() {
                 genreType="tv"
               />
 
-              {error && <HelperText type="error">{error}</HelperText>}
+              {error ? <HelperText type="error">{error}</HelperText> : <></>}
 
               <View>
                 <Button
@@ -306,18 +306,21 @@ export default function RegisterPage() {
               </View>
             </View>
           </ScrollView>
+          {snackbarMessage ? (
+            <Snackbar
+              visible={snackbarVisible}
+              onDismiss={onDismissSnackbar}
+              action={{
+                label: t("common.actions.close"),
+                onPress: onDismissSnackbar,
+              }}
+            >
+              {snackbarMessage}
+            </Snackbar>
+          ) : (
+            <></>
+          )}
         </KeyboardAvoidingView>
-
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={onDismissSnackbar}
-          action={{
-            label: t("common.actions.close"),
-            onPress: onDismissSnackbar,
-          }}
-        >
-          {snackbarMessage}
-        </Snackbar>
       </SafeAreaView>
     </Provider>
   );
