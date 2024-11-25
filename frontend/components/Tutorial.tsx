@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import { View, Text, StyleSheet, Image, useWindowDimensions } from "react-native";
 import {
   PanGestureHandler,
   GestureHandlerRootView,
@@ -16,19 +16,16 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "@/constants/DesignValues";
 
-// Define screen width and image size for scaling
-const { width } = Dimensions.get("window");
-const imageSize = width * 0.3;
-
 const Tutorial = () => {
-  const [currentIndex, setCurrentIndex] = useState(0); // Track the current tutorial page
-  const translateX = useSharedValue(0); // Shared value for swipe gesture animation
-  const textTranslateX = useSharedValue(0); // Shared value for text animation
+  const { width, height } = useWindowDimensions();
+  const imageSize = Math.min(width * 0.4, height * 0.25);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const translateX = useSharedValue(0);
+  const textTranslateX = useSharedValue(0);
 
-  const { theme } = useTheme(); // Access theme context for colors
-  const { t } = useTranslation(); // Access translation function
+  const { theme } = useTheme();
+  const { t } = useTranslation();
 
-  // Define the array of tutorial pages, each with an image, title, and description
   const tutorialPages = useMemo(
     () => [
       {
@@ -62,107 +59,126 @@ const Tutorial = () => {
         illustration: require("../assets/images/welcome.png"),
       },
     ],
-    [theme] // Update if theme changes
+    [theme]
   );
 
-  // Function to transition to the next page, looping back if at the end
   const goToNextPage = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % tutorialPages.length);
   }, [tutorialPages.length]);
 
-  // Automatically transition pages every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      // Slide text out, change page, and slide new text in
       textTranslateX.value = withTiming(-width, { duration: 300 }, () => {
-        runOnJS(goToNextPage)(); // Move to the next page
-        textTranslateX.value = width; // Reset text offscreen
-        textTranslateX.value = withTiming(0, { duration: 300 }); // Slide new text in
+        runOnJS(goToNextPage)();
+        textTranslateX.value = width;
+        textTranslateX.value = withTiming(0, { duration: 300 });
       });
     }, 5000);
-    return () => clearInterval(interval); // Clean up interval on component unmount
-  }, [currentIndex, goToNextPage, textTranslateX]);
+    return () => clearInterval(interval);
+  }, [currentIndex, goToNextPage, textTranslateX, width]);
 
-  // Handle swipe gestures to navigate between pages
   const onHandlerStateChange = (event: GestureHandlerStateChangeEvent) => {
     const nativeEvent = event.nativeEvent;
     if (nativeEvent && typeof nativeEvent.oldState === "number") {
-      // Check if gesture ended (oldState === 4)
       if (nativeEvent.oldState === 4) {
         const { translationX } = nativeEvent;
         if (translationX < -50 && currentIndex < tutorialPages.length - 1) {
-          transitionPage(currentIndex + 1, -width); // Swipe left
+          transitionPage(currentIndex + 1, -width);
         } else if (translationX > 50 && currentIndex > 0) {
-          transitionPage(currentIndex - 1, width); // Swipe right
+          transitionPage(currentIndex - 1, width);
         }
-        translateX.value = withSpring(0); // Reset swipe position
+        translateX.value = withSpring(0);
       }
     }
   };
 
-  // Helper function to animate page transitions
   const transitionPage = (newIndex: number, offset: number) => {
     textTranslateX.value = withTiming(offset, { duration: 300 }, () => {
-      runOnJS(setCurrentIndex)(newIndex); // Update to new page
-      textTranslateX.value = -offset; // Reset text offscreen
-      textTranslateX.value = withTiming(0, { duration: 300 }); // Slide new text in
+      runOnJS(setCurrentIndex)(newIndex);
+      textTranslateX.value = -offset;
+      textTranslateX.value = withTiming(0, { duration: 300 });
     });
   };
 
-  // Animated style for sliding text
   const textAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: textTranslateX.value }],
   }));
 
-  // Custom hook to generate animated styles for dot indicators
   const useDotAnimatedStyle = (index: number) => {
-    const isActive = currentIndex === index; // Check if this dot is active
-    const scale = useSharedValue(isActive ? 1.2 : 1); // Scale active dots larger
+    const isActive = currentIndex === index;
+    const scale = useSharedValue(isActive ? 1.2 : 1);
     useEffect(() => {
-      scale.value = withSpring(isActive ? 1.5 : 1); // Animate dot scale transition
+      scale.value = withSpring(isActive ? 1.5 : 1);
     }, [isActive]);
     return useAnimatedStyle(() => ({
       transform: [{ scale: scale.value }],
-      backgroundColor: isActive ? theme.colors.primary : "#ccc", // Color active dot
+      backgroundColor: isActive ? theme.colors.primary : "#ccc",
     }));
   };
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      {/* Pan gesture handler to navigate pages with swipe */}
       <PanGestureHandler onHandlerStateChange={onHandlerStateChange}>
-        <Animated.View style={styles.pageContainer}>
-          {/* Animated view for the tutorial page */}
-          <Animated.View style={[styles.page, { width }, textAnimatedStyle]}>
-            {/* Display current page's image */}
-            <Image
-              source={tutorialPages[currentIndex].illustration}
-              style={{
-                width: imageSize,
-                height: imageSize,
-                resizeMode: "contain",
-              }}
-            />
-            {/* Display the title with theme color */}
-            <Text style={[styles.title, { color: theme.colors.primary }]}>
-              {t(tutorialPages[currentIndex].titleKey)}
-            </Text>
-            {/* Display the description with theme color */}
-            <Text
-              style={[styles.description, { color: theme.colors.secondary }]}
-            >
-              {t(tutorialPages[currentIndex].descriptionKey)}
-            </Text>
+        <Animated.View style={[styles.pageContainer, { height: height * 0.7 }]}>
+          <Animated.View 
+            style={[
+              styles.page, 
+              { width }, 
+              textAnimatedStyle,
+              { maxHeight: height * 0.7 }
+            ]}
+          >
+            <View style={styles.contentContainer}>
+              <Image
+                source={tutorialPages[currentIndex].illustration}
+                style={[
+                  styles.image,
+                  {
+                    width: imageSize,
+                    height: imageSize,
+                  }
+                ]}
+              />
+              <View style={styles.textContainer}>
+                <Text 
+                  style={[
+                    styles.title, 
+                    { 
+                      color: theme.colors.primary,
+                      fontSize: Math.min(width * 0.06, 24)
+                    }
+                  ]}
+                  numberOfLines={2}
+                >
+                  {t(tutorialPages[currentIndex].titleKey)}
+                </Text>
+                <Text
+                  style={[
+                    styles.description,
+                    {
+                      color: theme.colors.secondary,
+                      fontSize: Math.min(width * 0.04, 16)
+                    }
+                  ]}
+                  numberOfLines={4}
+                >
+                  {t(tutorialPages[currentIndex].descriptionKey)}
+                </Text>
+              </View>
+            </View>
           </Animated.View>
         </Animated.View>
       </PanGestureHandler>
 
-      {/* Dot indicators for each page */}
-      <View style={styles.dotsContainer}>
+      <View style={[styles.dotsContainer, { bottom: height * 0.05 }]}>
         {tutorialPages.map((_, index) => (
           <Animated.View
             key={index}
-            style={[styles.dot, useDotAnimatedStyle(index)]} // Apply animated style for each dot
+            style={[
+              styles.dot,
+              useDotAnimatedStyle(index),
+              { width: width * 0.02, height: width * 0.02 }
+            ]}
           />
         ))}
       </View>
@@ -170,7 +186,6 @@ const Tutorial = () => {
   );
 };
 
-// Styles for component layout and presentation
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -179,30 +194,45 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flexDirection: "row",
+    alignItems: "center",
   },
   page: {
     justifyContent: "center",
     alignItems: "center",
-    padding: SPACING.large,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: SPACING.large,
+    maxWidth: 600,
+  },
+  image: {
+    resizeMode: "contain",
+    marginBottom: SPACING.large,
+  },
+  textContainer: {
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: SPACING.medium,
   },
   title: {
-    fontSize: SPACING.large,
     fontWeight: "bold",
+    textAlign: "center",
     marginBottom: SPACING.medium,
   },
   description: {
-    fontSize: SPACING.medium,
     textAlign: "center",
+    paddingHorizontal: SPACING.small,
   },
   dotsContainer: {
     flexDirection: "row",
     position: "absolute",
-    bottom: SPACING.large,
+    alignItems: "center",
+    justifyContent: "center",
   },
   dot: {
-    width: SPACING.medium,
-    height: SPACING.medium,
-    borderRadius: SPACING.medium / 2,
+    borderRadius: 999,
     backgroundColor: "#ccc",
     margin: SPACING.small,
   },

@@ -74,7 +74,9 @@ export default function Index() {
             </Menu>
           </Appbar.Header>
         </View>
+        <View style={styles.tutorial}>
         <Tutorial />
+        </View>
         <View
           style={[
             styles.buttonContainer,
@@ -119,6 +121,12 @@ const styles = StyleSheet.create({
   },
   appBar: {
     justifyContent: "space-between",
+  },
+  tutorial: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: SPACING.medium,
   },
   buttonContainer: {
     alignItems: "center",
