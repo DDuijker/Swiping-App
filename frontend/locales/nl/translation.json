@@ -197,5 +197,31 @@
       "format": "Bestandsformaat wordt niet ondersteund",
       "failed": "Upload mislukt"
     }
+  },
+  "tutorial": {
+    "welcome": {
+      "title": "Welkom bij Binge! 🎬",
+      "description": "Heb je jezelf ooit vastgezet in een eindeloze cyclus van 'Wat wil je kijken?' en 'Ik weet het niet, wat wil jij kijken?'"
+    },
+    "createGroup": {
+      "title": "Maak een Groep",
+      "description": "Maak een groep met je vrienden, partner of familie."
+    },
+    "givePreferences": {
+      "title": "Geef Je Voorkeuren",
+      "description": "Laat iedereen hun film- of serievoorkeuren delen."
+    },
+    "swipeToFindMatch": {
+      "title": "Swipe om een Match te Vinden",
+      "description": "Swipe om films te ontdekken die iedereen leuk zal vinden!"
+    },
+    "groupAndPersonalLists": {
+      "title": "Groep & Persoonlijke Lijsten",
+      "description": "Houd je groepsmatches en persoonlijke favorieten bij."
+    },
+    "endCard": {
+      "title": "🎉 Klaar om te Bingen?",
+      "description": "Laten we beginnen!"
+    }
   }
 }
