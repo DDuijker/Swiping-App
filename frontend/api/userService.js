@@ -5,7 +5,7 @@ const API_URL = `http://${process.env.EXPO_PUBLIC_API_URL}/api/user`;
 // Function to login user
 export const login = async (username, password) => {
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`http://localhost:27017/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
