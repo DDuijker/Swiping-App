@@ -28,7 +28,7 @@ import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 
 interface Genre {
-  id: string;
+  id: number;
   name: string;
 }
 
@@ -140,11 +140,6 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 8) {
-      setError(t("validation.password.minLength"));
-      return;
-    }
-
     if (password !== confirmPassword) {
       setError(t("validation.password.match"));
       return;
@@ -166,18 +161,13 @@ export default function RegisterPage() {
         }
       }
 
-      const favoriteMovieGenresIds = favoriteMovieGenres.map(
-        (genre) => genre.id
-      );
-      const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
-
       const user = await register(
         username,
         password,
         email,
         processedAvatar,
-        favoriteMovieGenresIds,
-        favoriteTVGenresIds
+        favoriteMovieGenres,
+        favoriteTVGenres
       );
 
       setSnackbarMessage(t("succes.registration"));
@@ -269,7 +259,7 @@ export default function RegisterPage() {
                   setMovieFavoriteGenres((prevGenres) =>
                     prevGenres.some((g) => g.id === genre.id)
                       ? prevGenres.filter((g) => g.id !== genre.id)
-                      : [...prevGenres, genre]
+                      : [...prevGenres, { id: genre.id, name: genre.name }]
                   );
                 }}
                 title={t("common.preferences.genres.selectMovie")}
@@ -282,12 +272,13 @@ export default function RegisterPage() {
                   setTVFavoriteGenres((prevGenres) =>
                     prevGenres.some((g) => g.id === genre.id)
                       ? prevGenres.filter((g) => g.id !== genre.id)
-                      : [...prevGenres, genre]
+                      : [...prevGenres, { id: genre.id, name: genre.name }]
                   );
                 }}
                 title={t("common.preferences.genres.selectTV")}
                 genreType="tv"
               />
+
 
               {error ? <HelperText type="error">{error}</HelperText> : <></>}
 

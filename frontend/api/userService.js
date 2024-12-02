@@ -28,12 +28,12 @@ export const login = async (username, password) => {
 
 // Function to register a user
 export const register = async (
-  username: string,
-  password: string,
-  email: string,
-  avatar?: string,
-  favoriteMovieGenres?: string[],
-  favoriteTVGenres?: string[]
+  username,
+  password,
+  email,
+  avatar,
+  favoriteMovieGenres,
+  favoriteTVGenres
 ) => {
   try {
     // Compress the image before sending
@@ -41,7 +41,7 @@ export const register = async (
     if (avatar && avatar.length > 1000000) {
       // If larger than ~1MB
       const compressionRatio = 1000000 / avatar.length;
-      const quality = Math.min(0.95, Math.max(0.1, compressionRatio));
+      // const quality = Math.min(0.95, Math.max(0.1, compressionRatio));
       // Remove the data:image prefix if present
       processedAvatar = avatar.includes("base64,")
         ? avatar.split("base64,")[1]
@@ -59,8 +59,8 @@ export const register = async (
         password,
         email,
         avatar: processedAvatar,
-        favoriteMovieGenres,
-        favoriteTVGenres,
+        favoriteMovieGenres: favoriteMovieGenres,
+        favoriteTVGenres: favoriteTVGenres,
       }),
     });
 

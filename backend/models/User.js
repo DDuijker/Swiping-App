@@ -19,11 +19,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   favoriteMovieGenres: {
-    type: [String],
+    type: [{ id: Number, name: String }],
     default: [],
   },
   favoriteTVGenres: {
-    type: [String],
+    type: [{ id: Number, name: String }],
     default: [],
   },
   joinedAt: {
