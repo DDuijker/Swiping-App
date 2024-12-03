@@ -1,47 +1,40 @@
-import { useTheme } from "@/context/ThemeContext";
+import React, { useState, useEffect } from "react";
+import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
+import { Card, Title, Paragraph, FAB } from "react-native-paper";
+import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
-import React from "react";
-import { FlatList, View, StyleSheet } from "react-native";
-import { Card, Title, Paragraph, FAB, IconButton } from "react-native-paper";
 
 export default function GroupIndex() {
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {theme} = useTheme();
-  const groups = [
-    {
-      _id: "1",
-      name: "Groep 1",
-      description: "Beschrijving groep 1",
-    },
-    {
-      _id: "2",
-      name: "Groep 2",
-      description: "Beschrijving groep 2",
-    },
-    {
-      _id: "3",
-      name: "Groep 3",
-      description: "Beschrijving groep 3",
-    },
-  ];
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    setLoading(true);
+    try {
+      const data = await groupService.getAllGroups(); // Fetch from backend
+      setGroups(data);
+    } catch (error) {
+      console.error("Error fetching groups:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
+    <View style={styles.container}>
+      {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={groups}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <Card style={styles.card}>
-            <Card.Content style={styles.cardContent}>
-              <View style={styles.textContainer}>
-                <Title>{item.name}</Title>
-                <Paragraph>{item.description}</Paragraph>
-              </View>
-              <IconButton
-                icon="chevron-right"
-                size={24}
-                onPress={() => console.log(`Navigate to details of ${item.name}`)}
-              />
+            <Card.Content>
+              <Title>{item.name}</Title>
+              <Paragraph>{item.description}</Paragraph>
             </Card.Content>
           </Card>
         )}
@@ -49,7 +42,7 @@ export default function GroupIndex() {
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => router.push("/groups/create")}
+        onPress={() => router.push("/(tabs)/groups/create")}
       />
     </View>
   );
@@ -59,18 +52,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    backgroundColor: "#fff",
   },
   card: {
     marginBottom: 10,
-  },
-  cardContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  textContainer: {
-    flex: 1,
-    marginRight: 10,
   },
   fab: {
     position: "absolute",
