@@ -171,7 +171,7 @@ export default function RegisterPage() {
       );
       const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
 
-      const user = await register(
+      await register(
         username,
         password,
         email,
@@ -183,7 +183,7 @@ export default function RegisterPage() {
       setSnackbarMessage(t("succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
-      register(user);
+     
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
