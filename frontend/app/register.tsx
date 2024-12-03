@@ -161,7 +161,7 @@ export default function RegisterPage() {
         }
       }
 
-      const user = await register(
+      await register(
         username,
         password,
         email,
@@ -173,7 +173,8 @@ export default function RegisterPage() {
       setSnackbarMessage(t("succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
-      register(user);
+      // register(user);
+    
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
