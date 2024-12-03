@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.7.8",
     "react-native-paper": "^5.12.5"
   }
 }

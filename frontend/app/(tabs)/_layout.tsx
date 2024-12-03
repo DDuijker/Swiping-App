@@ -4,9 +4,10 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 import React from "react";
 import ListScreen from "./lists/index";
-import GroupsScreen from "./groups/index";
 import ProfileScreen from "./profile/index";
 import AppProviders from "../../components/AppProviders";
+import GroupsLayout from "./groups/_layout";
+import { router } from "expo-router";
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export default function TabsLayout() {
 
   const renderScene = BottomNavigation.SceneMap({
     lists: ListScreen,
-    groups: GroupsScreen,
+    groups: GroupsLayout,
     profile: ProfileScreen,
   });
 
@@ -52,6 +53,7 @@ export default function TabsLayout() {
             elevation: 0,
           }}
         >
+           <Appbar.BackAction onPress={() => router.canGoBack()? router.back() : <></>} />
           <Appbar.Content
             color={theme.colors.onBackground}
             title={routes[index].title}
