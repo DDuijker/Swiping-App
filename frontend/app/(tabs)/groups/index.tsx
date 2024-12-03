@@ -1,3 +1,4 @@
+import { useTheme } from "@/context/ThemeContext";
 import { useRouter } from "expo-router";
 import React from "react";
 import { FlatList, View, StyleSheet } from "react-native";
@@ -5,6 +6,7 @@ import { Card, Title, Paragraph, FAB, IconButton } from "react-native-paper";
 
 export default function GroupIndex() {
   const router = useRouter();
+  const {theme} = useTheme();
   const groups = [
     {
       _id: "1",
@@ -24,7 +26,7 @@ export default function GroupIndex() {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
       <FlatList
         data={groups}
         keyExtractor={(item) => item._id}
@@ -38,7 +40,7 @@ export default function GroupIndex() {
               <IconButton
                 icon="chevron-right"
                 size={24}
-                onPress={() => console.log(`Navigate to details of ${item.name}`)} // Replace with navigation
+                onPress={() => console.log(`Navigate to details of ${item.name}`)}
               />
             </Card.Content>
           </Card>

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Title } from "react-native-paper";
+import { TextInput, Button, Title, Appbar } from "react-native-paper";
 import { useRouter } from "expo-router";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function CreateGroupScreen() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { theme } = useTheme();
 
   const handleCreateGroup = () => {
     setLoading(true);
@@ -27,7 +29,8 @@ export default function CreateGroupScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
+       
       <Title>Create a New Group</Title>
       <TextInput
         label="Group Name"

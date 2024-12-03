@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Appbar,
@@ -8,7 +8,7 @@ import {
   Snackbar,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { login } from "../api/userService";
+import { getUser, login } from "../api/userService";
 import { router } from "expo-router";
 import { useTheme } from "../context/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,6 +23,17 @@ export default function LoginPage() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const user = await getUser();
+      if (user) {
+        router.replace("/(tabs)/groups");
+      }
+    };
+
+    checkUser();
+  }, []);
 
   const handleLogin = async () => {
     if (!username || !password) {

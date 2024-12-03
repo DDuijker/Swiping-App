@@ -7,6 +7,7 @@ import { useTheme } from "../context/ThemeContext";
 import { SPACING } from "../constants/DesignValues";
 import "react-native-reanimated";
 import Tutorial from "@/components/Tutorial";
+import { getUser } from "@/api/userService";
 
 // Interface for the MenuButton component
 interface MenuButtonProps {
@@ -33,6 +34,17 @@ export default function Index() {
     i18n.changeLanguage(language);
     setVisible(false);
   };
+  
+  React.useEffect(() => {
+    const checkUser = async () => {
+      const user = await getUser();
+      if (user) {
+        router.replace("/(tabs)/groups");
+      }
+    };
+
+    checkUser();
+  }, []);
 
   return (
     <Provider theme={theme}>

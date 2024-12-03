@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SPACING } from "../constants/DesignValues";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ import {
   Snackbar,
 } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import { register } from "../api/userService";
+import { getUser, register } from "../api/userService";
 import { useTheme } from "../context/ThemeContext";
 import {
   View,
@@ -48,6 +48,17 @@ export default function RegisterPage() {
 
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const user = await getUser();
+      if (user) {
+        router.replace("/(tabs)/groups");
+      }
+    };
+
+    checkUser();
+  }, []);
 
   const convertToBase64 = async (uri: string) => {
     try {

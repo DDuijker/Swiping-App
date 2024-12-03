@@ -7,6 +7,7 @@ import ListScreen from "./lists/index";
 import ProfileScreen from "./profile/index";
 import AppProviders from "../../components/AppProviders";
 import GroupsLayout from "./groups/_layout";
+import { router } from "expo-router";
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -52,6 +53,7 @@ export default function TabsLayout() {
             elevation: 0,
           }}
         >
+           <Appbar.BackAction onPress={() => router.canGoBack()? router.back() : <></>} />
           <Appbar.Content
             color={theme.colors.onBackground}
             title={routes[index].title}
