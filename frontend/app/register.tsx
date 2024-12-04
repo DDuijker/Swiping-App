@@ -140,11 +140,6 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 8) {
-      setError(t("validation.password.minLength"));
-      return;
-    }
-
     if (password !== confirmPassword) {
       setError(t("validation.password.match"));
       return;
@@ -171,7 +166,7 @@ export default function RegisterPage() {
       );
       const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
 
-      const user = await register(
+      await register(
         username,
         password,
         email,
@@ -183,7 +178,6 @@ export default function RegisterPage() {
       setSnackbarMessage(t("succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
-      register(user);
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);

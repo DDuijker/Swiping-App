@@ -5,7 +5,7 @@ const API_URL = `http://${process.env.EXPO_PUBLIC_API_URL}/api/user`;
 // Function to login user
 export const login = async (username, password) => {
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`http://localhost:27017/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -28,21 +28,17 @@ export const login = async (username, password) => {
 
 // Function to register a user
 export const register = async (
-  username: string,
-  password: string,
-  email: string,
-  avatar?: string,
-  favoriteMovieGenres?: string[],
-  favoriteTVGenres?: string[]
+  username,
+  password,
+  email,
+  avatar,
+  favoriteMovieGenres,
+  favoriteTVGenres
 ) => {
   try {
     // Compress the image before sending
     let processedAvatar = avatar;
     if (avatar && avatar.length > 1000000) {
-      // If larger than ~1MB
-      const compressionRatio = 1000000 / avatar.length;
-      const quality = Math.min(0.95, Math.max(0.1, compressionRatio));
-      // Remove the data:image prefix if present
       processedAvatar = avatar.includes("base64,")
         ? avatar.split("base64,")[1]
         : avatar;
