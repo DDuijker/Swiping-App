@@ -9,7 +9,8 @@ const jwt = require("jsonwebtoken");
  */
 exports.registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, favoriteMovieGenres, favoriteTVGenres } =
+      req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
@@ -25,6 +26,8 @@ exports.registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      favoriteMovieGenres,
+      favoriteTVGenres,
     });
 
     res.status(201).json({ user: newUser });
