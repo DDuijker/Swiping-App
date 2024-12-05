@@ -13,15 +13,18 @@ const {
   deleteUser,
   getAuthenticatedUser,
 } = require("../controllers/userController");
+const authenticate = require("../middleware/authenticate");
 
-//Routes
-router.get("/", getAllUsers); // Get all users
+//Public Routes
 router.post("/register", registerUser); // Register a user
 router.post("/login", loginUser); // Login a user
 router.get("/search", searchUsers); // Search for users
-router.get("/me", getAuthenticatedUser); // Get authenticated user
-router.get("/:id", getUserById); // Get a user by ID
-router.put("/:id", updateUser); // Update a user
-router.delete("/:id", deleteUser); // Remove a user
+
+// Private Routes using authentication
+router.get("/", authenticate, getAllUsers); // Get all users
+router.get("/me", authenticate, getAuthenticatedUser); // Get authenticated user
+router.get("/:id", authenticate, getUserById); // Get a user by ID
+router.put("/:id", authenticate, updateUser); // Update a user
+router.delete("/:id", authenticate, deleteUser); // Remove a user
 
 module.exports = router;

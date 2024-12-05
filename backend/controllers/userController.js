@@ -163,11 +163,12 @@ exports.deleteUser = async (req, res) => {
  */
 exports.getAuthenticatedUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ msg: "User not found" });
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.error("Error in getAuthenticatedUser:", error.message);
+    res.status(500).json({ msg: "Server error. Unable to fetch user info." });
   }
 };
