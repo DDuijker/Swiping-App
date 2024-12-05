@@ -44,12 +44,14 @@ export const login = async (username, password) => {
     const response = await axiosInstance.post("/login", { username, password });
     const { token, user } = response.data;
 
+    // Store token and user data in AsyncStorage
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 
     return user;
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const message = handleApiError(error);
+    throw new Error(message);
   }
 };
 
@@ -182,8 +184,13 @@ export const getUserId = async () => {
  */
 export const searchUsers = async (username) => {
   try {
+    const token = await AsyncStorage.getItem("token");
+
     const response = await axiosInstance.get("/search", {
       params: { username },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     return response.data;
@@ -216,7 +223,14 @@ export const getAllUsers = async () => {
  */
 export const getUserById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/${id}`);
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    const response = await axiosInstance.get(`/api/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data.user;
   } catch (error) {
     throw new Error(handleApiError(error));
