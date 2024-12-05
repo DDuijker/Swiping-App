@@ -23,14 +23,9 @@ import {
   Platform,
   Text,
 } from "react-native";
-import GenreChips from "../components/GenreChips";
+import GenreChips, { Genre } from "../components/GenreChips";
 import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
-
-interface Genre {
-  id: string;
-  name: string;
-}
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -172,21 +167,16 @@ export default function RegisterPage() {
         }
       }
 
-      const favoriteMovieGenresIds = favoriteMovieGenres.map(
-        (genre) => genre.id
-      );
-      const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
-
       await register(
         username,
         password,
         email,
         processedAvatar,
-        favoriteMovieGenresIds,
-        favoriteTVGenresIds
+        favoriteMovieGenres,
+        favoriteTVGenres
       );
 
-      setSnackbarMessage(t("succes.registration"));
+      setSnackbarMessage(t("common.succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
       setTimeout(() => {
