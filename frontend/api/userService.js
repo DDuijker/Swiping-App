@@ -92,11 +92,12 @@ export const register = async (
       favoriteTVGenres,
     });
 
-    const { user } = response.data;
+    const { user, token } = response.data;
     console.log(user);
+    await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 
-    return user;
+    return user, token;
   } catch (error) {
     throw new Error(handleApiError(error));
   }

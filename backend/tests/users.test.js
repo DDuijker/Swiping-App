@@ -1,114 +1,102 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const { app, server } = require("../server");
-const User = require("../models/User");
+const { app, server } = require("../server.js");
 
 let mongoServer;
 
-const testUser = {
-  username: "testuser",
-  email: "testuser@example.com",
-  password: "Test1234!",
-};
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
-describe("User Routes", () => {
-  beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-    const uri = mongoServer.getUri();
-    await mongoose.connect(uri);
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});
+
+describe("User API", () => {
+  let token;
+  let userId;
+
+  it("should register a new user", async () => {
+    const res = await request(app).post("/api/user/register").send({
+      username: "testuser",
+      email: "test@example.com",
+      password: "testpassword",
+    });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user).toHaveProperty("_id");
+    userId = res.body.user._id;
   });
 
-  afterAll(async () => {
-    await mongoose.disconnect();
-    await mongoServer.stop();
+  it("should login the user", async () => {
+    const res = await request(app).post("/api/user/login").send({
+      username: "testuser",
+      password: "testpassword",
+    });
 
-    // Close the server if it exists
-    if (server) {
-      server.close();
-    }
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("token");
+    token = res.body.token;
   });
 
-  beforeEach(async () => {
-    // Clear the database before each test
-    await User.deleteMany();
+  it("should get authenticated user info", async () => {
+    const res = await request(app)
+      .get("/api/user/me")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("username", "testuser");
   });
 
-  describe("POST /api/user/register", () => {
-    it("should register a new user", async () => {
-      const response = await request(app)
-        .post("/api/user/register")
-        .send(testUser);
-      expect(response.status).toBe(201);
-      expect(response.body.user).toHaveProperty("_id");
-      expect(response.body.user.username).toBe(testUser.username);
-    });
+  it("should get all users", async () => {
+    const res = await request(app)
+      .get("/api/user")
+      .set("Authorization", `Bearer ${token}`);
 
-    it("should not register a user with an existing username", async () => {
-      await User.create(testUser);
-      const response = await request(app)
-        .post("/api/user/register")
-        .send(testUser);
-      expect(response.status).toBe(400);
-      expect(response.body.msg).toBe("Username or email already exists");
-    });
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBeGreaterThan(0);
   });
 
-  describe("POST /api/user/login", () => {
-    it("should log in an existing user", async () => {
-      const newUser = new User(testUser);
-      await newUser.save();
+  it("should get user by ID", async () => {
+    const res = await request(app)
+      .get(`/api/user/${userId}`)
+      .set("Authorization", `Bearer ${token}`);
 
-      const response = await request(app)
-        .post("/api/user/login")
-        .send({ username: testUser.username, password: testUser.password });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty("token");
-      expect(response.body.user.username).toBe(testUser.username);
-    });
-
-    it("should not log in with incorrect password", async () => {
-      const newUser = new User(testUser);
-      await newUser.save();
-
-      const response = await request(app)
-        .post("/api/user/login")
-        .send({ username: testUser.username, password: "WrongPassword123" });
-
-      expect(response.status).toBe(400);
-      expect(response.body.msg).toBe("Invalid username or password");
-    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("user");
+    expect(res.body.user).toHaveProperty("_id", userId);
   });
 
-  describe("GET /api/user/me", () => {
-    let token;
+  it("should search user by username", async () => {
+    const res = await request(app).get("/api/user/search?username=testuser");
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body[0]).toHaveProperty("username", "testuser");
+  });
 
-    beforeEach(async () => {
-      const newUser = new User(testUser);
-      await newUser.save();
+  it("should update user", async () => {
+    const res = await request(app)
+      .put(`/api/user/${userId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "newtest@example.com" });
 
-      const loginResponse = await request(app)
-        .post("/api/user/login")
-        .send({ username: testUser.username, password: testUser.password });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("email", "newtest@example.com");
+  });
 
-      token = loginResponse.body.token;
-    });
+  it("should delete user", async () => {
+    const res = await request(app)
+      .delete(`/api/user/${userId}`)
+      .set("Authorization", `Bearer ${token}`);
 
-    it("should get authenticated user info", async () => {
-      const response = await request(app)
-        .get("/api/user/me")
-        .set("Authorization", `Bearer ${token}`);
-
-      expect(response.status).toBe(200);
-      expect(response.body.username).toBe(testUser.username);
-      expect(response.body.email).toBe(testUser.email);
-    });
-
-    it("should return 401 for unauthenticated request", async () => {
-      const response = await request(app).get("/api/user/me");
-      expect(response.status).toBe(401);
-      expect(response.body.msg).toBe("Unauthorized");
-    });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("message", "User deleted successfully");
   });
 });

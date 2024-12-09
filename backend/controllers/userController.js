@@ -29,7 +29,12 @@ exports.registerUser = async (req, res) => {
       favoriteTVGenres,
     });
 
-    res.status(201).json({ user: newUser });
+    // Generate JWT token after successful registration
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({ user: newUser, token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
