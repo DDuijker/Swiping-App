@@ -9,10 +9,9 @@ import {
   Button,
   TextInput,
   HelperText,
-  Avatar,
   Snackbar,
 } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
+import ImagePickerComponent from "../components/RegisterImagePickerComponent";
 import { getUser, register } from "../api/userService";
 import { useTheme } from "../context/ThemeContext";
 import {
@@ -23,14 +22,7 @@ import {
   Platform,
   Text,
 } from "react-native";
-import GenreChips from "../components/GenreChips";
-import * as FileSystem from "expo-file-system";
-import * as ImageManipulator from "expo-image-manipulator";
-
-interface Genre {
-  id: string;
-  name: string;
-}
+import GenreChips, { Genre } from "../components/GenreChips";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -38,9 +30,9 @@ export default function RegisterPage() {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [avatar, setAvatar] = useState("");
   const [favoriteMovieGenres, setMovieFavoriteGenres] = useState<Genre[]>([]);
   const [favoriteTVGenres, setTVFavoriteGenres] = useState<Genre[]>([]);
   const [error, setError] = useState("");
@@ -59,69 +51,6 @@ export default function RegisterPage() {
 
     checkUser();
   }, []);
-
-  const convertToBase64 = async (uri: string) => {
-    try {
-      if (uri.startsWith("data:")) {
-        return uri.split(",")[1];
-      }
-
-      const manipulateResult = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 300, height: 300 } }],
-        { compress: 0.3, format: ImageManipulator.SaveFormat.JPEG }
-      );
-
-      const base64 = await FileSystem.readAsStringAsync(manipulateResult.uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      return `data:image/jpeg;base64,${base64}`;
-    } catch (error) {
-      console.error("Error converting image to base64:", error);
-      throw new Error("Failed to process image");
-    }
-  };
-
-  const pickImage = async () => {
-    try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (!permissionResult.granted) {
-        alert(t("profile.errors.avatarPermissionDenied"));
-        return;
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.5,
-      });
-
-      if (!result.canceled) {
-        setAvatar(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error("Image picker error:", error);
-      alert(t("profile.errors.errorPickingImage"));
-    }
-  };
-
-  const getAvatarSource = () => {
-    return avatar
-      ? { uri: avatar }
-      : {
-          uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            username || "User"
-          )}`,
-        };
-  };
-
-  const removeImage = () => {
-    setAvatar("");
-  };
 
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -159,42 +88,29 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      let processedAvatar;
-
-      if (avatar) {
-        try {
-          processedAvatar = await convertToBase64(avatar);
-        } catch (error) {
-          console.error("Error processing avatar:", error);
-          setError(t("profile.errorProcessingImage"));
-          setLoading(false);
-          return;
-        }
-      }
-
-      const favoriteMovieGenresIds = favoriteMovieGenres.map(
-        (genre) => genre.id
-      );
-      const favoriteTVGenresIds = favoriteTVGenres.map((genre) => genre.id);
-
       await register(
         username,
         password,
         email,
-        processedAvatar,
-        favoriteMovieGenresIds,
-        favoriteTVGenresIds
+        avatar,
+        favoriteMovieGenres,
+        favoriteTVGenres
       );
 
-      setSnackbarMessage(t("succes.registration"));
+      setSnackbarMessage(t("common.succes.registration"));
       setSnackbarVisible(true);
       setLoading(false);
       setTimeout(() => {
         router.replace("/(tabs)/groups");
       }, 2000);
     } catch (error) {
-      setError(t("errors.auth.invalidCredentials"));
-      setSnackbarMessage(t("errors.auth.invalidCredentials"));
+      const errorMessage =
+        error?.response?.data?.msg ||
+        error?.msg ||
+        t("errors.auth.invalidCredentials");
+
+      setError(errorMessage);
+      setSnackbarMessage(errorMessage);
       setSnackbarVisible(true);
       setLoading(false);
     }
@@ -218,25 +134,14 @@ export default function RegisterPage() {
             </Appbar.Header>
 
             <View style={styles.form}>
-              <View style={styles.avatarContainer}>
-                <Avatar.Image size={100} source={getAvatarSource()} />
-                <View style={styles.avatarButtons}>
-                  {avatar ? (
-                    <Button
-                      onPress={removeImage}
-                      mode="outlined"
-                      style={styles.removeButton}
-                    >
-                      {t("profile.actions.removePicture")}
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                  <Button onPress={pickImage} mode="outlined">
-                    {t("profile.actions.uploadPicture")}
-                  </Button>
-                </View>
-              </View>
+              <ImagePickerComponent
+                avatar={avatar}
+                setAvatar={setAvatar}
+                username={username}
+                onError={(message) => setError(message)}
+                removeText={t("profile.actions.removePicture")}
+                uploadText={t("profile.actions.uploadPicture")}
+              />
 
               <TextInput
                 label={t("common.fields.username")}

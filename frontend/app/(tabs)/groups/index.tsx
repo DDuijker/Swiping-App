@@ -3,10 +3,12 @@ import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
 import { Card, Title, Paragraph, FAB } from "react-native-paper";
 import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
+import { useTheme } from "../../../context/ThemeContext";
 
 export default function GroupIndex() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
   const router = useRouter();
   useEffect(() => {
     fetchGroups();
@@ -25,7 +27,9 @@ export default function GroupIndex() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={groups}
@@ -51,8 +55,6 @@ export default function GroupIndex() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: "#fff",
   },
   card: {
     marginBottom: 10,

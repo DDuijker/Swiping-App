@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { SPACING } from "../constants/DesignValues";
 import { useTheme } from "../context/ThemeContext";
 
-interface Genre {
+export interface Genre {
   id: string;
   name: string;
 }
