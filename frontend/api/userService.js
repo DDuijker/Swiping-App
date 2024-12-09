@@ -23,7 +23,7 @@ const handleApiError = (error) => {
     if (status === 400) return data.msg || "Invalid request.";
     if (status === 401) return data.msg || "Unauthorized. Please log in.";
     if (status === 404) return data.msg || "Resource not found.";
-    return data.msg || `Unexpected error: ${status}.`;
+    return data.message || `Unexpected error: ${status}.`;
   } else if (error.request) {
     return "Network error. Please check your connection.";
   } else {
@@ -93,7 +93,7 @@ export const register = async (
     });
 
     const { user } = response.data;
-
+    console.log(user);
     await AsyncStorage.setItem("user", user);
 
     return user;
@@ -112,6 +112,7 @@ export const getUser = async () => {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (!userString) return null;
+    console.log(userString);
     return JSON.parse(userString);
   } catch (error) {
     console.error("Error getting user:", error);
@@ -144,7 +145,6 @@ export const logout = async () => {
   try {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("user");
-    await AsyncStorage.removeItem("userId");
     console.log("Logged out successfully.");
   } catch (error) {
     console.error("Error during logout:", error.message);
@@ -226,7 +226,7 @@ export const getUserById = async (id) => {
     const token = await AsyncStorage.getItem("token");
     if (!token) throw new Error("User is not authenticated.");
 
-    const response = await axiosInstance.get(`/api/user/${id}`, {
+    const response = await axiosInstance.get(`${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
