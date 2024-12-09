@@ -20,9 +20,9 @@ const handleApiError = (error) => {
   if (error.response) {
     const { status, data } = error.response;
 
-    if (status === 400) return data.msg || "Invalid request.";
-    if (status === 401) return data.msg || "Unauthorized. Please log in.";
-    if (status === 404) return data.msg || "Resource not found.";
+    if (status === 400) return data.message || "Invalid request.";
+    if (status === 401) return data.message || "Unauthorized. Please log in.";
+    if (status === 404) return data.message || "Resource not found.";
     return data.message || `Unexpected error: ${status}.`;
   } else if (error.request) {
     return "Network error. Please check your connection.";

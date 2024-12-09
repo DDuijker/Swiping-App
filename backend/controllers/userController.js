@@ -15,7 +15,9 @@ exports.registerUser = async (req, res) => {
     // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ msg: "Username or email already exists" });
+      return res
+        .status(400)
+        .json({ message: "Username or email already exists" });
     }
 
     // Create a new user
@@ -29,7 +31,7 @@ exports.registerUser = async (req, res) => {
 
     res.status(201).json({ user: newUser });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -45,13 +47,13 @@ exports.loginUser = async (req, res) => {
     // Find user by username
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ msg: "Invalid username or password" });
+      return res.status(400).json({ message: "Invalid username or password" });
     }
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ msg: "Invalid username or password" });
+      return res.status(400).json({ message: "Invalid username or password" });
     }
 
     // Generate JWT token
@@ -61,7 +63,7 @@ exports.loginUser = async (req, res) => {
 
     res.status(200).json({ token, user });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -75,7 +77,7 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -111,11 +113,11 @@ exports.searchUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -129,11 +131,12 @@ exports.updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!updatedUser) return res.status(404).json({ msg: "User not found" });
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
 
     res.json(updatedUser);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -145,11 +148,11 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json({ msg: "User deleted successfully" });
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -161,11 +164,13 @@ exports.deleteUser = async (req, res) => {
 exports.getAuthenticatedUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
   } catch (error) {
     console.error("Error in getAuthenticatedUser:", error.message);
-    res.status(500).json({ msg: "Server error. Unable to fetch user info." });
+    res
+      .status(500)
+      .json({ message: "Server error. Unable to fetch user info." });
   }
 };
