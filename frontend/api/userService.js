@@ -226,7 +226,7 @@ export const getUserById = async (id) => {
     const token = await AsyncStorage.getItem("token");
     if (!token) throw new Error("User is not authenticated.");
 
-    const response = await axiosInstance.get(`${id}`, {
+    const response = await axiosInstance.get(`/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
