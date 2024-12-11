@@ -3,76 +3,28 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const {
+  registerUser,
+  loginUser,
+  getAllUsers,
+  searchUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getAuthenticatedUser,
+} = require("../controllers/userController");
+const authenticate = require("../middleware/authenticate");
 
-// Register a new user
-router.post("/register", async (req, res) => {
-  const {
-    username,
-    email,
-    password,
-    avatar,
-    favoriteMovieGenres,
-    favoriteTVGenres,
-  } = req.body;
+//Public Routes
+router.post("/register", registerUser); // Register a user
+router.post("/login", loginUser); // Login a user
+router.get("/search", searchUsers); // Search for users
 
-  try {
-    // Check if username or email already exists
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
-      return res.status(400).json({ msg: "Username or email already exists" });
-    }
-
-    // Create a new user
-    const newUser = new User({
-      username,
-      email,
-      password,
-      avatar,
-      favoriteMovieGenres,
-      favoriteTVGenres,
-    });
-    await newUser.save();
-
-    res.status(201).json({ msg: "User registered successfully" });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-});
-
-// Login a user
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    // Find user by username
-    const user = await User.findOne({ username });
-    if (!user)
-      return res.status(400).json({ msg: "Invalid username or password" });
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ msg: "Invalid username or password" });
-
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    // Send back the user info and token
-    res.json({
-      token,
-      user: {
-        username: user.username,
-        email: user.email,
-        avatar: user.avatar,
-        favoriteMovieGenres: user.favoriteMovieGenres,
-        favoriteTVGenres: user.favoriteTVGenres,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-});
+// Private Routes using authentication
+router.get("/", authenticate, getAllUsers); // Get all users
+router.get("/me", authenticate, getAuthenticatedUser); // Get authenticated user
+router.get("/:id", authenticate, getUserById); // Get a user by ID
+router.put("/:id", authenticate, updateUser); // Update a user
+router.delete("/:id", authenticate, deleteUser); // Remove a user
 
 module.exports = router;
