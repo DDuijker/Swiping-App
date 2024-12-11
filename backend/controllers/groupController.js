@@ -2,8 +2,10 @@ const Group = require("../models/Group");
 
 // Create a group
 exports.createGroup = async (req, res) => {
+  console.log("POST request received");
   try {
     const { name, description, members, creator } = req.body;
+    console.log("Received data:", req.body); 
     const group = new Group({ name, description, members, creator });
     await group.save();
     res.status(201).json(group);

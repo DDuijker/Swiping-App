@@ -1,33 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Title } from "react-native-paper";
+import { TextInput, Button, Title, Provider } from "react-native-paper";
 import { useRouter } from "expo-router";
 import groupService from "../../../api/groupService";
 import { getUser } from "../../../api/userService"; // Assuming this function fetches the logged-in user
+import { getUserId } from "../../../api/userService";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "../../../context/ThemeContext";
+import { SPACING } from "../../../constants/DesignValues";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateGroupScreen() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    getUserId().then((userId) => {
+      console.log("UserId:", userId);
+      setUserId(userId);
+    });
+  }, []);
 
   const handleCreateGroup = async () => {
+    console.log("Button pressed: handleCreateGroup called")
     setLoading(true);
 
     try {
-      const user = await getUser(); // Fetch logged-in user
+
+      
+      const user =  getUser(); // Fetch logged-in user
+      console.log("Fetched User:", user);
       if (!user) throw new Error("User not logged in.");
 
+       // Fetch the user ID from the server
+      //const userId = await getUserId();
+      //console.log("Fetched User ID:", userId);
+      
       const groupData = {
         name,
         description,
         members: [], // Empty for now
-        creator: user._id, // Use the user's ObjectId
+        creator: userId, // Use the user's ObjectId
       };
 
-      // const createdGroup = await groupService.createGroup(groupData);
-      // console.log("Created Group:", createdGroup);
-      console.log("Created Group:", groupData);
+      console.log("INPUT DATA:", groupData);
+      const createdGroup = await groupService.createGroup(groupData);
+      console.log("Created Group:", createdGroup);
+      
 
       router.back(); // Navigate back after success
     } catch (error) {
@@ -38,7 +62,11 @@ export default function CreateGroupScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <Provider theme={theme}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+    <View style={styles.form}>
       <Title>Create a New Group</Title>
       <TextInput
         label="Group Name"
@@ -65,19 +93,23 @@ export default function CreateGroupScreen() {
         Create Group
       </Button>
     </View>
+    </SafeAreaView>
+    </Provider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
   },
   input: {
-    marginBottom: 15,
+    marginBottom: SPACING.medium,
+  },
+  form: {
+    margin: SPACING.xLarge,
+    padding: SPACING.xLarge,
   },
   button: {
-    marginTop: 10,
+    margin: SPACING.xLarge,
   },
 });

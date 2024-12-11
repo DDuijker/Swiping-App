@@ -116,6 +116,7 @@ export const logout = async () => {
 export const getUserId = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
+    console.log("Authorization Token:", token); // Log the token for debugging
     if (!token) throw new Error("User is not authenticated.");
 
     const response = await axiosInstance.get("/me", {
