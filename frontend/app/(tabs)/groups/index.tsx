@@ -12,6 +12,7 @@ export default function GroupIndex() {
   const { theme } = useTheme();
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
   const router = useRouter();
   useEffect(() => {
     fetchGroups();
@@ -30,7 +31,9 @@ export default function GroupIndex() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={groups}

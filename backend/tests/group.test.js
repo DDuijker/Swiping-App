@@ -21,7 +21,11 @@ describe("Group API Endpoints", () => {
     // Disconnect MongoDB and stop the memory server
     await mongoose.disconnect();
     await mongoServer.stop();
-    server.close();
+
+    // Close the server if it exists
+    if (server) {
+      server.close();
+    }
   });
 
   beforeEach(async () => {

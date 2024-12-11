@@ -11,30 +11,62 @@ const axiosInstance = axios.create({
   },
 });
 
-// Function to login user
+/**
+ * Handles API errors and returns user-friendly error messages.
+ * @param {any} error - The error object from Axios.
+ * @returns {string} - User-friendly error message.
+ */
+const handleApiError = (error) => {
+  if (error.response) {
+    const { status, data } = error.response;
+
+    if (status === 400) return data.message || "Invalid request.";
+    if (status === 401) return data.message || "Unauthorized. Please log in.";
+    if (status === 404) return data.message || "Resource not found.";
+    return data.message || `Unexpected error: ${status}.`;
+  } else if (error.request) {
+    return "Network error. Please check your connection.";
+  } else {
+    return error.message || "An unexpected error occurred.";
+  }
+};
+
+/**
+ * Logs in the user.
+ * @async
+ * @param {string} username - The user's username.
+ * @param {string} password - The user's password.
+ * @returns {Promise<Object>} - The logged-in user data.
+ * @throws {Error} - If login fails.
+ */
 export const login = async (username, password) => {
   try {
-    const response = await axiosInstance.post("/login", {
-      username,
-      password,
-    });
-
+    const response = await axiosInstance.post("/login", { username, password });
     const { token, user } = response.data;
 
-    // Store token, user info, and user ID in AsyncStorage
+    // Store token and user data in AsyncStorage
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 
     return user;
   } catch (error) {
-    console.error("Login error:", error.response?.data || error.message);
-    throw new Error(
-      error.response?.data?.msg || "Login failed. Please try again."
-    );
+    const message = handleApiError(error);
+    throw new Error(message);
   }
 };
 
-// Function to register a user
+/**
+ * Registers a new user.
+ * @async
+ * @param {string} username - The user's username.
+ * @param {string} password - The user's password.
+ * @param {string} email - The user's email address.
+ * @param {string} avatar - The user's avatar as a base64 string.
+ * @param {Array<Object>} favoriteMovieGenres - List of user's favorite movie genres.
+ * @param {Array<Object>} favoriteTVGenres - List of user's favorite TV genres.
+ * @returns {Promise<Object>} - The newly registered user's data.
+ * @throws {Error} - If registration fails.
+ */
 export const register = async (
   username,
   password,
@@ -44,10 +76,8 @@ export const register = async (
   favoriteTVGenres
 ) => {
   try {
-    // Compress the image before sending
     let processedAvatar = avatar;
     if (avatar && avatar.length > 1000000) {
-      // Remove the data:image prefix if present
       processedAvatar = avatar.includes("base64,")
         ? avatar.split("base64,")[1]
         : avatar;
@@ -62,57 +92,73 @@ export const register = async (
       favoriteTVGenres,
     });
 
-    const { user } = response.data;
+    const { user, token } = response.data;
+    console.log(user);
+    await AsyncStorage.setItem("token", token);
+    await AsyncStorage.setItem("user", JSON.stringify(user));
 
-    // Store user ID in AsyncStorage
-    await AsyncStorage.setItem("userId", user._id); // Assuming user object contains _id
-
-    return response.data;
+    return user, token;
   } catch (error) {
-    console.error("Registration error:", error.response?.data || error.message);
-    throw new Error(
-      error.response?.data?.msg ||
-        `Registration failed. Status: ${error.response?.status}`
-    );
+    throw new Error(handleApiError(error));
   }
 };
 
-// Function to get logged-in user info
+/**
+ * Retrieves the logged-in user's data from local storage.
+ * @async
+ * @returns {Promise<Object|null>} - The logged-in user data or null if not logged in.
+ * @throws {Error} - If retrieval fails.
+ */
 export const getUser = async () => {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (!userString) return null;
+    console.log(userString);
     return JSON.parse(userString);
   } catch (error) {
-    console.log("Error getting user:", error);
-    return null;
+    console.error("Error getting user:", error);
+    throw new Error("Failed to retrieve user info.");
   }
 };
 
-// Function to check authentication status
+/**
+ * Checks if the user is authenticated.
+ * @async
+ * @returns {Promise<boolean>} - True if authenticated, false otherwise.
+ * @throws {Error} - If authentication check fails.
+ */
 export const isAuthenticated = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
-    return token !== null; // Return true if a token exists, otherwise false
+    return token !== null;
   } catch (error) {
-    console.error("Error checking authentication:", error);
-    return false;
+    throw new Error(handleApiError(error));
   }
 };
 
-// Function to logout
+/**
+ * Logs out the user by removing token and user data from local storage.
+ * @async
+ * @returns {Promise<void>}
+ * @throws {Error} - If logout fails.
+ */
 export const logout = async () => {
   try {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("user");
-    await AsyncStorage.removeItem("userId");
     console.log("Logged out successfully.");
   } catch (error) {
     console.error("Error during logout:", error.message);
+    throw new Error("Failed to log out.");
   }
 };
 
-// Function to get the user ID from mongoose
+/**
+ * Retrieves the user's ID from the backend.
+ * @async
+ * @returns {Promise<string>} - The user's ID.
+ * @throws {Error} - If retrieval fails.
+ */
 export const getUserId = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
@@ -121,15 +167,74 @@ export const getUserId = async () => {
 
     const response = await axiosInstance.get("/me", {
       headers: {
-        Authorization: `Bearer ${token}`, // Send token for authentication
+        Authorization: `Bearer ${token}`,
       },
     });
 
     return response.data._id;
   } catch (error) {
-    console.error("Error fetching user ID:", error.response?.data || error.message);
-    throw new Error(
-      error.response?.data?.msg || "Unable to fetch user ID. Please try again."
-    );
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
+ * Searches for users by username.
+ * @async
+ * @param {string} username - The username to search for (optional).
+ * @returns {Promise<Array<Object>>} - List of users with matching usernames.
+ * @throws {Error} - If the search fails.
+ */
+export const searchUsers = async (username) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+
+    const response = await axiosInstance.get("/search", {
+      params: { username },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
+ * Retrieves all users.
+ * @async
+ * @returns {Promise<Array<Object>>} - List of all users.
+ * @throws {Error} - If retrieval fails.
+ */
+export const getAllUsers = async () => {
+  try {
+    const response = await axiosInstance.get("/");
+    return response.data;
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
+ * Retrieves a specific user by ID.
+ * @async
+ * @param {string} id - The user's ID.
+ * @returns {Promise<Object>} - The user's data.
+ * @throws {Error} - If retrieval fails.
+ */
+export const getUserById = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    const response = await axiosInstance.get(`/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.user;
+  } catch (error) {
+    throw new Error(handleApiError(error));
   }
 };
