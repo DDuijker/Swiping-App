@@ -3,20 +3,17 @@ import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
 import { Card, Title, Paragraph, FAB } from "react-native-paper";
 import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../context/ThemeContext";
-
+import { getUser, getUserId } from "@/api/userService";
 
 export default function GroupIndex() {
-  const { t } = useTranslation();
-  const { theme } = useTheme();
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const router = useRouter();
   useEffect(() => {
     fetchGroups();
-  }, []);
+  }, [groups]);
 
   const fetchGroups = async () => {
     setLoading(true);
@@ -34,7 +31,6 @@ export default function GroupIndex() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={groups}
         keyExtractor={(item) => item._id}
@@ -59,8 +55,6 @@ export default function GroupIndex() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    //backgroundColor: ,
   },
   card: {
     marginBottom: 10,

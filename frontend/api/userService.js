@@ -93,7 +93,6 @@ export const register = async (
     });
 
     const { user, token } = response.data;
-    console.log(user);
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 
@@ -113,7 +112,6 @@ export const getUser = async () => {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (!userString) return null;
-    console.log(userString);
     return JSON.parse(userString);
   } catch (error) {
     console.error("Error getting user:", error);
@@ -162,7 +160,6 @@ export const logout = async () => {
 export const getUserId = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
-    console.log("Authorization Token:", token); // Log the token for debugging
     if (!token) throw new Error("User is not authenticated.");
 
     const response = await axiosInstance.get("/me", {

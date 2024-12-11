@@ -21,26 +21,15 @@ export default function CreateGroupScreen() {
 
   useEffect(() => {
     getUserId().then((userId) => {
-      console.log("UserId:", userId);
       setUserId(userId);
     });
   }, []);
 
   const handleCreateGroup = async () => {
-    console.log("Button pressed: handleCreateGroup called")
     setLoading(true);
 
     try {
 
-      
-      const user =  getUser(); // Fetch logged-in user
-      console.log("Fetched User:", user);
-      if (!user) throw new Error("User not logged in.");
-
-       // Fetch the user ID from the server
-      //const userId = await getUserId();
-      //console.log("Fetched User ID:", userId);
-      
       const groupData = {
         name,
         description,
@@ -48,9 +37,7 @@ export default function CreateGroupScreen() {
         creator: userId, // Use the user's ObjectId
       };
 
-      console.log("INPUT DATA:", groupData);
       const createdGroup = await groupService.createGroup(groupData);
-      console.log("Created Group:", createdGroup);
       
 
       router.back(); // Navigate back after success
