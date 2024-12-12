@@ -13,6 +13,10 @@
       "previous": "Previous",
       "continue": "Continue"
     },
+    "languages": {
+      "dutch": "Dutch",
+      "english": "English"
+    },
     "fields": {
       "username": "Username",
       "password": "Password",
@@ -129,7 +133,9 @@
       "email": "Email",
       "password": "Password",
       "passwordRepeat": "Repeat Password",
-      "bio": "Bio"
+      "bio": "Bio",
+      "favoriteTVGenres": "Favorite TV Genres",
+      "favoriteMovieGenres": "Favorite Movie Genres"
     },
     "settings": {
       "notifications": "Notifications",
@@ -145,7 +151,8 @@
       "uploadPicture": "An error occurred while uploading the profile picture",
       "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
       "errorPickingImage": "Er is een fout opgetreden bij het selecteren van de afbeelding",
-      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding"
+      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding",
+      "profileUpdate": "Er is iets misgegaan bij het updaten van uw profiel"
     },
     "success": {
       "accountDeleted": "Account successfully deleted",

@@ -186,6 +186,7 @@ export const getUserId = async () => {
 export const updateUser = async (id, data) => {
   try {
     const token = await AsyncStorage.getItem("token");
+    console.log(token);
     if (!token) throw new Error("User is not authenticated.");
 
     const response = await axiosInstance.put(`/${id}`, data, {
