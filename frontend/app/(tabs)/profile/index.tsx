@@ -1,13 +1,22 @@
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { Button } from "react-native-paper";
-import { logout } from "../../../api/userService";
-import { router } from "expo-router";
+import { logout, getUser } from "../../../api/userService";
+import { Link, router } from "expo-router";
 
 export default function ProfileIndex() {
+  // const [user, setUser] = useState(null);
   const { t } = useTranslation();
   const { theme } = useTheme();
+
+  // useEffect(() => {
+  //   getUser().then((user) => {
+  //     console.log("User:", user);
+  //     setUser(user);
+  //   });
+  // }, []);
 
   const handleLogout = async () => {
     try {
@@ -30,6 +39,9 @@ export default function ProfileIndex() {
       <Text style={{ color: theme.colors.onBackground }}>
         {t("profile.title")}
       </Text>
+
+      <Button onPress={() => router.push("/groups/create")}>Update</Button>
+
       <Button onPress={handleLogout}>{t("common.actions.logout")}</Button>
     </View>
   );

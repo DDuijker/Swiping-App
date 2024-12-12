@@ -113,7 +113,6 @@ export const getUser = async () => {
   try {
     const userString = await AsyncStorage.getItem("user");
     if (!userString) return null;
-    console.log(userString);
     return JSON.parse(userString);
   } catch (error) {
     console.error("Error getting user:", error);
