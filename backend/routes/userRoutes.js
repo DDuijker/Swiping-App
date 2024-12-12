@@ -75,4 +75,86 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Change Password
+router.put("/change-password", async (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Check if the current password matches
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Incorrect current password" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ msg: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
+// Change Email
+router.put("/change-email", async (req, res) => {
+  const { userId, newEmail } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Check if the new email is already in use
+    const emailExists = await User.findOne({ email: newEmail });
+    if (emailExists) {
+      return res.status(400).json({ msg: "Email already in use" });
+    }
+
+    user.email = newEmail;
+    await user.save();
+
+    res.status(200).json({ msg: "Email updated successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
+// Delete Account
+router.delete("/delete-account", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ msg: "Account deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
+const authenticateToken = require("../middleware/authMiddleware");
+
+// Bescherm routes
+router.put("/change-password", authenticateToken, async (req, res) => {
+  // Logica voor wachtwoord wijzigen
+});
+router.put("/change-email", authenticateToken, async (req, res) => {
+  // Logica voor e-mailadres wijzigen
+});
+router.delete("/delete-account", authenticateToken, async (req, res) => {
+  // Logica voor account verwijderen
+});
+
+
 module.exports = router;
