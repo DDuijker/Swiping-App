@@ -177,6 +177,31 @@ export const getUserId = async () => {
 };
 
 /**
+ * Updates the user's data.
+ * @async
+ * @param {string} id - The user's ID.
+ * @param {Object} data - The updated user data.
+ * @returns {Promise<Object>} - The updated user data.
+ * @throws {Error} - If update fails.
+ */
+export const updateUser = async (id, data) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    const response = await axiosInstance.put(`/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
  * Searches for users by username.
  * @async
  * @param {string} username - The username to search for (optional).
