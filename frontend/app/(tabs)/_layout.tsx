@@ -5,7 +5,6 @@ import { useTheme } from "../../context/ThemeContext";
 import React from "react";
 import ListScreen from "./lists/index";
 import ProfileScreen from "./profile/index";
-import AppProviders from "../../components/AppProviders";
 import GroupsLayout from "./groups/_layout";
 import { router } from "expo-router";
 
