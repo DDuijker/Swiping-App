@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const connectDB = require("./db");
 const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const recommendationRoutes = require("./routes/recommendationRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/groups", groupRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 
 // Start server only if not in test environment
 let server = null;

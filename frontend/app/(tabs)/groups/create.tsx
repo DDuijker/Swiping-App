@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Title } from "react-native-paper";
 import { useRouter } from "expo-router";
-import groupService from "../../../api/groupService";
-import { getUser } from "../../../api/userService"; // Assuming this function fetches the logged-in user
+import { getUserId } from "../../../api/userService"; // Assuming this function fetches the logged-in user
+import groupService from "@/api/groupService";
 
 export default function CreateGroupScreen() {
   const [name, setName] = useState("");
@@ -11,25 +11,33 @@ export default function CreateGroupScreen() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    getUserId().then((id) => {
+      setUserId(id);
+    });
+    console.log("User ID:", userId);
+  });
+
   const handleCreateGroup = async () => {
     setLoading(true);
 
     try {
-      const user = await getUser(); // Fetch logged-in user
-      if (!user) throw new Error("User not logged in.");
+      if (!userId) throw new Error("User not logged in.");
 
       const groupData = {
         name,
         description,
         members: [], // Empty for now
-        creator: user._id, // Use the user's ObjectId
+        creator: userId, // Use the user's ObjectId
       };
 
-      // const createdGroup = await groupService.createGroup(groupData);
-      // console.log("Created Group:", createdGroup);
+      const createdGroup = await groupService.createGroup(groupData);
+      console.log("Created Group:", createdGroup);
       console.log("Created Group:", groupData);
 
-      router.back(); // Navigate back after success
+      // router.back(); // Navigate back after success
     } catch (error) {
       console.error("Error creating group:", error.message);
     } finally {

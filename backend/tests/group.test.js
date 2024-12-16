@@ -64,6 +64,45 @@ describe("Group API Endpoints", () => {
     expect(response.body.length).toBe(1); // Ensure there's one group
   });
 
+  it("should fetch groups by user ID", async () => {
+    const userId = new mongoose.Types.ObjectId(); // Create a test user ID
+
+    // Create groups where the user is either a member or the creator
+    await Group.create({
+      name: "Group 1",
+      description: "User as Creator",
+      members: [new mongoose.Types.ObjectId()],
+      creator: userId, // Set user as creator
+    });
+
+    await Group.create({
+      name: "Group 2",
+      description: "User as Member",
+      members: [userId, new mongoose.Types.ObjectId()], // Set user as a member
+      creator: new mongoose.Types.ObjectId(),
+    });
+
+    await Group.create({
+      name: "Group 3",
+      description: "No Relation",
+      members: [new mongoose.Types.ObjectId()],
+      creator: new mongoose.Types.ObjectId(),
+    });
+
+    // Make request to fetch groups by user ID
+    const response = await request(app).get(`/api/groups/user/${userId}`);
+
+    expect(response.statusCode).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(2); // Only 2 groups should be related to the user
+
+    // Validate that the correct groups are returned
+    const groupNames = response.body.map((group) => group.name);
+    expect(groupNames).toContain("Group 1");
+    expect(groupNames).toContain("Group 2");
+    expect(groupNames).not.toContain("Group 3");
+  });
+
   it("should fetch a group by ID", async () => {
     const group = await Group.create({
       name: "Unique Group",
