@@ -64,6 +64,62 @@ exports.getGroupById = async (req, res) => {
 };
 
 /**
+ * @description Get groups by user ID
+ * @route GET /api/groups/user/:userId
+ * @access Private
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.getGroupsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Check if userId is provided
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ message: "User ID is required in the request parameters." });
+    }
+
+    // Check if userId is a valid ObjectId (assuming MongoDB)
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "Invalid User ID format." });
+    }
+
+    // Find groups where the user is either the creator or a member
+    const groups = await Group.find({
+      $or: [{ creator: userId }, { members: userId }],
+    })
+      .populate("members", "username email")
+      .populate("creator", "username email");
+
+    // If no groups are found
+    if (!groups || groups.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No groups found for the provided User ID." });
+    }
+
+    res.status(200).json(groups);
+  } catch (error) {
+    // Handle specific MongoDB errors
+    if (error.name === "CastError") {
+      return res
+        .status(400)
+        .json({ message: "Invalid data format in the request." });
+    }
+
+    // Log detailed error for debugging
+    console.error("Error fetching groups by user ID:", error);
+
+    // Generic server error response
+    res.status(500).json({
+      message: "An unexpected error occurred. Please try again later.",
+    });
+  }
+};
+
+/**
  * @description Update a group
  * @route PUT /api/groups/:id
  * @access Private
