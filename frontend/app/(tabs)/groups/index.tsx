@@ -4,6 +4,7 @@ import { Card, Title, Paragraph, FAB } from "react-native-paper";
 import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../../context/ThemeContext";
+import { getUser, getUserId } from "@/api/userService";
 
 export default function GroupIndex() {
   const [groups, setGroups] = useState([]);
@@ -12,7 +13,7 @@ export default function GroupIndex() {
   const router = useRouter();
   useEffect(() => {
     fetchGroups();
-  }, []);
+  }, [groups]);
 
   const fetchGroups = async () => {
     setLoading(true);
@@ -30,7 +31,6 @@ export default function GroupIndex() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {loading && <ActivityIndicator size="large" />}
       <FlatList
         data={groups}
         keyExtractor={(item) => item._id}

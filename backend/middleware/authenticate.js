@@ -7,7 +7,7 @@ const authenticate = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ msg: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
@@ -16,7 +16,7 @@ const authenticate = (req, res, next) => {
     next();
   } catch (error) {
     console.error("Authentication error:", error.message);
-    res.status(401).json({ msg: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
 
