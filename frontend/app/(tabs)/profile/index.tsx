@@ -208,12 +208,7 @@ export default function ProfileIndex() {
           <View style={styles.chipContainer}>
             {updatedUser.favoriteMovieGenres.length > 0 ? (
               updatedUser.favoriteMovieGenres.map((genre: Genre) => (
-                <Chip
-                  key={genre.id}
-                  style={styles.chip}
-                  theme={theme}
-                  onClose={() => handleToggleGenre("movie", genre)}
-                >
+                <Chip key={genre.id} style={styles.chip} theme={theme}>
                   {genre.name}
                 </Chip>
               ))
@@ -228,12 +223,7 @@ export default function ProfileIndex() {
           <View style={styles.chipContainer}>
             {updatedUser.favoriteTVGenres.length > 0 ? (
               updatedUser.favoriteTVGenres.map((genre: Genre) => (
-                <Chip
-                  key={genre.id}
-                  style={styles.chip}
-                  theme={theme}
-                  onClose={() => handleToggleGenre("tv", genre)}
-                >
+                <Chip key={genre.id} style={styles.chip} theme={theme}>
                   {genre.name}
                 </Chip>
               ))
@@ -437,7 +427,7 @@ const styles = StyleSheet.create({
   infoContainer: { marginBottom: 16, alignItems: "center" },
   chipContainer: { display: "flex", flexDirection: "row", flexWrap: "wrap" },
   chip: {
-    marginRight: 4,
+    marginRight: 8,
     marginBottom: 4,
   },
   input: { marginBottom: 16 },
