@@ -22,7 +22,7 @@ import {
   updateUser,
   logout,
   deleteUser,
-  changePassword, // Import changePassword function
+  changePassword,
 } from "../../../api/userService";
 
 // Import components
@@ -39,12 +39,12 @@ export default function ProfileIndex() {
   const [snackbar, setSnackbar] = useState({ visible: false, message: "" });
   const [loading, setLoading] = useState(true);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [passwordDialogVisible, setPasswordDialogVisible] = useState(false); // State for password dialog
+  const [passwordDialogVisible, setPasswordDialogVisible] = useState(false);
   const [passwords, setPasswords] = useState({
     current: "",
     new: "",
     confirm: "",
-  }); // State for passwords
+  });
 
   // Fetch user data on mount
   useEffect(() => {
@@ -124,7 +124,7 @@ export default function ProfileIndex() {
     if (passwords.new !== passwords.confirm) {
       setSnackbar({
         visible: true,
-        message: t("profile.error.passwordMismatch"),
+        message: t("profile.errors.passwordMismatch"),
       });
       return;
     }

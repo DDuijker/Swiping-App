@@ -179,3 +179,35 @@ exports.getAuthenticatedUser = async (req, res) => {
       .json({ message: "Server error. Unable to fetch user info." });
   }
 };
+
+exports.verifyPassword = async (req, res) => {
+  try {
+    const { userId, password } = req.body;
+
+    // Validate input
+    if (!userId || !password) {
+      return res
+        .status(400)
+        .json({ message: "User ID and password are required." });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Compare the password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect password." });
+    }
+
+    // Success response
+    res.status(200).json({ message: "Password verified successfully." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};

@@ -22,7 +22,7 @@ const handleApiError = (error) => {
 
     if (status === 400) return data.message || "Invalid request.";
     if (status === 401) return data.message || "Unauthorized. Please log in.";
-    if (status === 404) return data.message || "Resource not found.";
+    if (status === 404) return data.message || "Not found.";
     return data.message || `Unexpected error: ${status}.`;
   } else if (error.request) {
     return "Network error. Please check your connection.";
@@ -293,11 +293,33 @@ export const deleteUser = async (id) => {
  * @returns {Promise<void>}
  * @throws {Error} - If password change fails.
  */
-export const changePassword = async (userId, currentPassword, newPassword) => {
+export const changePassword = async (userId, password, newPassword) => {
   try {
-    const data = { currentPassword, newPassword };
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    // Verify current password
+    const verifyResponse = await axiosInstance.post(
+      "/verify-password",
+      {
+        userId,
+        password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (verifyResponse.status !== 200) {
+      throw new Error("Incorrect password.");
+    }
+    // Update password
+    const data = { newPassword };
     await updateUser(userId, data);
   } catch (error) {
+    console.error("Error changing password:", error.message);
     throw new Error(handleApiError(error));
   }
 };
