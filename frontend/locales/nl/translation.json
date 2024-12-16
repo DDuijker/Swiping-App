@@ -11,10 +11,12 @@
       "close": "Sluiten",
       "next": "Volgende",
       "previous": "Vorige",
-      "continue": "Doorgaan"
+      "continue": "Doorgaan",
+      "lightMode": "Lichte Modus",
+      "darkMode": "Donkere Modus"
     },
     "languages": {
-      "dutch": "Dutch",
+      "dutch": "Nederlands",
       "english": "English"
     },
     "fields": {
@@ -133,13 +135,21 @@
       "email": "E-mail",
       "password": "Wachtwoord",
       "passwordRepeat": "Herhaal Wachtwoord",
+      "currentPassword": "Huidig wachtwoord",
+      "newPassword": "Nieuw wachtwoord",
+      "confirmPassword": "Bevestig wachtwoord",
       "bio": "Biografie",
       "favoriteTVGenres": "Favoriete TV Genres",
       "favoriteMovieGenres": "Favoriete film genres"
     },
     "settings": {
       "notifications": "Meldingen",
-      "privacy": "Privacy-instellingen"
+      "privacy": "Privacy-instellingen",
+      "preferences": "Voorkeuren",
+      "title": "Profiel Instellingen",
+      "logout": "Uitloggen",
+      "deleteAccount": "Account verwijderen",
+      "confirmDeleteAccount": "Weet je zeker dat je je account wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
     },
     "errors": {
       "emailInvalid": "E-mail is ongeldig",

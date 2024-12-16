@@ -35,10 +35,22 @@ export default function GroupIndex() {
         data={groups}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <Card style={styles.card}>
+          <Card
+            style={[
+              styles.card,
+              {
+                backgroundColor: theme.colors.secondaryContainer,
+                elevation: 5,
+              },
+            ]}
+          >
             <Card.Content>
-              <Title>{item.name}</Title>
-              <Paragraph>{item.description}</Paragraph>
+              <Title style={{ color: theme.colors.onSecondaryContainer }}>
+                {item.name}
+              </Title>
+              <Paragraph style={{ color: theme.colors.onSecondaryContainer }}>
+                {item.description}
+              </Paragraph>
             </Card.Content>
           </Card>
         )}

@@ -262,3 +262,42 @@ export const getUserById = async (id) => {
     throw new Error(handleApiError(error));
   }
 };
+
+/**
+ * Deletes the user's account.
+ * @async
+ * @param {string} id - The user's ID.
+ * @returns {Promise<void>}
+ * @throws {Error} - If deletion fails.
+ */
+export const deleteUser = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    await axiosInstance.delete(`/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+/**
+ * Changes the user's password.
+ * @async
+ * @param {string} userId - The user's ID.
+ * @param {string} currentPassword - The user's current password.
+ * @param {string} newPassword - The user's new password.
+ * @returns {Promise<void>}
+ * @throws {Error} - If password change fails.
+ */
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  try {
+    const data = { currentPassword, newPassword };
+    await updateUser(userId, data);
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};

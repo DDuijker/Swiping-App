@@ -11,7 +11,9 @@
       "close": "Close",
       "next": "Next",
       "previous": "Previous",
-      "continue": "Continue"
+      "continue": "Continue",
+      "lightMode": "Light Mode",
+      "darkMode": "Dark Mode"
     },
     "languages": {
       "dutch": "Dutch",
@@ -132,6 +134,9 @@
       "username": "Username",
       "email": "Email",
       "password": "Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm Password",
       "passwordRepeat": "Repeat Password",
       "bio": "Bio",
       "favoriteTVGenres": "Favorite TV Genres",
@@ -139,7 +144,13 @@
     },
     "settings": {
       "notifications": "Notifications",
-      "privacy": "Privacy Settings"
+      "privacy": "Privacy Settings",
+      "preferences": "Preferences",
+      "title": "Profile Settings",
+      "logout": "Logout",
+      "changePassword": "Change Password",
+      "deleteAccount": "Delete Account",
+      "confirmDeleteAccount": "Are you sure you want to delete the account? This action cannot be undone."
     },
     "errors": {
       "emailInvalid": "Email invalid",

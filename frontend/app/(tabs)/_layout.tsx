@@ -44,34 +44,34 @@ export default function TabsLayout() {
   });
 
   return (
-    <AppProviders>
-      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <Appbar.Header
-          mode="center-aligned"
-          style={{
-            backgroundColor: "transparent",
-            elevation: 0,
-          }}
-        >
-           <Appbar.BackAction onPress={() => router.canGoBack()? router.back() : <></>} />
-          <Appbar.Content
-            color={theme.colors.onBackground}
-            title={routes[index].title}
-          />
-        </Appbar.Header>
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          barStyle={{
-            height: tabBarHeight,
-            backgroundColor: theme.colors.elevation.level2,
-          }}
-          sceneAnimationType="shifting"
-          labeled={true}
-          theme={theme}
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Appbar.Header
+        mode="center-aligned"
+        style={{
+          backgroundColor: "transparent",
+          elevation: 0,
+        }}
+      >
+        <Appbar.BackAction
+          onPress={() => (router.canGoBack() ? router.back() : <></>)}
         />
-      </View>
-    </AppProviders>
+        <Appbar.Content
+          color={theme.colors.onBackground}
+          title={routes[index].title}
+        />
+      </Appbar.Header>
+      <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        barStyle={{
+          height: tabBarHeight,
+          backgroundColor: theme.colors.elevation.level2,
+        }}
+        sceneAnimationType="shifting"
+        labeled={true}
+        theme={theme}
+      />
+    </View>
   );
 }
