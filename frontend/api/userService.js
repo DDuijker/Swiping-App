@@ -160,6 +160,7 @@ export const logout = async () => {
 export const getUserId = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
+    // console.log(token);
     if (!token) throw new Error("User is not authenticated.");
 
     const response = await axiosInstance.get("/me", {
@@ -223,14 +224,14 @@ export const getAllUsers = async () => {
 export const getUserById = async (id) => {
   try {
     const token = await AsyncStorage.getItem("token");
-    if (!token) throw new Error("User is not authenticated.");
+    // if (!token) throw new Error("User is not authenticated.");
 
     const response = await axiosInstance.get(`/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data.user;
+    return response;
   } catch (error) {
     throw new Error(handleApiError(error));
   }

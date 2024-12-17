@@ -63,7 +63,7 @@ exports.loginUser = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "200h",
     });
 
     res.status(200).json({ token, user });
@@ -88,7 +88,7 @@ exports.getAllUsers = async (req, res) => {
 
 /**
  * @description Get users by username or fetch all
- * @route GET /api/user/search
+ * @route GET /api/user/search?username={{query username}}
  * @access Public
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object

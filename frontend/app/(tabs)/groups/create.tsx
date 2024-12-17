@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   TextInput,
@@ -50,6 +51,8 @@ export default function CreateGroupScreen() {
     setLoading(true);
 
     try {
+      if (!userId) throw new Error("User not logged in.");
+
       const groupData = {
         name,
         description,
@@ -58,8 +61,10 @@ export default function CreateGroupScreen() {
       };
 
       const createdGroup = await groupService.createGroup(groupData);
+      console.log("Created Group:", createdGroup);
+      console.log("Created Group:", groupData);
 
-      router.back(); // Navigate back after success
+      // router.back(); // Navigate back after success
     } catch (error) {
       console.error("Error creating group:", error.message);
     } finally {
