@@ -1,0 +1,227 @@
+{
+  "common": {
+    "actions": {
+      "register": "Registreren",
+      "login": "Inloggen",
+      "logout": "Uitloggen",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "confirm": "Bevestigen",
+      "search": "Zoeken",
+      "close": "Sluiten",
+      "next": "Volgende",
+      "previous": "Vorige",
+      "continue": "Doorgaan"
+    },
+    "fields": {
+      "username": "Gebruikersnaam",
+      "password": "Wachtwoord",
+      "email": "E-mail",
+      "search": {
+        "placeholder": "Zoeken naar",
+        "noResults": "Geen resultaten gevonden",
+        "resultsFor": "Zoekresultaten voor",
+        "resultsIn": "Zoekresultaten in"
+      }
+    },
+    "navigation": {
+      "home": "Home",
+      "about": "Over Ons",
+      "contact": "Contact",
+      "settings": "Instellingen"
+    },
+    "errors": {
+      "general": "Er is een fout opgetreden",
+      "username": "Gebruikersnaam is verplicht",
+      "email": "E-mail is verplicht",
+      "password": "Wachtwoord is verplicht",
+      "confirmPassword": "Bevestig wachtwoord is verplicht",
+      "formValidation": "Er zijn fouten gevonden in het formulier",
+      "genres": {
+        "loading": "Er zijn fouten opgetreden bij het laden van de genres",
+        "none": "Geen genres beschikbaar"
+      }
+    },
+    "success": {
+      "registration": "Succesvol geregistreerd",
+      "login": "Successvol ingelogd",
+      "general": "Succes"
+    },
+    "states": {
+      "loading": "Laden..."
+    },
+    "welcome": {
+      "title": "Welkom bij Binge!"
+    },
+    "preferences": {
+      "language": "Taal",
+      "genres": {
+        "favorite": "Favoriete genres",
+        "selectMovie": "Selecteer je favoriete filmgenres",
+        "selectTV": "Selecteer je favoriete TV-genres"
+      }
+    }
+  },
+  "groups": {
+    "title": "Groepen",
+    "actions": {
+      "create": "Groep Aanmaken",
+      "edit": "Groep Bewerken",
+      "delete": "Groep Verwijderen",
+      "invite": "Leden Uitnodigen",
+      "leave": "Groep Verlaten",
+      "join": "Deelnemen aan Groep"
+    },
+    "fields": {
+      "name": "Naam",
+      "description": "Beschrijving",
+      "members": "Leden",
+      "membersCount": "Aantal Leden"
+    },
+    "settings": {
+      "title": "Groepsinstellingen"
+    },
+    "errors": {
+      "notFound": "Groep niet gevonden"
+    },
+    "states": {
+      "noMembers": "Deze groep heeft nog geen leden."
+    }
+  },
+  "lists": {
+    "title": "Lijsten",
+    "actions": {
+      "create": "Lijst Aanmaken",
+      "edit": "Lijst Bewerken",
+      "delete": "Lijst Verwijderen",
+      "addItem": "Item Toevoegen"
+    },
+    "fields": {
+      "name": "Naam",
+      "description": "Beschrijving",
+      "items": "Items",
+      "itemsCount": "Aantal Items"
+    },
+    "settings": {
+      "title": "Lijstinstellingen"
+    },
+    "states": {
+      "noItems": "Geen items gevonden."
+    },
+    "success": {
+      "itemAdded": "Item toegevoegd",
+      "itemDeleted": "Item verwijderd"
+    }
+  },
+  "profile": {
+    "title": "Profiel",
+    "actions": {
+      "edit": "Profiel Bewerken",
+      "delete": "Profiel Verwijderen",
+      "uploadPicture": "Uploaden",
+      "removePicture": "Foto verwijderen",
+      "changePassword": "Wachtwoord Wijzigen"
+    },
+    "fields": {
+      "name": "Naam",
+      "picture": "Profielfoto",
+      "username": "Gebruikersnaam",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "passwordRepeat": "Herhaal Wachtwoord",
+      "bio": "Biografie"
+    },
+    "settings": {
+      "notifications": "Meldingen",
+      "privacy": "Privacy-instellingen"
+    },
+    "errors": {
+      "emailInvalid": "E-mail is ongeldig",
+      "passwordMismatch": "Wachtwoorden komen niet overeen",
+      "passwordLength": "Wachtwoord moet minimaal 8 tekens lang zijn",
+      "passwordRequired": "Wachtwoord is verplicht",
+      "passwordRepeatRequired": "Herhaal wachtwoord is verplicht",
+      "passwordRepeatMismatch": "Herhaald wachtwoord komt niet overeen",
+      "uploadPicture": "Er is een fout opgetreden bij het uploaden van de profielfoto",
+      "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
+      "errorPickingImage": "There was an error picking the image",
+      "errorProcessingImage": "There was an error processing the image"
+    },
+    "success": {
+      "accountDeleted": "Account succesvol verwijderd",
+      "profileUpdated": "Profiel succesvol bijgewerkt",
+      "passwordChanged": "Wachtwoord succesvol gewijzigd"
+    }
+  },
+  "validation": {
+    "email": {
+      "format": "Voer een geldig e-mailadres in",
+      "required": "E-mailadres is verplicht",
+      "exists": "Dit e-mailadres is al geregistreerd"
+    },
+    "password": {
+      "minLength": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "requireUppercase": "Gebruik minimaal één hoofdletter",
+      "requireLowercase": "Gebruik minimaal één kleine letter",
+      "requireNumber": "Gebruik minimaal één cijfer",
+      "requireSpecial": "Gebruik minimaal één speciaal teken (!@#$%^&*)",
+      "match": "Wachtwoorden moeten overeenkomen",
+      "required": "Wachtwoord is verplicht"
+    },
+    "username": {
+      "minLength": "Gebruikersnaam moet minimaal 3 tekens bevatten",
+      "maxLength": "Gebruikersnaam mag niet langer zijn dan 30 tekens",
+      "format": "Alleen letters, cijfers en underscores toegestaan",
+      "exists": "Deze gebruikersnaam is al in gebruik"
+    },
+    "fields": {
+      "required": "Dit veld is verplicht",
+      "invalid": "Ongeldige invoer"
+    }
+  },
+  "errors": {
+    "auth": {
+      "invalidCredentials": "Ongeldige gebruikersnaam of wachtwoord",
+      "sessionExpired": "Je sessie is verlopen",
+      "unauthorized": "Log in om door te gaan",
+      "accountLocked": "Account tijdelijk vergrendeld",
+      "logout": "Er is een fout opgetreden bij het uitloggen"
+    },
+    "network": {
+      "offline": "Geen internetverbinding",
+      "timeout": "Verzoek duurde te lang",
+      "serverError": "Server fout opgetreden"
+    },
+    "upload": {
+      "size": "Bestand is te groot",
+      "format": "Bestandsformaat wordt niet ondersteund",
+      "failed": "Upload mislukt"
+    }
+  },
+  "tutorial": {
+    "welcome": {
+      "title": "Welkom bij Binge! 🎬",
+      "description": "Heb je jezelf ooit vastgezet in een eindeloze cyclus van 'Wat wil je kijken?' en 'Ik weet het niet, wat wil jij kijken?'"
+    },
+    "createGroup": {
+      "title": "Maak een Groep",
+      "description": "Maak een groep met je vrienden, partner of familie."
+    },
+    "givePreferences": {
+      "title": "Geef Je Voorkeuren",
+      "description": "Laat iedereen hun film- of serievoorkeuren delen."
+    },
+    "swipeToFindMatch": {
+      "title": "Swipe om een Match te Vinden",
+      "description": "Swipe om films te ontdekken die iedereen leuk zal vinden!"
+    },
+    "groupAndPersonalLists": {
+      "title": "Groep & Persoonlijke Lijsten",
+      "description": "Houd je groepsmatches en persoonlijke favorieten bij."
+    },
+    "endCard": {
+      "title": "🎉 Klaar om te Bingen?",
+      "description": "Laten we beginnen!"
+    }
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "common": {
+    "actions": {
+      "register": "Register",
+      "login": "Login",
+      "logout": "Logout",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "search": "Search",
+      "close": "Close",
+      "next": "Next",
+      "previous": "Previous",
+      "continue": "Continue"
+    },
+    "fields": {
+      "username": "Username",
+      "password": "Password",
+      "email": "Email",
+      "search": {
+        "placeholder": "Search for",
+        "noResults": "No results found",
+        "resultsFor": "Search results for",
+        "resultsIn": "Search results in"
+      }
+    },
+    "navigation": {
+      "home": "Home",
+      "about": "About Us",
+      "contact": "Contact",
+      "settings": "Settings"
+    },
+    "errors": {
+      "general": "An error occurred",
+      "username": "Username is required",
+      "email": "Email is required",
+      "password": "Password is required",
+      "confirmPassword": "Confirm password is required",
+      "formValidation": "Errors were found in the form",
+      "genres": {
+        "loading": "There were errors loading the genres",
+        "none": "No genres available"
+      }
+    },
+    "success": {
+      "registration": "Successfully registered",
+      "login": "Successfully logged in",
+      "general": "Success"
+    },
+    "states": {
+      "loading": "Loading..."
+    },
+    "welcome": {
+      "title": "Welcome to Binge!"
+    },
+    "preferences": {
+      "language": "Language",
+      "genres": {
+        "favorite": "Favorite genres",
+        "selectMovie": "Select your favorite genres",
+        "selectTV": "Select your favorite TV genres"
+      }
+    }
+  },
+  "groups": {
+    "title": "Groups",
+    "actions": {
+      "create": "Create Group",
+      "edit": "Edit Group",
+      "delete": "Delete Group",
+      "invite": "Invite Members",
+      "leave": "Leave Group",
+      "join": "Join Group"
+    },
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "members": "Members",
+      "membersCount": "Members Count"
+    },
+    "settings": {
+      "title": "Group Settings"
+    },
+    "errors": {
+      "notFound": "Group not found"
+    },
+    "states": {
+      "noMembers": "This group has no members yet."
+    }
+  },
+  "lists": {
+    "title": "Lists",
+    "actions": {
+      "create": "Create List",
+      "edit": "Edit List",
+      "delete": "Delete List",
+      "addItem": "Add Item"
+    },
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "items": "Items",
+      "itemsCount": "Items Count"
+    },
+    "settings": {
+      "title": "List Settings"
+    },
+    "states": {
+      "noItems": "No items found."
+    },
+    "success": {
+      "itemAdded": "Item added",
+      "itemDeleted": "Item deleted"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "actions": {
+      "edit": "Edit Profile",
+      "delete": "Delete Profile",
+      "uploadPicture": "Upload",
+      "removePicture": "Remove picture",
+      "changePassword": "Change Password"
+    },
+    "fields": {
+      "name": "Name",
+      "picture": "Profile Picture",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "passwordRepeat": "Repeat Password",
+      "bio": "Bio"
+    },
+    "settings": {
+      "notifications": "Notifications",
+      "privacy": "Privacy Settings"
+    },
+    "errors": {
+      "emailInvalid": "Email invalid",
+      "passwordMismatch": "Passwords do not match",
+      "passwordLength": "Password must be at least 8 characters long",
+      "passwordRequired": "Password is required",
+      "passwordRepeatRequired": "Repeat password is required",
+      "passwordRepeatMismatch": "Repeat password does not match",
+      "uploadPicture": "An error occurred while uploading the profile picture",
+      "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
+      "errorPickingImage": "Er is een fout opgetreden bij het selecteren van de afbeelding",
+      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding"
+    },
+    "success": {
+      "accountDeleted": "Account successfully deleted",
+      "profileUpdated": "Profile successfully updated",
+      "passwordChanged": "Password successfully changed"
+    }
+  },
+  "validation": {
+    "email": {
+      "format": "Please enter a valid email address",
+      "required": "Email is required",
+      "exists": "This email is already registered"
+    },
+    "password": {
+      "minLength": "Password must be at least 8 characters",
+      "requireUppercase": "Include at least one uppercase letter",
+      "requireLowercase": "Include at least one lowercase letter",
+      "requireNumber": "Include at least one number",
+      "requireSpecial": "Include at least one special character (!@#$%^&*)",
+      "match": "Passwords must match",
+      "required": "Password is required"
+    },
+    "username": {
+      "minLength": "Username must be at least 3 characters",
+      "maxLength": "Username cannot exceed 30 characters",
+      "format": "Only letters, numbers, and underscores allowed",
+      "exists": "This username is already taken"
+    },
+    "fields": {
+      "required": "This field is required",
+      "invalid": "Invalid input"
+    }
+  },
+  "errors": {
+    "auth": {
+      "invalidCredentials": "Invalid username or password",
+      "sessionExpired": "Your session has expired",
+      "unauthorized": "Please log in to continue",
+      "accountLocked": "Account temporarily locked",
+      "logout": "There was an error logging out"
+    },
+    "network": {
+      "offline": "No internet connection",
+      "timeout": "Request timed out",
+      "serverError": "Server error occurred"
+    },
+    "upload": {
+      "size": "File is too large",
+      "format": "Unsupported file format",
+      "failed": "Upload failed"
+    }
+  },
+  "tutorial": {
+    "welcome": {
+      "title": "Welcome to Binge! 🎬",
+      "description": "Ever found yourself stuck in an endless cycle of 'What do you want to watch?' and 'I don’t know, what do you want to watch?'"
+    },
+    "createGroup": {
+      "title": "Create a Group",
+      "description": "Make a group with your friends, partner or family"
+    },
+    "givePreferences": {
+      "title": "Give Your Preferences",
+      "description": "Let everyone share their movie or series preferences."
+    },
+    "swipeToFindMatch": {
+      "title": "Swipe to Find a Match",
+      "description": "Swipe to discover movies that everyone will love!"
+    },
+    "groupAndPersonalLists": {
+      "title": "Group & Personal Lists",
+      "description": "Keep track of your group matches and your personal favorites."
+    },
+    "endCard": {
+      "title": "🎉 Ready to Binge?",
+      "description": "Let's get started!"
+    }
+  }
+}
