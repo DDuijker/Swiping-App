@@ -1,8 +1,9 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: ["Tests"]
+    types: completed
 
 jobs:
 
@@ -14,3 +15,4 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: cd backend && docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
