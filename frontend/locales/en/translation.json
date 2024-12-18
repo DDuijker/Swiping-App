@@ -11,7 +11,13 @@
       "close": "Close",
       "next": "Next",
       "previous": "Previous",
-      "continue": "Continue"
+      "continue": "Continue",
+      "lightMode": "Light Mode",
+      "darkMode": "Dark Mode"
+    },
+    "languages": {
+      "dutch": "Dutch",
+      "english": "English"
     },
     "fields": {
       "username": "Username",
@@ -128,12 +134,23 @@
       "username": "Username",
       "email": "Email",
       "password": "Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm Password",
       "passwordRepeat": "Repeat Password",
-      "bio": "Bio"
+      "bio": "Bio",
+      "favoriteTVGenres": "Favorite TV Genres",
+      "favoriteMovieGenres": "Favorite Movie Genres"
     },
     "settings": {
       "notifications": "Notifications",
-      "privacy": "Privacy Settings"
+      "privacy": "Privacy Settings",
+      "preferences": "Preferences",
+      "title": "Profile Settings",
+      "logout": "Logout",
+      "changePassword": "Change Password",
+      "deleteAccount": "Delete Account",
+      "confirmDeleteAccount": "Are you sure you want to delete the account? This action cannot be undone."
     },
     "errors": {
       "emailInvalid": "Email invalid",
@@ -145,7 +162,8 @@
       "uploadPicture": "An error occurred while uploading the profile picture",
       "avatarPermissionDenied": "Toestemming geweigerd om de camera te openen",
       "errorPickingImage": "Er is een fout opgetreden bij het selecteren van de afbeelding",
-      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding"
+      "errorProcessingImage": "Er is een fout opgetreden bij het verwerken van de afbeelding",
+      "profileUpdate": "Er is iets misgegaan bij het updaten van uw profiel"
     },
     "success": {
       "accountDeleted": "Account successfully deleted",

@@ -12,6 +12,7 @@ const {
   updateUser,
   deleteUser,
   getAuthenticatedUser,
+  verifyPassword,
 } = require("../controllers/userController");
 const authenticate = require("../middleware/authenticate");
 
@@ -26,5 +27,6 @@ router.get("/me", authenticate, getAuthenticatedUser); // Get authenticated user
 router.get("/:id", authenticate, getUserById); // Get a user by ID
 router.put("/:id", authenticate, updateUser); // Update a user
 router.delete("/:id", authenticate, deleteUser); // Remove a user
+router.post("/verify-password", authenticate, verifyPassword); //Verify password
 
 module.exports = router;

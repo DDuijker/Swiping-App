@@ -1,7 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
-import { useColorScheme } from 'react-native';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { useColorScheme } from "react-native";
 
 const ThemeContext = createContext({
   isDarkTheme: false,
@@ -11,13 +17,13 @@ const ThemeContext = createContext({
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const scheme = useColorScheme();
-  const [isDarkTheme, setIsDarkTheme] = useState(scheme === 'dark');
+  const [isDarkTheme, setIsDarkTheme] = useState(scheme === "dark");
   const theme = isDarkTheme ? MD3DarkTheme : MD3LightTheme;
 
   useEffect(() => {
     const loadThemePreference = async () => {
       try {
-        const savedTheme = await AsyncStorage.getItem('isDarkTheme');
+        const savedTheme = await AsyncStorage.getItem("isDarkTheme");
         if (savedTheme !== null) {
           setIsDarkTheme(JSON.parse(savedTheme));
         }
@@ -32,7 +38,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const newTheme = !isDarkTheme;
     setIsDarkTheme(newTheme);
     try {
-      await AsyncStorage.setItem('isDarkTheme', JSON.stringify(newTheme));
+      await AsyncStorage.setItem("isDarkTheme", JSON.stringify(newTheme));
     } catch (error) {
       console.error("Failed to save theme preference:", error);
     }
