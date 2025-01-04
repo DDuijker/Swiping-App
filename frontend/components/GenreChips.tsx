@@ -80,12 +80,13 @@ const GenreChips: React.FC<GenreChipsProps> = ({
 
   return (
     <View>
-      <Text style={styles.title} variant="titleLarge">
+      <Text style={styles.title} theme={theme} variant="titleLarge">
         {title}
       </Text>
       <View style={styles.genreContainer}>
         {genres.map((genre: Genre) => (
           <Chip
+            theme={theme}
             key={genre.id}
             selected={selectedGenres.some((g: Genre) => g.id === genre.id)}
             onPress={() => onToggleGenre(genre)}
@@ -96,7 +97,7 @@ const GenreChips: React.FC<GenreChipsProps> = ({
             }
             style={{ margin: SPACING.small }}
           >
-            <Text>{genre.name}</Text>
+            <Text theme={theme}>{genre.name}</Text>
           </Chip>
         ))}
       </View>
