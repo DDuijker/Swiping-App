@@ -14,5 +14,5 @@
     "context/UserContext.tsx",
     "context/ThemeContext.tsx",
     "declarations.d.ts"
-  ]
+, "components/Swiping.js", "components/SwipeCard.js"  ]
 }

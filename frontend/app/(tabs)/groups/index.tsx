@@ -4,16 +4,16 @@ import { Card, Title, Paragraph, FAB } from "react-native-paper";
 import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../../context/ThemeContext";
-import { getUser, getUserId } from "@/api/userService";
 
 export default function GroupIndex() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const router = useRouter();
+
   useEffect(() => {
     fetchGroups();
-  }, [groups]);
+  }, []);
 
   const fetchGroups = async () => {
     setLoading(true);
@@ -31,30 +31,35 @@ export default function GroupIndex() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <Card
-            style={[
-              styles.card,
-              {
-                backgroundColor: theme.colors.secondaryContainer,
-                elevation: 5,
-              },
-            ]}
-          >
-            <Card.Content>
-              <Title style={{ color: theme.colors.onSecondaryContainer }}>
-                {item.name}
-              </Title>
-              <Paragraph style={{ color: theme.colors.onSecondaryContainer }}>
-                {item.description}
-              </Paragraph>
-            </Card.Content>
-          </Card>
-        )}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      ) : (
+        <FlatList
+          data={groups}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <Card
+              style={[
+                styles.card,
+                {
+                  backgroundColor: theme.colors.secondaryContainer,
+                  elevation: 5,
+                },
+              ]}
+              onPress={() => router.push(`/groups/${item._id}`)} // Navigate to details
+            >
+              <Card.Content>
+                <Title style={{ color: theme.colors.onSecondaryContainer }}>
+                  {item.name}
+                </Title>
+                <Paragraph style={{ color: theme.colors.onSecondaryContainer }}>
+                  {item.description}
+                </Paragraph>
+              </Card.Content>
+            </Card>
+          )}
+        />
+      )}
       <FAB
         style={styles.fab}
         icon="plus"
