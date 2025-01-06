@@ -4,6 +4,8 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const { app, server } = require("../server.js");
 const Group = require("../models/Group");
 
+// Test gemaakt door Djoeke
+
 describe("Group API Endpoints", () => {
   let mongoServer;
   let groupId;

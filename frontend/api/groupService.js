@@ -24,6 +24,17 @@ const groupService = {
       throw error;
     }
   },
+
+  // Get groups by user ID
+  getGroupsByUser: async (userId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/user/${userId}`);
+      return response.data; // Return groups array
+    } catch (error) {
+      console.error("Error fetching groups:", error.message);
+      throw error;
+    }
+  },
 };
 
 export default groupService;
