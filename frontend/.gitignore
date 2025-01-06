@@ -3,7 +3,6 @@ ios/
 .expo/
 dist/
 android
-ios/
 
 npm-debug.*
 *.jks
