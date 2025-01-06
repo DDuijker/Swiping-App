@@ -93,7 +93,6 @@ export const register = async (
     });
 
     const { user, token } = response.data;
-    console.log(user);
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 

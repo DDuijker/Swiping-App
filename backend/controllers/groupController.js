@@ -8,10 +8,12 @@ const Group = require("../models/Group");
  * @param {Object} res - Express response object
  */
 exports.createGroup = async (req, res) => {
+  console.log("POST request received");
   try {
     const { name, description, members, creator } = req.body;
 
     // Create a new group
+    console.log("Received data:", req.body); 
     const group = new Group({ name, description, members, creator });
     await group.save();
 

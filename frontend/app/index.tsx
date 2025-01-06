@@ -1,6 +1,6 @@
 import * as React from "react";
 import { router } from "expo-router";
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet, Platform } from "react-native";
 import { Appbar, Button, Menu, Provider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingTop: SPACING.medium,
+    marginBottom: Platform.OS === 'ios' ? "-8%" : 0
   },
   button: {
     marginBottom: SPACING.medium,

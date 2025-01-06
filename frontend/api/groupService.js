@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_BASE_URL = `http://${process.env.EXPO_PUBLIC_API_URL}/api/groups`;
 
+
 const groupService = {
   // Fetch all groups
   getAllGroups: async () => {
