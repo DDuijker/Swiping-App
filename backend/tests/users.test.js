@@ -5,6 +5,8 @@ const { app, server } = require("../server.js");
 
 let mongoServer;
 
+// Test gemaakt door Djoeke
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
