@@ -1,9 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useTheme } from "@/context/ThemeContext";
+import { Text } from "react-native-paper";
 
 const SwipeCard = ({ movie }) => {
   // Render stars for the rating
+  const { theme } = useTheme();
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 0; i < 5; i++) {
@@ -20,7 +23,12 @@ const SwipeCard = ({ movie }) => {
   };
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: theme.colors.secondaryContainer },
+      ]}
+    >
       <Image source={{ uri: movie.image }} style={styles.image} />
       <Text style={styles.title}>{movie.name}</Text>
       <Text style={styles.description}>{movie.description}</Text>
@@ -35,7 +43,6 @@ const styles = StyleSheet.create({
     height: 450,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f8f8",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -59,7 +66,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginBottom: 10,
-    color: "#555",
   },
   rating: {
     flexDirection: "row",

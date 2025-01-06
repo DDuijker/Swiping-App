@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Button, Text } from "react-native-paper";
 import SwipeCards from "react-native-swipe-cards";
 import SwipeCard from "./SwipeCard";
 import { useTheme } from "@/context/ThemeContext";
@@ -111,6 +112,7 @@ const Swiping = ({ onMatch }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [match, setMatch] = useState(null);
   const [isButtonsVisible, setIsButtonsVisible] = useState(true);
+  const { theme } = useTheme();
 
   const handleLike = () => {
     const likedMovie = movies[currentCardIndex];
@@ -133,8 +135,13 @@ const Swiping = ({ onMatch }) => {
     } else {
       hideButtons();
       return (
-        <View>
-          <Text>No more movies to swipe!</Text>
+        <View
+          style={[
+            styles.container,
+            { backgroundColor: theme.colors.background },
+          ]}
+        >
+          <Text mode>No more movies to swipe!</Text>
         </View>
       );
     }
@@ -153,12 +160,39 @@ const Swiping = ({ onMatch }) => {
   };
 
   return (
-    <View style={[styles.container]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       {match ? (
-        <View style={styles.matchModal}>
-          <Text style={styles.matchText}>It's a Match! 🎉</Text>
-          <Text style={styles.matchText}>{match.name}</Text>
-          <Button title="Continue" onPress={resetMatch} />
+        <View
+          style={[
+            styles.matchModal,
+            { backgroundColor: theme.colors.secondaryContainer },
+          ]}
+        >
+          <Text
+            style={[
+              styles.matchText,
+              { color: theme.colors.onSecondaryContainer },
+            ]}
+          >
+            It's a Match! 🎉
+          </Text>
+          <Text
+            style={[
+              styles.matchText,
+              { color: theme.colors.onSecondaryContainer },
+            ]}
+          >
+            {match.name}
+          </Text>
+          <Button
+            style={{ marginTop: 20 }}
+            mode="contained"
+            onPress={resetMatch}
+          >
+            Continue
+          </Button>
         </View>
       ) : (
         <View style={styles.swipeContainer}>
@@ -240,14 +274,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   matchModal: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
     padding: 20,
+    borderRadius: 20,
   },
   matchText: {
-    color: "#fff",
     fontSize: 20,
     marginVertical: 10,
   },
