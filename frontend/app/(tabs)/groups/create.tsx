@@ -59,15 +59,14 @@ export default function CreateGroupScreen() {
         creator: userId, // Use the user's ObjectId
       };
 
-      const createdGroup = await groupService.createGroup(groupData);
-      console.log("Created Group:", createdGroup);
-      console.log("Created Group:", groupData);
+      await groupService.createGroup(groupData);
 
       // router.back(); // Navigate back after success
     } catch (error) {
       console.error("Error creating group:", error.message);
     } finally {
       setLoading(false);
+      router.push("/groups"); // Navigate back to the groups list
     }
   };
 

@@ -150,13 +150,13 @@ export default function ProfileIndex() {
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={[
-          styles.container,
-          { backgroundColor: theme.colors.background },
-        ]}
-      >
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
+    >
+      <View style={styles.container}>
         {/* Profile Header */}
         <View style={styles.infoContainer}>
           <Text theme={theme} variant="titleLarge">
@@ -398,7 +398,8 @@ export default function ProfileIndex() {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </ScrollView>
+      </View>
+
       {/* Action Buttons */}
       {isEditing ? (
         <View style={styles.actions}>
@@ -420,7 +421,7 @@ export default function ProfileIndex() {
           onPress={() => setIsEditing(true)}
         />
       )}
-    </View>
+    </ScrollView>
   );
 }
 
