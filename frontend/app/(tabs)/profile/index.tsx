@@ -150,163 +150,255 @@ export default function ProfileIndex() {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
-    >
-      {/* Profile Header */}
-      <View style={styles.infoContainer}>
-        <Text theme={theme} variant="titleLarge">
-          {updatedUser.username}
-        </Text>
-        <Text theme={theme}>{updatedUser.email}</Text>
-      </View>
-
-      {/* Editing Section */}
-      {isEditing ? (
-        <>
-          <TextInput
-            label={t("profile.fields.username")}
-            value={updatedUser.username || ""}
-            onChangeText={(text) =>
-              setUpdatedUser({ ...updatedUser, username: text })
-            }
-            theme={theme}
-            mode="outlined"
-            style={styles.input}
-          />
-          <TextInput
-            label={t("profile.fields.email")}
-            value={updatedUser.email || ""}
-            onChangeText={(text) =>
-              setUpdatedUser({ ...updatedUser, email: text })
-            }
-            theme={theme}
-            mode="outlined"
-            style={styles.input}
-          />
-          <GenreChips
-            selectedGenres={updatedUser.favoriteMovieGenres}
-            onToggleGenre={(genre) => handleToggleGenre("movie", genre)}
-            title={t("profile.fields.favoriteMovieGenres")}
-            genreType="movie"
-          />
-          <GenreChips
-            selectedGenres={updatedUser.favoriteTVGenres}
-            onToggleGenre={(genre) => handleToggleGenre("tv", genre)}
-            title={t("profile.fields.favoriteTVGenres")}
-            genreType="tv"
-          />
-        </>
-      ) : (
-        <>
-          <Text theme={theme} variant="titleMedium">
-            {t("profile.fields.favoriteMovieGenres")}
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
+        {/* Profile Header */}
+        <View style={styles.infoContainer}>
+          <Text theme={theme} variant="titleLarge">
+            {updatedUser.username}
           </Text>
-          <View style={styles.chipContainer}>
-            {updatedUser.favoriteMovieGenres.length > 0 ? (
-              updatedUser.favoriteMovieGenres.map((genre: Genre) => (
-                <Chip key={genre.id} style={styles.chip} theme={theme}>
-                  {genre.name}
-                </Chip>
-              ))
-            ) : (
-              <Text theme={theme}>-</Text>
-            )}
-          </View>
+          <Text theme={theme}>{updatedUser.email}</Text>
+        </View>
 
-          <Text theme={theme} variant="titleMedium" style={{ marginTop: 8 }}>
-            {t("profile.fields.favoriteTVGenres")}
-          </Text>
-          <View style={styles.chipContainer}>
-            {updatedUser.favoriteTVGenres.length > 0 ? (
-              updatedUser.favoriteTVGenres.map((genre: Genre) => (
-                <Chip key={genre.id} style={styles.chip} theme={theme}>
-                  {genre.name}
-                </Chip>
-              ))
-            ) : (
-              <Text theme={theme}>-</Text>
-            )}
-          </View>
-
-          {/* Theme and Language Toggles */}
-          <List.Section
-            style={{
-              backgroundColor: theme.colors.secondaryContainer,
-              borderRadius: 8,
-            }}
-            theme={theme}
-            title={t("profile.settings.preferences")}
-          >
-            <List.Item
-              left={(props) => <List.Icon {...props} icon="translate" />}
-              title={t("common.languages.dutch")}
-              right={() => (
-                <Switch
-                  value={i18n.language === "nl"}
-                  onValueChange={() =>
-                    handleChangeLanguage(i18n.language === "en" ? "nl" : "en")
-                  }
-                />
-              )}
-              theme={theme}
-            />
-            <List.Item
-              left={(props) => (
-                <List.Icon
-                  {...props}
-                  icon={theme.dark ? "weather-sunny" : "weather-night"}
-                />
-              )}
-              theme={theme}
-              title={
-                theme.dark
-                  ? t("common.actions.lightMode")
-                  : t("common.actions.darkMode")
+        {/* Editing Section */}
+        {isEditing ? (
+          <>
+            <TextInput
+              label={t("profile.fields.username")}
+              value={updatedUser.username || ""}
+              onChangeText={(text) =>
+                setUpdatedUser({ ...updatedUser, username: text })
               }
-              right={() => (
-                <Switch value={theme.dark} onValueChange={toggleTheme} />
+              theme={theme}
+              mode="outlined"
+              style={styles.input}
+            />
+            <TextInput
+              label={t("profile.fields.email")}
+              value={updatedUser.email || ""}
+              onChangeText={(text) =>
+                setUpdatedUser({ ...updatedUser, email: text })
+              }
+              theme={theme}
+              mode="outlined"
+              style={styles.input}
+            />
+            <GenreChips
+              selectedGenres={updatedUser.favoriteMovieGenres}
+              onToggleGenre={(genre) => handleToggleGenre("movie", genre)}
+              title={t("profile.fields.favoriteMovieGenres")}
+              genreType="movie"
+            />
+            <GenreChips
+              selectedGenres={updatedUser.favoriteTVGenres}
+              onToggleGenre={(genre) => handleToggleGenre("tv", genre)}
+              title={t("profile.fields.favoriteTVGenres")}
+              genreType="tv"
+            />
+          </>
+        ) : (
+          <>
+            <Text theme={theme} variant="titleMedium">
+              {t("profile.fields.favoriteMovieGenres")}
+            </Text>
+            <View style={styles.chipContainer}>
+              {updatedUser.favoriteMovieGenres.length > 0 ? (
+                updatedUser.favoriteMovieGenres.map((genre: Genre) => (
+                  <Chip key={genre.id} style={styles.chip} theme={theme}>
+                    {genre.name}
+                  </Chip>
+                ))
+              ) : (
+                <Text theme={theme}>-</Text>
               )}
-            />
-          </List.Section>
+            </View>
 
-          {/* Logout and Delete */}
-          <List.Section
-            style={{
-              backgroundColor: theme.colors.secondaryContainer,
-              borderRadius: 8,
-            }}
-            title={t("profile.settings.title")}
-            theme={theme}
+            <Text theme={theme} variant="titleMedium" style={{ marginTop: 8 }}>
+              {t("profile.fields.favoriteTVGenres")}
+            </Text>
+            <View style={styles.chipContainer}>
+              {updatedUser.favoriteTVGenres.length > 0 ? (
+                updatedUser.favoriteTVGenres.map((genre: Genre) => (
+                  <Chip key={genre.id} style={styles.chip} theme={theme}>
+                    {genre.name}
+                  </Chip>
+                ))
+              ) : (
+                <Text theme={theme}>-</Text>
+              )}
+            </View>
+
+            {/* Theme and Language Toggles */}
+            <List.Section
+              style={{
+                backgroundColor: theme.colors.secondaryContainer,
+                borderRadius: 8,
+              }}
+              theme={theme}
+              title={t("profile.settings.preferences")}
+            >
+              <List.Item
+                left={(props) => <List.Icon {...props} icon="translate" />}
+                title={t("common.languages.dutch")}
+                right={() => (
+                  <Switch
+                    value={i18n.language === "nl"}
+                    onValueChange={() =>
+                      handleChangeLanguage(i18n.language === "en" ? "nl" : "en")
+                    }
+                  />
+                )}
+                theme={theme}
+              />
+              <List.Item
+                left={(props) => (
+                  <List.Icon
+                    {...props}
+                    icon={theme.dark ? "weather-sunny" : "weather-night"}
+                  />
+                )}
+                theme={theme}
+                title={
+                  theme.dark
+                    ? t("common.actions.lightMode")
+                    : t("common.actions.darkMode")
+                }
+                right={() => (
+                  <Switch value={theme.dark} onValueChange={toggleTheme} />
+                )}
+              />
+            </List.Section>
+
+            {/* Logout and Delete */}
+            <List.Section
+              style={{
+                backgroundColor: theme.colors.secondaryContainer,
+                borderRadius: 8,
+              }}
+              title={t("profile.settings.title")}
+              theme={theme}
+            >
+              <List.Item
+                title={t("profile.settings.logout")}
+                left={(props) => <List.Icon {...props} icon="logout" />}
+                right={(props) => <List.Icon {...props} icon="chevron-right" />}
+                onPress={handleLogout}
+                theme={theme}
+              />
+              <List.Item
+                title={t("profile.settings.deleteAccount")}
+                left={(props) => <List.Icon {...props} icon="delete" />}
+                right={(props) => <List.Icon {...props} icon="chevron-right" />}
+                onPress={handleDeleteAccount}
+                theme={theme}
+              />
+              <List.Item
+                title={t("profile.actions.changePassword")}
+                left={(props) => <List.Icon {...props} icon="lock" />}
+                right={(props) => <List.Icon {...props} icon="chevron-right" />}
+                onPress={() => setPasswordDialogVisible(true)}
+                theme={theme}
+              />
+            </List.Section>
+          </>
+        )}
+
+        {/* Snackbar */}
+        <Snackbar
+          visible={snackbar.visible}
+          onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
+          duration={3000}
+        >
+          {snackbar.message}
+        </Snackbar>
+
+        {/* Delete Account Dialog */}
+        <Portal>
+          <Dialog
+            visible={dialogVisible}
+            onDismiss={() => setDialogVisible(false)}
           >
-            <List.Item
-              title={t("profile.settings.logout")}
-              left={(props) => <List.Icon {...props} icon="logout" />}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              onPress={handleLogout}
-              theme={theme}
-            />
-            <List.Item
-              title={t("profile.settings.deleteAccount")}
-              left={(props) => <List.Icon {...props} icon="delete" />}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              onPress={handleDeleteAccount}
-              theme={theme}
-            />
-            <List.Item
-              title={t("profile.actions.changePassword")}
-              left={(props) => <List.Icon {...props} icon="lock" />}
-              right={(props) => <List.Icon {...props} icon="chevron-right" />}
-              onPress={() => setPasswordDialogVisible(true)}
-              theme={theme}
-            />
-          </List.Section>
-        </>
-      )}
-
+            <Dialog.Title>{t("profile.settings.deleteAccount")}</Dialog.Title>
+            <Dialog.Content>
+              <Text>{t("profile.settings.confirmDeleteAccount")}</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setDialogVisible(false)}>
+                {t("common.actions.cancel")}
+              </Button>
+              <Button onPress={confirmDeleteAccount}>
+                {t("common.actions.confirm")}
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        {/* Change Password Dialog */}
+        <Portal>
+          <Dialog
+            visible={passwordDialogVisible}
+            theme={theme}
+            onDismiss={() => setPasswordDialogVisible(false)}
+          >
+            <Dialog.Title theme={theme}>
+              {t("profile.actions.changePassword")}
+            </Dialog.Title>
+            <Dialog.Content>
+              <TextInput
+                label={t("profile.fields.currentPassword")}
+                value={passwords.current}
+                onChangeText={(text) =>
+                  setPasswords({ ...passwords, current: text })
+                }
+                secureTextEntry
+                theme={theme}
+                mode="outlined"
+                style={styles.input}
+                error={passwords.current === ""}
+              />
+              <TextInput
+                label={t("profile.fields.newPassword")}
+                value={passwords.new}
+                onChangeText={(text) =>
+                  setPasswords({ ...passwords, new: text })
+                }
+                secureTextEntry
+                theme={theme}
+                mode="outlined"
+                style={styles.input}
+                error={passwords.new === ""}
+              />
+              <TextInput
+                label={t("profile.fields.confirmPassword")}
+                value={passwords.confirm}
+                onChangeText={(text) =>
+                  setPasswords({ ...passwords, confirm: text })
+                }
+                secureTextEntry
+                theme={theme}
+                mode="outlined"
+                style={styles.input}
+                error={passwords.confirm !== passwords.new}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                theme={theme}
+                onPress={() => setPasswordDialogVisible(false)}
+              >
+                {t("common.actions.cancel")}
+              </Button>
+              <Button theme={theme} onPress={handleChangePassword}>
+                {t("common.actions.confirm")}
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </ScrollView>
       {/* Action Buttons */}
       {isEditing ? (
         <View style={styles.actions}>
@@ -328,96 +420,7 @@ export default function ProfileIndex() {
           onPress={() => setIsEditing(true)}
         />
       )}
-
-      {/* Snackbar */}
-      <Snackbar
-        visible={snackbar.visible}
-        onDismiss={() => setSnackbar({ ...snackbar, visible: false })}
-        duration={3000}
-      >
-        {snackbar.message}
-      </Snackbar>
-
-      {/* Delete Account Dialog */}
-      <Portal>
-        <Dialog
-          visible={dialogVisible}
-          onDismiss={() => setDialogVisible(false)}
-        >
-          <Dialog.Title>{t("profile.settings.deleteAccount")}</Dialog.Title>
-          <Dialog.Content>
-            <Text>{t("profile.settings.confirmDeleteAccount")}</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setDialogVisible(false)}>
-              {t("common.actions.cancel")}
-            </Button>
-            <Button onPress={confirmDeleteAccount}>
-              {t("common.actions.confirm")}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-      {/* Change Password Dialog */}
-      <Portal>
-        <Dialog
-          visible={passwordDialogVisible}
-          theme={theme}
-          onDismiss={() => setPasswordDialogVisible(false)}
-        >
-          <Dialog.Title theme={theme}>
-            {t("profile.actions.changePassword")}
-          </Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              label={t("profile.fields.currentPassword")}
-              value={passwords.current}
-              onChangeText={(text) =>
-                setPasswords({ ...passwords, current: text })
-              }
-              secureTextEntry
-              theme={theme}
-              mode="outlined"
-              style={styles.input}
-              error={passwords.current === ""}
-            />
-            <TextInput
-              label={t("profile.fields.newPassword")}
-              value={passwords.new}
-              onChangeText={(text) => setPasswords({ ...passwords, new: text })}
-              secureTextEntry
-              theme={theme}
-              mode="outlined"
-              style={styles.input}
-              error={passwords.new === ""}
-            />
-            <TextInput
-              label={t("profile.fields.confirmPassword")}
-              value={passwords.confirm}
-              onChangeText={(text) =>
-                setPasswords({ ...passwords, confirm: text })
-              }
-              secureTextEntry
-              theme={theme}
-              mode="outlined"
-              style={styles.input}
-              error={passwords.confirm !== passwords.new}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              theme={theme}
-              onPress={() => setPasswordDialogVisible(false)}
-            >
-              {t("common.actions.cancel")}
-            </Button>
-            <Button theme={theme} onPress={handleChangePassword}>
-              {t("common.actions.confirm")}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -433,5 +436,5 @@ const styles = StyleSheet.create({
   input: { marginBottom: 16 },
   headerText: { marginVertical: 8, fontWeight: "bold" },
   actions: { flexDirection: "row", justifyContent: "space-between" },
-  fab: { position: "absolute", right: 16, bottom: 16 },
+  fab: { position: "absolute", margin: 16, right: 0, bottom: 0 },
 });
