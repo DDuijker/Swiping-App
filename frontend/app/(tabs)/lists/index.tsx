@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
-import { List, Divider, FAB } from "react-native-paper";
+import { List, Divider, FAB, Button } from "react-native-paper";
 
 export default function ListIndex() {
   const { t } = useTranslation();
@@ -40,6 +40,29 @@ export default function ListIndex() {
               <Divider />
             </View>
           ))}
+          <View style={styles.buttonRow}>
+            <Button
+              icon="delete"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Delete
+            </Button>
+            <Button
+              icon="pencil"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Edit
+            </Button>
+            <Button
+              icon="format-list-bulleted"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Check Out List
+            </Button>
+          </View>
         </List.Section>
 
         <List.Section>
@@ -55,6 +78,29 @@ export default function ListIndex() {
               <Divider />
             </View>
           ))}
+          <View style={styles.buttonRow}>
+            <Button
+              icon="delete"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Delete
+            </Button>
+            <Button
+              icon="pencil"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Edit
+            </Button>
+            <Button
+              icon="format-list-bulleted"
+              mode="text"
+              onPress={() => console.log("Pressed")}
+            >
+              Check Out List
+            </Button>
+          </View>
         </List.Section>
       </ScrollView>
       <FAB style={styles.fab} icon="plus" />
@@ -72,5 +118,10 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
   },
 });
