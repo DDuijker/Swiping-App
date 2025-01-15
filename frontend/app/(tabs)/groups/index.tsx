@@ -4,21 +4,33 @@ import { Card, Title, Paragraph, FAB } from "react-native-paper";
 import groupService from "../../../api/groupService";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../../context/ThemeContext";
-import { getUser, getUserId } from "@/api/userService";
-
+import { getUserId } from "../../../api/userService";
 export default function GroupIndex() {
+  const [userId, setUserId] = useState(null);
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const router = useRouter();
-  useEffect(() => {
-    fetchGroups();
-  }, [groups]);
 
-  const fetchGroups = async () => {
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const fetchedUserId = await getUserId();
+        if (fetchedUserId) {
+          setUserId(fetchedUserId);
+          fetchGroups(fetchedUserId);
+        }
+      } catch (error) {
+        console.error("Error fetching user ID:", error.message);
+      }
+    };
+    loadUser();
+  }, []);
+
+  const fetchGroups = async (userId) => {
     setLoading(true);
     try {
-      const data = await groupService.getAllGroups(); // Fetch from backend
+      const data = await groupService.getGroupsByUser(userId); // Fetch from backend
       setGroups(data);
     } catch (error) {
       console.error("Error fetching groups:", error.message);
@@ -31,18 +43,35 @@ export default function GroupIndex() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <Card style={styles.card}>
-            <Card.Content>
-              <Title>{item.name}</Title>
-              <Paragraph>{item.description}</Paragraph>
-            </Card.Content>
-          </Card>
-        )}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      ) : (
+        <FlatList
+          data={groups}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <Card
+              style={[
+                styles.card,
+                {
+                  backgroundColor: theme.colors.secondaryContainer,
+                  elevation: 5,
+                },
+              ]}
+              onPress={() => router.push(`/groups/${item._id}`)} // Navigate to details
+            >
+              <Card.Content>
+                <Title style={{ color: theme.colors.onSecondaryContainer }}>
+                  {item.name}
+                </Title>
+                <Paragraph style={{ color: theme.colors.onSecondaryContainer }}>
+                  {item.description}
+                </Paragraph>
+              </Card.Content>
+            </Card>
+          )}
+        />
+      )}
       <FAB
         style={styles.fab}
         icon="plus"
@@ -55,6 +84,7 @@ export default function GroupIndex() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
   },
   card: {
     marginBottom: 10,

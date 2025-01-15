@@ -22,7 +22,7 @@ const handleApiError = (error) => {
 
     if (status === 400) return data.message || "Invalid request.";
     if (status === 401) return data.message || "Unauthorized. Please log in.";
-    if (status === 404) return data.message || "Resource not found.";
+    if (status === 404) return data.message || "Not found.";
     return data.message || `Unexpected error: ${status}.`;
   } else if (error.request) {
     return "Network error. Please check your connection.";
@@ -93,7 +93,6 @@ export const register = async (
     });
 
     const { user, token } = response.data;
-    console.log(user);
     await AsyncStorage.setItem("token", token);
     await AsyncStorage.setItem("user", JSON.stringify(user));
 
@@ -177,6 +176,32 @@ export const getUserId = async () => {
 };
 
 /**
+ * Updates the user's data.
+ * @async
+ * @param {string} id - The user's ID.
+ * @param {Object} data - The updated user data.
+ * @returns {Promise<Object>} - The updated user data.
+ * @throws {Error} - If update fails.
+ */
+export const updateUser = async (id, data) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    console.log(token);
+    if (!token) throw new Error("User is not authenticated.");
+
+    const response = await axiosInstance.put(`/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
  * Searches for users by username.
  * @async
  * @param {string} username - The username to search for (optional).
@@ -234,6 +259,67 @@ export const getUserById = async (id) => {
     });
     return response;
   } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+
+/**
+ * Deletes the user's account.
+ * @async
+ * @param {string} id - The user's ID.
+ * @returns {Promise<void>}
+ * @throws {Error} - If deletion fails.
+ */
+export const deleteUser = async (id) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    await axiosInstance.delete(`/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
+/**
+ * Changes the user's password.
+ * @async
+ * @param {string} userId - The user's ID.
+ * @param {string} currentPassword - The user's current password.
+ * @param {string} newPassword - The user's new password.
+ * @returns {Promise<void>}
+ * @throws {Error} - If password change fails.
+ */
+export const changePassword = async (userId, password, newPassword) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) throw new Error("User is not authenticated.");
+
+    // Verify current password
+    const verifyResponse = await axiosInstance.post(
+      "/verify-password",
+      {
+        userId,
+        password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (verifyResponse.status !== 200) {
+      throw new Error("Incorrect password.");
+    }
+    // Update password
+    const data = { newPassword };
+    await updateUser(userId, data);
+  } catch (error) {
+    console.error("Error changing password:", error.message);
     throw new Error(handleApiError(error));
   }
 };

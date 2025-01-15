@@ -9,7 +9,11 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "permissions": ["INTERNET", "CAMERA", "CAMERA_ROLL"],
+    "permissions": [
+      "INTERNET",
+      "CAMERA",
+      "CAMERA_ROLL"
+    ],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -31,7 +35,11 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-localization"],
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     },
